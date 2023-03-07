@@ -1,6 +1,7 @@
 \documentclass[a4paper,12pt,oneside]{book}%extreport
 \usepackage{times} 
-%\usepackage{multibib}
+% \usepackage{multibib}
+\usepackage{lipsum}
 \usepackage{appendix}
 \usepackage[shortlabels]{enumitem}
 \usepackage{booktabs}
@@ -37,15 +38,8 @@
 \usepackage{algpseudocode}
 \usepackage{tabularx,multicol,multirow,longtable}
 \usepackage{etoolbox}
-\usepackage{tikz}
-	\usetikzlibrary{decorations.pathmorphing}
-	\usetikzlibrary{matrix} 
-	\usetikzlibrary{arrows} 
-	\usetikzlibrary{calc} 
-	\usetikzlibrary{plotmarks} 
-	\usetikzlibrary{shadows}
-
-	\usetikzlibrary{patterns}
+\usepackage{tikz}	\usetikzlibrary{calc,arrows,decorations.pathmorphing,backgrounds,positioning,fit,shapes,decorations.shapes, shapes.geometric, decorations.pathreplacing, decorations.text}
+ 
 	\tikzstyle{block} = [draw,rectangle,thick,minimum height=2em,minimum width=2em,drop shadow,fill=blue!50]
 	\tikzstyle{sum} = [draw,circle,inner sep=0mm,minimum size=2mm]
 	\tikzstyle{connector} = [->,thick]
@@ -54,7 +48,8 @@
 	\tikzstyle{axes} = [->,>=stealth',semithick]
 	\tikzstyle{important line} = [very thick,draw=red]
 	\tikzstyle{important text} = [rounded corners,fill=red!10,inner sep=1ex]
-	\usepackage{pgfplots}
+\usepackage{circuitikz}
+\usepackage{pgfplots}
 \usepackage[numbers]{natbib}
 \usepackage{titlesec}
 \usepackage[labelsep=period]{caption}
@@ -111,16 +106,13 @@
 \usepackage[hidelinks, unicode]{hyperref}
 
 \begin{document}
-% \fontsize{13}{15.5}\selectfont
-
+\input{./footage/Tikz_fig.tex}
 
 \pagestyle{empty}
 \input{Covers/BiaNgoai.tex}
 \newpage
 \pagestyle{plain}
 \pagenumbering{gobble}
-%\newpage
-%\pagestyle{empty}
 \input{Covers/BiaTrong.tex}
 \newpage
 \input{Covers/BiaTomTat.tex}
@@ -142,16 +134,24 @@
 
 \fontsize{13}{16}\selectfont
 \renewcommand{\contentsname}{\vspace{-70pt}\centerline{\fontsize{14}{16}\selectfont\MakeUppercase{Mục lục}}}
+\clearpage
+\phantomsection
 \addcontentsline{toc}{chapter}{Mục lục}
 \tableofcontents
 \clearpage
 \input{Covers/VietTat.tex}
+
 \newpage
+\clearpage
+\phantomsection
 \addcontentsline{toc}{chapter}{Danh mục hình vẽ}
-\renewcommand{\listfigurename}{\vspace{-70pt}\centerline{\fontsize{14}{16}\selectfont{\MakeUppercase{Danh mục   hình vẽ}}}}
+\renewcommand{\listfigurename}{\vspace{-70pt}\centerline{\fontsize{14}{16}\selectfont{\MakeUppercase{Danh mục hình vẽ}}}}
 \listoffigures
 \fontsize{13}{16}\selectfont
+
 \newpage
+\clearpage
+\phantomsection
 \addcontentsline{toc}{chapter}{Danh mục bảng biểu}
 \renewcommand{\listtablename}{\vspace{-70pt}\centerline{\fontsize{14}{16}\selectfont{\MakeUppercase{Danh mục bảng biểu}}}}
 \listoftables
@@ -182,7 +182,7 @@
 
 % Tài liệu tham khảo
 
-\bibliographystyle{agsm_uet.bst}
+\bibliographystyle{./footage/agsm_uet.bst}
 \bibliography{library.bib}
 \end{document}
 

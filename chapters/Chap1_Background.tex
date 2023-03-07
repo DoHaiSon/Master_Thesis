@@ -4,10 +4,38 @@
 \setcounter{chapter}{0}
 \chapter[TỔNG QUAN VỀ CÁC PHƯƠNG PHÁP NHẬN DẠNG HỆ THỐNG TRONG TRUYỀN THÔNG KHÔNG DÂY]{Tổng quan về các phương pháp nhận dạng hệ thống trong truyền thông không dây}
 
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \node (b1) [startstop] at (0, 0) {Các thuật toán ước lượng kênh truyền};
+
+        \node (b21) [process, align=center] at (-60mm, -25mm) {Sử dụng Pilot};
+
+        \node (b22) [process, align=center] at (-20mm, -25mm) {Thuật toán mù};
+
+        \node (b23) [process, align=center] at (20mm, -25mm) {Thuật toán bán mù};
+
+        \node (b24) [process, align=center] at (60mm, -25mm) {Học máy/Học sâu};
+
+        \node (b31) [below=10mm of b21, process, align=center, fill=green!10!white] {Least Square (LS)~\cite{GesbertSPAWC}};
+
+        \draw[line] (b1.south) -- ([yshift=-5mm]b1.south);
+        \draw[arrow] ([yshift=-5mm]b1.south) -| (b21);
+        \draw[arrow] ([yshift=-5mm]b1.south) -| (b22);
+        \draw[arrow] ([yshift=-5mm]b1.south) -| (b23.north);
+        \draw[arrow] ([yshift=-5mm]b1.south) -| (b24.north);
+
+        \draw[arrow] (b21) -- (b31);
+        
+    \end{tikzpicture}
+    \caption{Phân loại các thuật toán ước lượng kênh truyền.}
+    \label{fig:classify}
+\end{figure}
+
+\section{Các thuật toán nhận dạng kênh tuyến tính}
+
 ~\cite{abed1997}
 
 ~\cite{Garro2020}
 
 ~\cite{bertsekas2014constrained}
-
-~\cite{GesbertSPAWC}
