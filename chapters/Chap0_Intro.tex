@@ -5,31 +5,53 @@
 \chapter*{Mở đầu}
 \noindent{\Large \textbf{Lý do chọn đề tài}}
 
+Theo~\cite{Mtawa2019}, trong năm 2021, chỉ riêng các thiết bị di động đã đòi hỏi tổng lưu lượng truy cập internet đạt 48,27 Petabytes/tháng, và tăng trưởng 46\% hàng năm. Tốc độ truy cập của các thế hệ mạng di động phổ biến ở Việt Nam như 4G là trung bình trên 28,2 Megabits/giây và tăng lên từ 29 đến 47\% hàng năm. Với sự ra trưởng nhanh chóng của số lượng các thiết bị di động và đòi hỏi về chất lượng nội dung của người dùng khiến yêu cầu về truyền tải nhanh và hiệu quả trong các hệ thống truyền thông không dây luôn là chủ đề nghiên cứu được quan tâm.
 
+Tuy nhiên, việc truyền tải không dây luôn gặp phải một hạn chế cố hữu đó là ảnh hưởng bởi kênh truyền vô tuyến. Để khắc phục nhược điểm này, ngay từ các thế hệ mạng di động đầu tiên như 2G~\cite{Tse2005}, các chuỗi tín hiệu hoa tiêu (pilot sequence) được biết trước ở cả bên phát và thu đã được sử dụng để ước lượng sự ảnh hưởng của kênh truyền và khôi phục dạng tín hiệu ở bên thu (NB - Non-blind)~\cite{ljung1999system}. Đến thế hệ mạng di động 4G, 5G, và cao hơn, việc truyền tải đơn ăng-ten (antenna) đã được thay thế bằng các hệ thống đa đầu vào đa đầu ra (MIMO - Multi-input multi-output) hay lớn hơn nữa là MIMO kích thước lớn (mMIMO - massive MIMO). Điều này khiến việc ước lượng kênh truyền trong các hệ thống MIMO, mMIMO trở nên phức tạp, yêu cầu các chuỗi pilot dài hơn~\cite{Michelusi2009}, dẫn đến hiệu quả về mặt phổ thời gian tần số của việc truyền tải bị giảm đi. 
+
+Nhiều phương pháp nghiên cứu đã được đề xuất để giảm thiểu số lượng pilot cần thiết cho việc ước lượng kênh truyền. Mà tiêu biểu trong số đó là ba hướng tiếp cận: 
+\begin{enumerate}
+    \item Các thuật toán nhận dạng ``mù'' (B - blind) ở đây được hiểu là khi xử lý (nhận dạng), bộ xử lý ``không nhìn thấy'' (không có thông tin) của đầu vào. Các thuật toán xử lý tín hiệu mù phát triển mạnh trong thập kỷ 90~\cite{abed1997}, tuy nhiên các phương pháp xử lý mù thường yêu cầu các thông số thống kê của tín hiệu mà thông thường không biết trước trong các hệ thống truyền thông thực, hơn nữa, độ chính xác mà các thuật toán này đưa ra cũng thấp hơn đáng kể khi so sánh với các phương pháp sử dụng pilot truyền thống. Do vậy, các thuật toán mù cũng ít được quan tâm trong những thế hệ mạng viễn thông di động trước 5G.
+
+    \item Các thuật toán nhận dạng ``bán mù'' (SB - Semi-blind) là phương pháp cải tiến của B và được quan tâm trong các năm gần đây~\cite{Ladaycia2017, Ladaycia2019, shaik2021}. Đây là kỹ thuật kết hợp các thông tin từ hướng tiếp cận mù truyền thống và các dạng thông tin khác, ví dụ~\cite{rekik}: số lượng nhỏ pilot, hướng sóng đến (DoA - Direction of Arrival), toạ độ người dùng, \ldots Điều này giúp giảm đi số lượng pilot cần thiết cho việc nhận dạng hệ thống nhằm tăng hiệu quả phổ nhưng vẫn giữ được độ chính xác cần thiết, giảm độ phức tạp, và cho khả năng ứng dụng rộng rãi hơn.
+
+    \item Các thuật toán nhận dạng sử dụng học máy, học sâu (ML - Machine learning; DL - Deep learning) cũng là lĩnh vực nghiên cứu dành được nhiều sự quan tâm~\cite{Zhang2019} trong các năm gần đây. Ưu điểm của các kỹ thuật sử dụng ML, DL là tính đa dạng, khi hướng tiếp cận ML, DL sử dụng cho mục đích xử lý các loại tín hiệu như hình ảnh, âm thanh đã đạt được các bước tiến rõ rệt. Đầu vào của các mạng DL được sử dụng để nhận dạng hệ thống rất linh hoạt, có thể tương ứng với cả ba hướng tiếp cận: pilot, mù, và bán mù kể trên. Sau quá trình huấn luyện, các mô hình (model) học máy có thể hoạt động độc lập như một bộ cân bằng mù/bán mù, khi chỉ cần đưa các tín hiệu thu được đi qua model, và các tín hiệu được khôi phục sẽ được trả về mà không cần đến các chuỗi pilot, hay thông tin về trạng thái kênh truyền (CSI - Channel state information).
+\end{enumerate}
+
+Có thể thấy, với SB và DL, thông tin về kênh truyền cần thiết phải được biết trước đó. Thay vào đó, các phương pháp này có thể sử dụng các tín hiệu mẫu được thu thập để đưa ra ước lượng chính xác của thông tin kênh truyền, giảm thiểu sự phụ thuộc vào kiến thức chính xác về kênh truyền. Vì vậy, SB và DL là các phương pháp tiên tiến và hứa hẹn trong việc ước lượng kênh truyền trong các hệ thống truyền thông hiện đại.
+
+Từ thực tế và những phân tích nêu trên, luận văn tập trung nghiên cứu hai mục tiêu sau phương pháp nhận dạng hệ thống bán mù, học máy, học sâu và đề xuất các giải thuật mới để cải thiện các phương pháp nhận dạng này, bao gồm:
+\begin{enumerate}
+    \item Phát triển thuật toán bán mù dựa trên một phương pháp nhận dạng mù truyền thống cho các hệ thống MIMO và mMIMO.
+    
+    \item Phát triển một phương pháp nhận dạng sử dụng DL cho các hệ thống mMIMO.
+\end{enumerate}
 \vspace{0.5cm}
 
 \noindent{\Large \textbf{Phương pháp nghiên cứu}}
 
-Cụ thể các phương pháp nghiên cứu sau đã được sử dụng trong luận văn:
+Trong luận văn, để đạt được mục tiêu nghiên cứu học viên đã tìm hiểu các tài liệu, bài báo, tạp chí quốc tế,\ldots có uy tín, thực hiện việc tính toán mô hình dữ liệu, phân tích số học để đưa ra các hướng giải quyết hợp lý, và sau đó kiểm nghiệm lại kết quả bằng hình thức mô phỏng trên Matlab, Python.
 
-\renewcommand{\labelitemi}{$-$}
-\begin{itemize}
-	\item 
-	\item 
-	\item 
-	\item 
-\end{itemize} 
+Cụ thể để phát triển các thuật toán mới như mục tiêu đề ra các bước nghiên cứu sau đã được thực hiện trong luận văn:
+
+\begin{enumerate}
+    \item Tìm hiểu về tổng quan các thuật toán nhận dạng hệ thống trong truyền thông không dây với các hướng tiếp cận khác nhau. 
+	\item Xác định bài toán cụ thể và mục tiêu của nghiên cứu.
+	\item Lựa chọn thuật toán bán truyền thống phù hợp để phát triển lên SB và một phương pháp sử dụng học sâu để nhận dạng kênh truyền có thể cải tiến.
+	\item Xây dựng mô hình toán học, huấn luyện mô hình, và tối ưu hóa các thuật toán đề xuất.
+	\item Đánh giá và phân tích kết quả ở nhiều kịch bản khác nhau, so sánh với các nghiên cứu đi trước.
+\end{enumerate} 
 \vspace{0.3cm}
 
 \noindent{\Large \textbf{Nội dung nghiên cứu}}
 
 \renewcommand{\labelitemi}{$-$}
 \begin{itemize}
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
+	\item Tìm hiểu về các thuật toán ước lượng kênh truyền trong những năm gần đây.
+	\item Xây dựng mô hình toán học hệ thống MIMO/mMIMO để mô tả quá trình truyền tải tín hiệu qua kênh truyền.
+	\item Phát triển thuật toán SB dựa trên phương pháp bộ cân bằng kênh tham chiếu (MRE - Mutually referenced equalizers).
+	\item Phát triển mạng học sâu phát hiện tuần tự lặp lại (ISD - Iterative Sequential Detection) để ước lượng kênh truyền viễn thông.
+	\item Đánh giá, kiểm tra các thuật toán được đề xuất trên các công cụ mô phỏng Matlab, Python.
 \end{itemize} 
 \vspace{0.3cm}
 
@@ -54,8 +76,8 @@ Nội dung chính của luận văn được trình bày như sau:
 \renewcommand{\labelitemi}{$-$}
 \begin{itemize}
 	\item Mở đầu: Trình bày mục đích, phương pháp nghiên cứu, nội dung, đóng góp và bố cục của luận văn.
-	\item Chương 1: 
-	\item Chương 2: 
-	\item Chương 3: 
-	\item 
+	\item Chương 1: Trình bày mô hình hệ thống viễn thông MIMO/mMIMO và tổng quan về các phương pháp nhận dạng hệ thống trong truyền thông không dây.
+	\item Chương 2: Trình bày sơ lược về thuật toán B-MRE gốc, sau đó đề xuất phương pháp SB-MRE cho MIMO/mMIMO. Kiểm nghiệm và đánh giá kết quả thông qua mô phỏng Matlab.
+	\item Chương 3: Trình bày sơ lược về mạng DetNet (Detection Network) phục vụ cho ước lượng kênh truyền viễn thông. Đề xuất mạng ISD nhằm giảm độ phức tạp cho mô hình đầu ra. Tạo bộ dữ liệu, đào tạo và đánh giá kết quả thông qua mô phỏng Python.
+	\item Kết luận: Đưa ra kết luận về hai thuật toán được đề xuất và đề xuất các giải pháp để cải thiện hệ thống.
 \end{itemize} 
