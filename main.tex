@@ -174,17 +174,17 @@
 \input{chapters/Chap5_Ketluan.tex}
 \newpage
 \input{chapters/Congbo.tex}
-% % \newpage
-% % \appendix
-% \input{chapters/PhuLuc.tex}
+
 \def\baselinestretch{1}
-
 \vspace{-2cm}
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{TÀI LIỆU THAM KHẢO}
 \renewcommand{\bibname}{Tài liệu tham khảo}
-
-% Tài liệu tham khảo
-
 \bibliographystyle{./footage/agsm_uet.bst}
 \bibliography{library.bib}
-\end{document}
 
+\newpage
+\appendix
+\input{chapters/PhuLuc.tex}
+\end{document}

@@ -3,81 +3,78 @@
 
 \setcounter{chapter}{1}
 \chapter[{NHẬN DẠNG KÊNH TRUYỀN SỬ DỤNG THUẬT TOÁN BÁN MÙ MRE}]{Nhận dạng kênh truyền sử dụng thuật toán bán mù MRE}
+\label{sec:MRE}
+
+Trong chương này, tác giả sẽ trình bày các tìm hiểu sơ lược về một thuật toán ước lượng kênh truyền mù truyền thống là bộ cân bằng kênh tham chiếu (MRE - Mutually referenced equalizers). Trước hết, B-MRE sẽ được phát triển để hoạt động với các hệ thống MIMO. Sau đó, phương pháp SB-MRE được đề xuất bằng cách sử dụng thêm một số lượng nhỏ pilot cùng với thông tin từ B-MRE. Sau đó, các hai phương pháp nhằm giảm thiểu chi phí của thuật toán SB-MRE được đề xuất, bao gồm giảm độ phức tạp của B-MRE và giảm thiểu độ dài chuỗi pilot. Cuối cùng, các mô phỏng được thực hiện để kiểm chứng thuật toán đề xuất và đưa ra kết luận.
 
 \section{Sơ lược về thuật toán B-MRE}
 
-Generally, MRE uses an $N$-taps linear equalizer to filter each channel. Let $g_{t, i}  \in \mathbb{C}^{LN \times 1}$ be an $i$-delay equalizer and $t$-th transmitter. For \mbox{$i=0, \ldots, K-1$}, at time $n$, we have
+Generally, MRE uses an $N$-taps linear equalizer to filter each channel. Let $\mathbf{g}_{t, i}  \in \mathbb{C}^{LN \times 1}$ be an $i$-delay equalizer and $t$-th transmitter. For \mbox{$i=0, \ldots, K-1$}, at time $n$, we have
 \begin{equation}
-    g^H_{t, i} * x(n)=\sum_{l=0}^{L-1}\sum_{k=0}^{N-1} g^H_{t,i}(k) x^{(l)}(n-k) \approx s_t(n-i)
+    \mathbf{g}^H_{t, i} * \mathbf{x}(n)=\sum_{l=0}^{L-1}\sum_{k=0}^{N-1} g^H_{t,i}(k) x^{(l)}(n-k) \approx \mathbf{s}_t(n-i)
 \end{equation}
 % At $i$-delay, $g_i$ is express as follows
 \begin{equation}
-\begin{aligned}
-    g_{t,i}=\big[g_{t, i}^{(0)}(0), \ldots, &g_{t, i}^{(0)}(N - 1), \ldots, \\
-    &g_{t, i}^{(L-1)}(0), \ldots, g_{t, i}^{(L-1)} (N-1) \big]^\top
-\end{aligned}
+    \mathbf{g}_{t,i}=\big[g_{t, i}^{(0)}(0), \ldots, g_{t, i}^{(0)}(N - 1), \ldots,
+    g_{t, i}^{(L-1)}(0), \ldots, g_{t, i}^{(L-1)} (N-1) \big]^\top
 \end{equation}
-The equalizers matrix for $t$-th transmitter is $G_t \in \mathbb{C}^{LN \times K}$ as follows
+The equalizers matrix for $t$-th transmitter is $\mathbf{G}_t \in \mathbb{C}^{LN \times K}$ as follows
 \begin{equation}
-    G_t = [g_{t, 0}, \ldots, g_{t, K-1}]
+    \mathbf{G}_t = [\mathbf{g}_{t, 0}, \ldots, \mathbf{g}_{t, K-1}]
 \end{equation}
 
-In the noise-free case, the transmitted symbols can be perfectly recovered with $\bar{G}$ is any left inverse of $\mathcal{H}$ since
+In the noise-free case, the transmitted symbols can be perfectly recovered with $\bar{\mathbf{G}}$ is any left inverse of $\mathbf{H}$ since
 \begin{equation}
     \begin{aligned}
-        \relax[G_0, \ldots, G_{T-1}]^{H} 
-        X(i)
-        &= [S_0^\top(i), \ldots, S^\top_{T-1}(i)]^\top \\
-        \bar{G}^H X(i) &= \bar{S}(i)
+        \relax[\mathbf{G}_0, \ldots, \mathbf{G}_{T-1}]^{H} 
+        \mathbf{x}(i)
+        &= [\mathbf{s}_0^\top(i), \ldots, \mathbf{s}^\top_{T-1}(i)]^\top \\
+        \bar{\mathbf{G}}^H \mathbf{x}(i) &= \bar{\mathbf{s}}(i)
     \end{aligned}   
 \end{equation}
 
-In noisy case, to estimate $\bar{G}$, the MRE method exploits the delay diversity from multi-channel, $g_i^H X(i) = g_{i+1}^H X(i+1)$, to determine the full set of channel inverses. Where $g$ is the vector form of $\bar{G}$ equalizers matrix as shown in Eq.~\ref{eq:vecG} . The unconstrained MRE cost function of $\bar{G}$ is given by
+In noisy case, to estimate $\bar{\mathbf{G}}$, the MRE method exploits the delay diversity from multi-channel, $\mathbf{g}_i^H \mathbf{x}(i) = \mathbf{g}_{i+1}^H \mathbf{x}(i+1)$, to determine the full set of channel inverses. Where $\mathbf{g}$ is the vector form of $\bar{\mathbf{G}}$ equalizers matrix as shown in Eq.~\ref{eq:vecG} . The unconstrained MRE cost function of $\bar{\mathbf{G}}$ is given by
 \begin{equation}
-    \mathcal{J}(\bar{G})=g^H \mathcal{R}g
+    \mathcal{L}(\bar{\mathbf{G}})=\mathbf{g}^H \mathbf{R} \mathbf{g}
 \end{equation}
-where $\mathcal{R} \in \mathbb{C}^{LNKT \times LNKT}$ is the matrix of $X(i)$ and $X(i+1)$ observed signals, which is given by
+where $\mathbf{R} \in \mathbb{C}^{LNKT \times LNKT}$ is the matrix of $\mathbf{x}(i)$ and $\mathbf{x}(i+1)$ observed signals, which is given by
 \begin{equation}
 \label{eq:R}
-\mathcal{R} \stackrel{\text { def }}{=} E\left(U^{H} U\right)
+\mathbf{R} \stackrel{\text { def }}{=} E\left(\mathbf{U}^{H} \mathbf{U}\right)
 \end{equation}
 with
 \begin{equation}
 \label{eq:U}
-U = \left(I_{T (K-1)}, \mathbf{0}\right) \otimes X^{H}(i)-\left(\mathbf{0}, I_{T (K-1)}\right) \otimes X^{H}(i+1)
+\mathbf{U} = \left(\mathbf{I}_{T (K-1)}, \mathbf{0}\right) \otimes \mathbf{x}^{H}(i)-\left(\mathbf{0}, \mathbf{I}_{T (K-1)}\right) \otimes \mathbf{x}^{H}(i+1)
 \end{equation}
-Under the quadratic constraint~\cite{original}, the unique stable minimum of $g$ is estimated by selecting the smallest eigenvector of $\mathcal{R}$.
+Under the quadratic constraint~\cite{original}, the unique stable minimum of $\mathbf{g}$ is estimated by selecting the smallest eigenvector of $\mathbf{R}$.
 
 
 \section{Đề xuất phương pháp nhận dạng hệ thống SB-MRE cho MIMO}
 
 
-In each transmitter, a block data $S_t$ is considered to send, including $N_p$ pilot symbols and $N_s - N_p$ data symbols.
+In each transmitter, a block data $\mathbf{s}_t$ is considered to send, including $N_p$ pilot symbols and $N_s - N_p$ data symbols.
 \begin{equation}
-S_t = \left[s(0), \ldots s\left(N_{p-1}\right), s\left(N_p\right), \ldots, s\left(N_s-1\right)\right]
+\mathbf{s}_t = \left[s(0), \ldots s\left(N_{p-1}\right), s\left(N_p\right), \ldots, s\left(N_s-1\right)\right]
 \end{equation}
 
 Pilot signals estimate the full set of channel inverse by the least-square method.
 \begin{equation}
-    \hat{G} = \arg \underset{\bar{G} \in \mathbb{C}^{LN \times KT}}{\min} \sum_{i=N-1}^{N_{p} - 1}\|\bar{S}(i)- \bar{G}^H X(i)\|_F^2 
+    \hat{\mathbf{G}} = \arg \underset{\bar{\mathbf{G}} \in \mathbb{C}^{LN \times KT}}{\min} \sum_{i=N-1}^{N_{p} - 1}\|\bar{\mathbf{s}}(i)- \bar{\mathbf{G}}^H \mathbf{x}(i)\|_F^2 
 \end{equation}
 
 The combining of pilot-based and blind MRE is a constrained optimization that can readily solve by the Lagrange multiplier method~\cite{bertsekas2014constrained}. The total cost function of SB-MRE will be
 \begin{equation}
 \label{eq:cost}
-    \mathcal{J}(\bar{G})=\sum_{i=N-1}^{N_{p} - 1}\|\bar{S}(i)- \bar{G}^H X(i)\|_F^2 +\lambda g^H \mathcal{R} g
+    \mathcal{L}(\bar{\mathbf{G}})=\sum_{i=N-1}^{N_{p} - 1}\|\bar{\mathbf{s}}(i)- \bar{\mathbf{G}}^H \mathbf{s}(i)\|_F^2 +\lambda \mathbf{g}^H \mathbf{R} \mathbf{g}
 \end{equation}
-with $\lambda$ is a weighting factor, $\mathcal{R}$ in the quadratic form of the blind MRE criterion as shown in Eq.~\ref{eq:R}, and $g$ is the vector form of $\bar{G}$.
+with $\lambda$ is a weighting factor, $\mathbf{R}$ in the quadratic form of the blind MRE criterion as shown in Eq.~\ref{eq:R}, and $g$ is the vector form of $\bar{\mathbf{G}}$.
 \begin{equation}
 \label{eq:vecG}
     \begin{aligned}
-        % g = \operatorname{vec}(\bar{G}) &=\left[\vec{G}_0^\top, \vec{G}_1^\top, \ldots, \vec{G}_{T-1}^\top\right]^\top \\
-        % \vec{G_t} &= \left[\begin{array}{ll}
-        % g_{t, 0}^\top, \cdots, g_{t, K-1}^\top
-        % \end{array}\right]^\top
-        g = \operatorname{vec}(\bar{G}) &=\left[\vec{G}_0^\top, \vec{G}_1^\top, \ldots, \vec{G}_{K-1}^\top\right]^\top \\
-        \vec{G_i} &= \left[\begin{array}{ll}
-        g_{0, i}^\top, g_{1, i}^\top, \cdots, g_{T-1, i}^\top
+        \mathbf{g} = \operatorname{vec}(\bar{\mathbf{G}}) &=\left[\vec{\mathbf{G}}_0^\top, \vec{\mathbf{G}}_1^\top, \ldots, \vec{\mathbf{G}}_{K-1}^\top\right]^\top \\
+        \vec{\mathbf{G}_i} &= \left[\begin{array}{ll}
+        \mathbf{g}_{0, i}^\top, \mathbf{g}_{1, i}^\top, \cdots, \mathbf{g}_{T-1, i}^\top
         \end{array}\right]^\top
     \end{aligned}
 \end{equation}
@@ -85,38 +82,38 @@ with $\lambda$ is a weighting factor, $\mathcal{R}$ in the quadratic form of the
 Without loss of generality, the least-square expression of Eq.~\ref{eq:cost} is conjugate transposed and the sum operator is turned into matrix forms of $\widetilde{S}$ and $\widetilde{X}$. The cost function is expressed as follows
 \begin{equation}
     \begin{aligned}
-    \mathcal{J}(\bar{G})&=\sum_{i=N-1}^{N_{p} - 1}\left\|{\bar{S}(i)^H}-X(i)^H \bar{G}\right\|^2_F +\lambda g^H \mathcal{R} g\\
-    &=\left\|\widetilde{S}^H-\widetilde{X}^H \bar{G}\right\|^2_F +\lambda g^H \mathcal{R} g
+    \mathcal{L}(\bar{\mathbf{G}})&=\sum_{i=N-1}^{N_{p} - 1}\left\|{\bar{\mathbf{s}}(i)^H}- \mathbf{x}(i)^H \bar{\mathbf{G}}\right\|^2_F +\lambda \mathbf{g}^H \mathbf{R} \mathbf{g}\\
+    &=\left\|\widetilde{\mathbf{S}}^H-\widetilde{\mathbf{X}}^H \bar{\mathbf{G}}\right\|^2_F +\lambda \mathbf{g}^H \mathbf{R} \mathbf{g}
     \end{aligned}
 \end{equation}
-where $\widetilde{S}, \widetilde{X}$ are the matrices of shape $\mathbb{C}^{KT \times (N_p -N +1)}$ and $ \mathbb{C}^{LN \times (N_p-N+1)}$, respectively.
+where $\widetilde{\mathbf{S}}, \widetilde{\mathbf{X}}$ are the matrices of shape $\mathbb{C}^{KT \times (N_p -N +1)}$ and $ \mathbb{C}^{LN \times (N_p-N+1)}$, respectively.
 \begin{equation*}
     \begin{aligned}
-        \widetilde{S} &= [\bar{S}(N-1), \ldots, \bar{S}\left(N_{p} - 1\right)] \\
-        \widetilde{X} &= [X(N-1), \ldots, X\left(N_{p} - 1\right)]
+        \widetilde{\mathbf{S}} &= [\bar{\mathbf{s}}(N-1), \ldots, \bar{\mathbf{s}}\left(N_{p} - 1\right)] \\
+        \widetilde{\mathbf{X}} &= [\mathbf{x}(N-1), \ldots, \mathbf{x}\left(N_{p} - 1\right)]
     \end{aligned}
 \end{equation*}
 
-The least-square expression is vectorized and thanks to the property for vector, i.e., $\operatorname{vec}(AXB) = (B^\top \otimes A) * \operatorname{vec}(X)$. The SB-MRE cost function turned into
+The least-square expression is vectorized and thanks to the property for vector, i.e., $\operatorname{vec}(\mathbf{AXB}) = (\mathbf{B}^\top \otimes \mathbf{A}) * \operatorname{vec}(\mathbf{X})$. The SB-MRE cost function turned into
 \begin{equation}
 \label{eq:cost_final}
     \begin{aligned}
-    \mathcal{J}(g) &= \left\|\operatorname{vec}(\widetilde{S}^H) - (I_{KT} \otimes \widetilde{X}^H) \operatorname{vec}(\bar{G})\right\|^2_F + \lambda g^H \mathcal{R} g\\
-         &= \left\| \bar{s} - A g \right\|^2_F + \lambda g^H \mathcal{R} g \\
-         &= g^H A^H A g + \left\| \bar{s} \right\|^2_F - 2\mathfrak{Re} (g^h A^H \bar{s}) + \lambda g^H \mathcal{R} g    \end{aligned}
+    \mathcal{L}(\mathbf{g}) &= \left\|\operatorname{vec}(\widetilde{\mathbf{S}}^H) - (\mathbf{I}_{KT} \otimes \widetilde{\mathbf{X}}^H) \operatorname{vec}(\bar{\mathbf{G}})\right\|^2_F + \lambda \mathbf{g}^H \mathbf{R} \mathbf{g}\\
+         &= \left\| \bar{\mathbf{s}} - \mathbf{A} \mathbf{g} \right\|^2_F + \lambda \mathbf{g}^H \mathbf{R} \mathbf{g} \\
+         &= \mathbf{g}^H \mathbf{A}^H \mathbf{A} \mathbf{g} + \left\| \bar{\mathbf{s}} \right\|^2_F - 2\Re (\mathbf{g}^h \mathbf{A}^H \bar{\mathbf{s}}) + \lambda \mathbf{g}^H \mathbf{R} \mathbf{g}    \end{aligned}
 \end{equation}
 
-In order to find minimum cost of Eq.~\ref{eq:cost_final}, let derivative $\mathcal{J}(g)$ with respect to $g$ as follows
+In order to find minimum cost of Eq.~\ref{eq:cost_final}, let derivative $\mathcal{L}(\mathbf{g})$ with respect to $\mathbf{g}$ as follows
 \begin{equation}
 \begin{aligned}
-\frac{\partial \mathcal{J}}{\partial g}(g) &= 0 \\
-\left(A^H A+\lambda \mathcal{R}\right) g &= A^H \bar{s}
+\frac{\partial \mathcal{L}}{\partial \mathbf{g}}(\mathbf{g}) &= 0 \\
+\left(\mathbf{A}^H \mathbf{A}+\lambda \mathbf{R}\right) \mathbf{g} &= \mathbf{A}^H \bar{\mathbf{s}}
 \end{aligned}
 \end{equation}
 
 The final equalizers matrix in vector form of the proposed SB-MRE method is obtained through
 \begin{equation}
-    g_{SB}=\left(A^H A + \lambda \mathcal{R}\right)^{-1} A^H \bar{s}
+    \mathbf{g}_{SB}=\left(\mathbf{A}^H \mathbf{A} + \lambda \mathbf{R}\right)^{-1} \mathbf{A}^H \bar{\mathbf{s}}
 \end{equation}
 
 \section{Đề xuất giảm thiểu chi phí của thuật toán SB-MRE}
@@ -127,15 +124,15 @@ In the ensuing,
 \subsection{Giảm thiểu độ phức tạp của thành phần B-MRE}
 In the original work, the overall complexity of the blind MRE method is $\mathcal{O}(LNKT)$~\cite{original}. All $K$ equalizers are estimated for each transmitter, but only one is used in the final. This burden computation is not necessary when $N$ becomes bigger. Hence, in this section, we considerably reduce the number of equalizers to 2, i.e., the $0$-th and \mbox{$(K-1)$-th} equalizer. Now, the overall complexity is $\mathcal{O}(LNT)$ and equalizers matrix for $t$-th transmitter is given by
 \begin{equation}
-    V_{t} = [g_{t, 0}, g_{t, K-1}]
+    \mathbf{V}_{t} = [\mathbf{g}_{t, 0}, \mathbf{g}_{t, K-1}]
 \end{equation}
 Followed by the estimated signal source of $t$-th transmitter will be
 \begin{equation}
-    V_t^H X(i) = [s_t(i), s_t(i-K+1)]^\top = S_{t}(i)
+    \mathbf{V}_t^H \mathbf{x}(i) = [s_t(i), s_t(i-K+1)]^\top = \mathbf{s}_{t}(i)
 \end{equation}
-Following that, we do not have to compute the full rank of $\mathcal{R}$ as the blind approach. Eq.~\ref{eq:U} is modified to
+Following that, we do not have to compute the full rank of $\mathbf{R}$ as the blind approach. Eq.~\ref{eq:U} is modified to
 \begin{equation*}
-U = \left(I_{T}, \mathbf{0}\right) \otimes X^{H}(i)-\left(\mathbf{0}, I_{T}\right) \otimes X^{H}(i+K-1)
+\mathbf{U} = \left(\mathbf{I}_{T}, \mathbf{0}\right) \otimes \mathbf{x}^{H}(i)-\left(\mathbf{0}, \mathbf{I}_{T}\right) \otimes \mathbf{x}^{H}(i+K-1)
 \end{equation*}
 // Proof 
 \subsection{Giảm thiểu độ dài chuỗi pilot}

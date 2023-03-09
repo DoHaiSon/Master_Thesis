@@ -3,17 +3,21 @@
 
 \addcontentsline{toc}{chapter}{{MỞ ĐẦU}}
 \chapter*{Mở đầu}
+\label{sec:intro}
+
 \noindent{\Large \textbf{Lý do chọn đề tài}}
 
 Theo~\cite{Mtawa2019}, trong năm 2021, chỉ riêng các thiết bị di động đã đòi hỏi tổng lưu lượng truy cập internet đạt 48,27 Petabytes/tháng, và tăng trưởng 46\% hàng năm. Tốc độ truy cập của các thế hệ mạng di động phổ biến ở Việt Nam như 4G là trung bình trên 28,2 Megabits/giây và tăng lên từ 29 đến 47\% hàng năm. Với sự ra trưởng nhanh chóng của số lượng các thiết bị di động và đòi hỏi về chất lượng nội dung của người dùng khiến yêu cầu về truyền tải nhanh và hiệu quả trong các hệ thống truyền thông không dây luôn là chủ đề nghiên cứu được quan tâm.
 
-Tuy nhiên, việc truyền tải không dây luôn gặp phải một hạn chế cố hữu đó là ảnh hưởng bởi kênh truyền vô tuyến. Để khắc phục nhược điểm này, ngay từ các thế hệ mạng di động đầu tiên như 2G~\cite{Tse2005}, các chuỗi tín hiệu hoa tiêu (pilot sequence) được biết trước ở cả bên phát và thu đã được sử dụng để ước lượng sự ảnh hưởng của kênh truyền và khôi phục dạng tín hiệu ở bên thu (NB - Non-blind)~\cite{ljung1999system}. Đến thế hệ mạng di động 4G, 5G, và cao hơn, việc truyền tải đơn ăng-ten (antenna) đã được thay thế bằng các hệ thống đa đầu vào đa đầu ra (MIMO - Multi-input multi-output) hay lớn hơn nữa là MIMO kích thước lớn (mMIMO - massive MIMO). Điều này khiến việc ước lượng kênh truyền trong các hệ thống MIMO, mMIMO trở nên phức tạp, yêu cầu các chuỗi pilot dài hơn~\cite{Michelusi2009}, dẫn đến hiệu quả về mặt phổ thời gian tần số của việc truyền tải bị giảm đi. 
+Tuy nhiên, việc truyền tải không dây luôn gặp phải một hạn chế cố hữu đó là ảnh hưởng bởi kênh truyền vô tuyến là biến dạng tín hiệu.
+``\textbf{Nhận dạng hệ thống truyền thông}'' được hiểu là ước lượng sự ảnh hưởng của kênh truyền vô tuyến đến việc truyền nhận tín hiệu, gọi ngắn gọn là ``ước lượng kênh truyền''.
+Ngay từ các thế hệ mạng di động đầu tiên như 2G~\cite{Tse2005}, các chuỗi tín hiệu hoa tiêu (pilot sequence) được biết trước ở cả bên phát và thu đã được sử dụng để ước lượng sự ảnh hưởng của kênh truyền và khôi phục dạng tín hiệu ở bên thu (NB - Non-blind)~\cite{ljung1999system}. Đến thế hệ mạng di động 4G, 5G, và cao hơn, việc truyền tải đơn ăng-ten (antenna) đã được thay thế bằng các hệ thống đa đầu vào đa đầu ra (MIMO - Multi-input multi-output) hay lớn hơn nữa là MIMO kích thước lớn (mMIMO - massive MIMO). Điều này khiến việc ước lượng kênh truyền trong các hệ thống MIMO, mMIMO trở nên phức tạp, yêu cầu các chuỗi pilot dài hơn~\cite{Michelusi2009}, dẫn đến hiệu quả về mặt phổ thời gian tần số của việc truyền tải bị giảm đi. 
 
 Nhiều phương pháp nghiên cứu đã được đề xuất để giảm thiểu số lượng pilot cần thiết cho việc ước lượng kênh truyền. Mà tiêu biểu trong số đó là ba hướng tiếp cận: 
 \begin{enumerate}
     \item Các thuật toán nhận dạng ``mù'' (B - blind) ở đây được hiểu là khi xử lý (nhận dạng), bộ xử lý ``không nhìn thấy'' (không có thông tin) của đầu vào. Các thuật toán xử lý tín hiệu mù phát triển mạnh trong thập kỷ 90~\cite{abed1997}, tuy nhiên các phương pháp xử lý mù thường yêu cầu các thông số thống kê của tín hiệu mà thông thường không biết trước trong các hệ thống truyền thông thực, hơn nữa, độ chính xác mà các thuật toán này đưa ra cũng thấp hơn đáng kể khi so sánh với các phương pháp sử dụng pilot truyền thống. Do vậy, các thuật toán mù cũng ít được quan tâm trong những thế hệ mạng viễn thông di động trước 5G.
 
-    \item Các thuật toán nhận dạng ``bán mù'' (SB - Semi-blind) là phương pháp cải tiến của B và được quan tâm trong các năm gần đây~\cite{Ladaycia2017, Ladaycia2019, shaik2021}. Đây là kỹ thuật kết hợp các thông tin từ hướng tiếp cận mù truyền thống và các dạng thông tin khác, ví dụ~\cite{rekik}: số lượng nhỏ pilot, hướng sóng đến (DoA - Direction of Arrival), toạ độ người dùng, \ldots Điều này giúp giảm đi số lượng pilot cần thiết cho việc nhận dạng hệ thống nhằm tăng hiệu quả phổ nhưng vẫn giữ được độ chính xác cần thiết, giảm độ phức tạp, và cho khả năng ứng dụng rộng rãi hơn.
+    \item Các thuật toán nhận dạng ``bán mù'' (SB - Semi-blind) là phương pháp cải tiến của B và được quan tâm trong các năm gần đây~\cite{Ladaycia2017, Ladaycia2019, shaik2021}. Đây là kỹ thuật kết hợp các thông tin từ hướng tiếp cận mù truyền thống và các dạng thông tin khác, ví dụ~\cite{Rekik2021}: số lượng nhỏ pilot, hướng sóng đến (DoA - Direction of Arrival), toạ độ người dùng, \ldots Điều này giúp giảm đi số lượng pilot cần thiết cho việc nhận dạng hệ thống nhằm tăng hiệu quả phổ nhưng vẫn giữ được độ chính xác cần thiết, giảm độ phức tạp, và cho khả năng ứng dụng rộng rãi hơn.
 
     \item Các thuật toán nhận dạng sử dụng học máy, học sâu (ML - Machine learning; DL - Deep learning) cũng là lĩnh vực nghiên cứu dành được nhiều sự quan tâm~\cite{Zhang2019} trong các năm gần đây. Ưu điểm của các kỹ thuật sử dụng ML, DL là tính đa dạng, khi hướng tiếp cận ML, DL sử dụng cho mục đích xử lý các loại tín hiệu như hình ảnh, âm thanh đã đạt được các bước tiến rõ rệt. Đầu vào của các mạng DL được sử dụng để nhận dạng hệ thống rất linh hoạt, có thể tương ứng với cả ba hướng tiếp cận: pilot, mù, và bán mù kể trên. Sau quá trình huấn luyện, các mô hình (model) học máy có thể hoạt động độc lập như một bộ cân bằng mù/bán mù, khi chỉ cần đưa các tín hiệu thu được đi qua model, và các tín hiệu được khôi phục sẽ được trả về mà không cần đến các chuỗi pilot, hay thông tin về trạng thái kênh truyền (CSI - Channel state information).
 \end{enumerate}
@@ -61,12 +65,15 @@ Với sự hiểu biết của học viên, những kết quả nghiên cứu tr
 
 \renewcommand{\labelitemi}{$-$}
 \begin{itemize}
-	\item 
-	\item 
-	\item 
-	\item
-	\item 
+	\item Tổng quan về các thuật toán nhận dạng hệ thống truyền thông MIMO kích thước lớn.
+	\item Đề xuất thuật toán SB-MRE cho ước lượng kênh truyền.
+	\item Đề xuất một mạng học sâu ISD cho việc ước lượng kênh truyền của hệ thống mMIMO.
 \end{itemize} 
+
+Kết quả nghiên cứu trong khuôn khổ luận văn đã được công bố trên \ldots
+\begin{enumerate}
+    \item 
+\end{enumerate}
 
 \noindent{\Large \textbf{Bố cục của luận văn}}
 \vspace{0.5cm}
