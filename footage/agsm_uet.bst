@@ -367,7 +367,7 @@ FUNCTION {format.vol.num.pages}
   pages empty$
     'skip$
     { duplicate$ empty$
-	{ pp.~ pop$ format.pages }
+	{ pop$ format.pages }
 	{ ", pp.~" * pages n.dashify * }
       if$
     }
