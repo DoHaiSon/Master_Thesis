@@ -5,10 +5,321 @@
 \chapter[NHẬN DẠNG HỆ THỐNG SỬ DỤNG MẠNG HỌC SÂU]{Nhận dạng hệ thống sử dụng mạng học sâu}
 \label{sec:ML}
 
-\section{Giới thiệu về mạng học sâu DetNet}
+Trong chương này, tác giả sẽ đề xuất một mô hình mạng học sâu ISD sử dụng cho nhận dạng hệ thống viễn thông MIMO/mMIMO. Đầu tiên, sơ lược về hai hướng tiếp cận sử dụng mạng nơ-ron học sâu sẽ được trình bày, trong đó chi tiết về mô hình mạng DetNet sẽ được đưa ra. Sau đó, từ một mô hình mạng ISD đã được đề xuất trước đó, kết hợp với cách tiếp cận của mạng DetNet kể trên, tác giả sẽ đề xuất một mạng học sâu ISD cải tiến để nhận dạng hệ thống. Các bước mô phỏng và đánh giá sẽ được đưa ra để cho thấy tiềm năng của phương pháp đề xuất và đưa ra kết luận của chương. 
+
+\section{Giới thiệu về mạng nơ-ron học sâu DetNet}
+
+Trong chương~\ref{sec:back}, các phương pháp nhận dạng hệ thống sử dụng các phương pháp ML/DL đã được chia làm ba loại, trong đó phương pháp sử dụng các mạng nơ-ron đang được quan tâm nghiên cứu. Các mạng nơ-ron sâu (DNN - Deep-neural network) đã được sử rụng rộng rãi trong các ứng dụng như xử lý tiếng nói, ngôn ngữ tự nhiên, hình ảnh, thị giác máy, trò chơi trực tuyến~\cite{Samek2021}. Mười năm trở lại đây, nhiều nghiên cứu ứng dụng các mô hình mạng DNN khác nhau cho nhận dạng hệ thống viễn thông không dây. Có thể chia các phương pháp này thành hai kiểu chính, bao gồm hướng dữ liệu (data-driven) và hướng mô hình (model-driven)~\cite{Liao2020}. Các phương pháp data-driver trực tiếp học các đặc trưng từ một tập lớn các dữ liệu (dataset) để phục vụ cho các mục đích như ước lượng kênh truyền, phản hồi CSI,~\ldots. Tuy các phương pháp data-driven được đề xuất đều cho độ chính xác cao nhưng vẫn có những thách thức khi yêu cầu số lượng mẫu rất lớn và kéo theo đó là thời gian cho việc đào tạo lâu. Các phương pháp model-driven~\cite{He2019} có thể một phần khắc phục các hạn chế này bằng việc tối ưu/đưa thêm các tham số học bằng DL vào các một hình có sẵn để kết hợp ưu điểm của data-driven và các mô hình toán học truyền thống. Trong số các phương pháp data-driven, mô hình mạng nơ-ron sâu DetNet sẽ được trình bày ngắn gọn dưới đây do trong mô hình đề xuất có một phần ý tưởng xuất phát từ mạng DNN DetNet.
+
+Xét hệ thống MIMO/mMIMO tương tự đã trình bày ở hình~\ref{fig:sys_model}. Tuy nhiên, thay vì mô hình hoá tín kênh truyền vô tuyến dưới dạng các bộ lọc FIR có chiều dài $M+1$, trong DNN, giả sử: (i) ma trận $\mathbf{H}$ là biến đổi tuyến tính của tín hiệu truyền thành tín hiệu nhận được, (ii) $N=1$ tức mỗi ăng-ten nhận chỉ thu thập một ký hiệu tại một thời điểm, (iii) các ma trận sẽ được chuyển đổi sang dạng phần thực, ảo riêng biệt như phương trình (\ref{eq:matrixtras1}) và (\ref{eq:matrixtras2}). Biểu diễn đơn giản cho hệ thống MIMO/mMIMO như sau
+
+\begin{equation}
+    \mathbf{x} = \mathbf{H} \mathbf{s} + \mathbf{w}
+\end{equation}
+trong đó, $\mathbf{H} \in \mathbb{R}^{2L \times 2T}$, $\mathbf{s} \in \mathbb{R}^{2T}$, $\mathbf{w} \in \mathbb{R}^{2T}$, và $\mathbf{x} \in \mathbb{R}^{2L}$.
+
+\begin{equation}
+    \mathbf{H}^\top \mathbf{x}=\mathbf{H}^\top \mathbf{H s}+\mathbf{H}^\top \mathbf{w}
+\end{equation}
+
+\begin{equation}
+    \begin{aligned}
+    \hat{\mathbf{s}}_{k+1} & =\Pi\left[\hat{\mathbf{s}}_k-\left.\delta_k \frac{\partial\|\mathbf{x}-\mathbf{H} \mathbf{s}\|^2}{\partial \mathbf{s}}\right|_{\mathbf{s}=\hat{\mathbf{s}}_k}\right] \\
+    & =\Pi\left[\hat{\mathbf{s}}_k-\delta_k \mathbf{H}^\top \mathbf{x}+\delta_k \mathbf{H}^\top \mathbf{H} \hat{\mathbf{s}}_k\right]
+    \end{aligned}
+\end{equation}
+
+\begin{equation}
+    \Pi\left(\mathbf{s}_0\right)=\arg \min _{\mathbf{s} \in \Phi^L}\left\|\mathbf{s}-\mathbf{s}_0\right\|^2
+\end{equation}
+
+\begin{subequations}
+\begin{alignat}{4}
+    \mathbf{z}_k & =\rho\left(\mathbf{W}_{1 k}\left[\begin{array}{c}
+    \mathbf{H}^\top \mathbf{x} \\
+    \hat{\mathbf{s}}_k \\
+    \mathbf{H}^\top \mathbf{H} \hat{\mathbf{s}}_k \\
+    \mathbf{v}_k
+    \end{array}\right]+\mathbf{b}_{1 k}\right) \\
+    \hat{\mathbf{s}}_{k+1} & =\psi_{t_k}\left(W_{2 k} \mathbf{z}_k+b_{2 k}\right) \\
+    \hat{\mathbf{v}}_{k+1} & =W_{3 k} \mathbf{z}_k+ b_{3 k} \\
+    \hat{\mathbf{s}}_1 & =\mathbf{0}
+\end{alignat}
+\end{subequations}
+
+\begin{equation}
+    \psi_{t_k}(s)=-1+\frac{\rho\left(s + t_k \right)}{\left|t_k\right|}-\frac{\rho\left(s- t_k \right)}{\left|t_k\right|}
+\end{equation}
+
+\begin{equation}
+    l(\mathbf{s} ; \tilde{\mathbf{s}}(\mathbf{H}, \mathbf{x}))=\sum_{i=1}^L \log (i) \frac{\left\|\mathbf{s}-\hat{\mathbf{s}}_k\right\|^2}{\|\mathbf{s}-\tilde{\mathbf{s}}\|^2}
+\end{equation}
+
+\begin{equation}
+    \tilde{\mathbf{s}}=\left(\mathbf{H}^\top \mathbf{H}\right)^{-1} \mathbf{H}^\top \mathbf{x}
+\end{equation}
+
+\begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}
+        \node (B11) [field6, fill=red!10!white] at (0, 0) {$\mathbf{H}^\top \mathbf{x}$};
+        \node (B21) [below=10mm of B11, field6, fill=red!10!white] {$\mathbf{v}_k$};
+        \node (B31) [below=10mm of B21, field6, fill=red!10!white] {$\mathbf{s}_k$};
+        \node (B41) [below=10mm of B31, field6, fill=red!10!white] {$\mathbf{H}^\top \mathbf{H}$};
+
+        
+        \node (B32) [right=10mm of B31.south east, anchor=north, circle, fill=blue!10!white, draw=black] {$\times$}; 
+        \node (B22) [right=25mm of B21, circle, fill=blue!10!white, draw=black] {$\operatorname{con}$};
+        \node (B33) [below=11mm of B22, circle, fill=blue!10!white, draw=black] {$\times$};
+        \node (B34) [below=4mm of B33, field8, fill=green!10!white, draw=black] {$W_{1k}$};
+        \node (B35) [right=7mm of B33, circle, fill=blue!10!white, draw=black] {$+$};
+        \node (B36) [below=4mm of B35, field8, fill=green!10!white, draw=black] {$b_{1k}$};
+
+        \node (B37) [circle, fill=blue!10!white, draw=black] at (70mm, -30mm) {$\rho$};
+        \node (B38) [right=40mm of B33, circle, fill=blue!10!white, draw=black] {$\times$};
+        \node (B39) [below=4mm of B38, field8, fill=green!10!white, draw=black] {$W_{2k}$};
+        \node (B310) [right=7mm of B38, circle, fill=blue!10!white, draw=black] {$+$};
+        \node (B311) [below=4mm of B310, field8, fill=green!10!white, draw=black] {$b_{2k}$};
+        \node (B312) [right=7mm of B310, circle, fill=blue!10!white, draw=black] {$\Psi$};
+
+        \node (B23) [above=24.2mm of B39, circle, fill=blue!10!white, draw=black] {$\times$};
+        \node (B24) [right=7mm of B23, circle, fill=blue!10!white, draw=black] {$+$};
+        \node (B25) [above=4mm of B23, field8, fill=green!10!white, draw=black] {$W_{3k}$};
+        \node (B26) [above=4mm of B24, field8, fill=green!10!white, draw=black] {$b_{3k}$};
+
+        \node (Bvk1) [right=123mm of B21, field6, fill=red!10!white] {$\mathbf{v}_{k+1}$};
+        \node (Bxk1) [right=123mm of B31, field6, fill=red!10!white] {$\mathbf{s}_{k+1}$};
+
+        \draw[arrow] (B312) -- (Bxk1);
+        \draw[arrow] (B24) -- (Bvk1);
+        \draw[arrow] (B310) -- (B312);
+        \draw[arrow] (B38) -- (B310);
+        \draw[arrow] (B23) -- (B24);
+        \draw[arrow] (B25) -- (B23);
+        \draw[arrow] (B26) -- (B24);
+        \draw[arrow] (B311) -- (B310);
+        \draw[arrow] (B39) -- (B38);
+        \draw[arrow] (B33) -- (B35);
+        \draw[arrow] (B36) -- (B35);
+        \draw[arrow] (B34) -- (B33);
+        \draw[arrow] (B22) -- (B33);
+
+        \draw[arrow] (B21) -- (B22);
+        \draw[line] (B11) -- ([yshift=-3mm]B11.south);
+        \draw[arrow] ([yshift=-3mm]B11.south) -| (B22);
+        \draw[line] (B31) -- ([xshift=3mm]B31.east);
+        \draw[arrow] ([xshift=3mm]B31.east) |- ([yshift=-1.5mm]B22.west);
+        \draw[line] (B32) -- ([xshift=3mm]B32.east);
+        \draw[arrow] ([xshift=3mm]B32.east) |- ([yshift=-3mm]B22.west);
+
+        \draw[arrow] (B31) |- ([yshift=3mm]B32);
+        \draw[arrow] (B41) |- ([yshift=-3mm]B32);
+
+        \draw[arrow] (B37) |- (B38);
+        \draw[arrow] (B37) |- (B23);
+        \draw[arrow] (B35) |- (B37);
+        
+        \draw[arrow] (B41) -- (150mm, -60mm);
+        \draw[arrow] (Bvk1) -- (150mm, -20mm);
+        \draw[arrow] (Bxk1) -- (150mm, -41mm);
+        \draw[arrow] (B11) -- (150mm, 0mm);
+
+        % Legends
+        \node[rectangle, draw=black, dashed, fill=black!5!white, minimum width=140mm, minimum height=35mm] at (70mm, -85mm) {};
+
+        \node (B51) [field6, fill=red!10!white] at (22mm, -78mm) {Giá trị \\đầu vào/đầu ra};
+
+        \node (B61) [below=4mm of B51, field8, fill=green!10!white, draw=black] {Giá trị học};
+
+        \node (B52) [right=7mm of B51, circle, fill=blue!10!white, draw=black] {$\times$};
+        \draw[arrow] (B52) -- ([xshift=3mm]B52.east) node [pos=0, right=3mm] {Nhân};
+
+        \node (B53) [below=7mm of B52, circle, fill=blue!10!white, draw=black] {$+$};
+        \draw[arrow] (B53) -- ([xshift=3mm]B53.east) node [pos=0, right=3mm] {Cộng};
+
+        \node (B54) [right=20mm of B52, circle, fill=blue!10!white, draw=black] {$\rho$};
+        \draw[arrow] (B54) -- ([xshift=10mm]B54.east) node [pos=0, right=10mm, above, label={below}:{tuyến tính}] {Toán tử};
+
+        \node (B55) [right=20mm of B53, circle, fill=blue!10!white, draw=black] {$\Psi$};
+        \draw[arrow] (B55) -- ([xshift=10mm]B55.east) node [pos=0, right=11mm, above, label={below}:{phi tuyến tính}] {Toán tử};
+
+        \node (B56) [right=28mm of B54, circle, fill=blue!10!white, draw=black] {$\operatorname{con}$};
+        \draw[arrow] (B56) -- ([xshift=3mm]B56.east) node [pos=0, right=3mm] {Nối};
+         
+    \end{tikzpicture}
+    \caption{Kiến trúc của một lớp trong mô hình mạng DetNet~\cite{Samuel2017}.}
+    \label{fig:detnet}
+\end{figure}
 
 \section{Đề xuất mạng học sâu ISD cho ước lượng kênh truyền}
 
+\begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}
+        \node (B11) [field6, fill=red!10!white] at (0, 0) {$\mathbf{V}_0$};
+        \node (B21) [below=10mm of B11, field6, fill=red!10!white] {$\mathbf{\Phi}_0$};
+        \node (B31) [below=10mm of B21, field6, fill=red!10!white] {$\mathbf{H}^\top \mathbf{H}$};
+        \node (B41) [below=10mm of B31, field6, fill=red!10!white] {$\mathbf{H}^\top \mathbf{y}$};
+        \node (B51) [below=10mm of B41, field6, fill=red!10!white] {$\mathbf{D}^{-1}$};
+
+        \node (B12) [right=5mm of B11, circle, fill=blue!10!white, draw=black] {$\times$};
+        \node (B13) [right=5mm of B12, circle, fill=blue!10!white, draw=black] {$+$};
+        \node (B14) [right=5mm of B13, circle, fill=blue!10!white, draw=black] {$\times$};
+        \node (B15) [right=5mm of B14, circle, fill=blue!10!white, draw=black] {$+$};
+        \node (B16) [right=5mm of B15, circle, fill=blue!10!white, draw=black] {$\times$};
+        \node (B17) [right=18mm of B16, field8, fill=green!10!white, draw=black] {$\alpha^2_0$};
+        \node (B18) [right=5mm of B17, circle, fill=blue!10!white, draw=black] {$\times$};
+
+        \node (B61) [below=4mm of B12, field8, fill=green!10!white, draw=black] {$W_{10}$};
+        \node (B62) [below=4mm of B13, field8, fill=green!10!white, draw=black] {$b_{10}$};
+        \node (B63) [below=4mm of B14, field8, fill=green!10!white, draw=black] {$W_{20}$};
+        \node (B64) [below=4mm of B15, field8, fill=green!10!white, draw=black] {$b_{20}$};
+        \node (B65) [below=4mm of B16, field8, fill=green!10!white, draw=black] {$\alpha^1_0$};
+
+        \node (B22) [right=75mm of B21, circle, fill=blue!10!white, draw=black] {$+$};
+        \node (B23) [below=12mm of B18, circle, fill=blue!10!white, draw=black] {$+$};
+        \node (B24) [right=5mm of B23, circle, fill=blue!10!white, draw=black] {$\rho$};
+
+        \node (B25) [below=4mm of B23, circle, fill=blue!10!white, draw=black] {$\times$};
+        \node (B26) [below=4mm of B25, field8, fill=green!10!white, draw=black] {$1 - \alpha^2_0$};
+
+        \node (B32) [right=5mm of B31, circle, fill=blue!10!white, draw=black] {$\times$};
+        \node (B42) [right=5mm of B41, circle, fill=blue!10!white, draw=black] {$-$};
+        \node (B52) [right=5mm of B51, circle, fill=blue!10!white, draw=black] {$\times$};
+
+        \node (Phi1) [right=123mm of B21, field6, fill=red!10!white] {$\Phi_1$};
+        \node (V1) [right=123mm of B51, field6, fill=red!10!white] {$\mathbf{V}_{1}$};
+
+        \draw[arrow] (B11) -- (B12);
+        \draw[arrow] (B12) -- (B13);
+        \draw[arrow] (B13) -- (B14);
+        \draw[arrow] (B14) -- (B15);
+        \draw[arrow] (B15) -- (B16);
+        \draw[arrow] (B17) -- (B18);
+        
+        \draw[arrow] (B61) -- (B12);
+        \draw[arrow] (B62) -- (B13);
+        \draw[arrow] (B63) -- (B14);
+        \draw[arrow] (B64) -- (B15);
+        \draw[arrow] (B65) -- (B16);
+
+        \draw[arrow] (B21) -- (B22);
+        \draw[arrow] (B31) -- (B32);
+        \draw[arrow] (B41) -- (B42);
+        \draw[arrow] (B51) -- (B52);
+        \draw[arrow] (B52) -- (V1);
+
+        \draw[arrow] (B18) -- (B23);
+        \draw[arrow] (B23) -- (B24);
+        \draw[arrow] (B24) -- (Phi1);
+
+        \draw[arrow] (B16) -| (B22);
+        \draw[arrow] (B25) -- (B23);
+        \draw[arrow] (B26) -- (B25);
+        \draw[line] (B22) -- ([xshift=3mm]B22.east);
+        \draw[arrow] ([xshift=3mm]B22.east) |- (B25);
+        \draw[line] (V1) -- ([yshift=15mm]V1.north);
+        \draw[arrow] ([yshift=15mm]V1.north) -| (B22);
+
+        \draw[arrow] (B21) -| (B32);
+        \draw[arrow] (B32) -- (B42);
+        \draw[arrow] (B42) -- (B52);
+
+        \draw[line] (B21) -| ([xshift=-3mm, yshift=28mm]B21.west);
+        \draw[arrow] ([xshift=-3mm, yshift=28mm]B21.west) -| (B18);
+
+        \draw[arrow] (Phi1) -- ([xshift=3mm]Phi1.east);
+        \draw[arrow] (V1) -- ([xshift=3mm]V1.east);
+
+        % Legends
+        \node[rectangle, draw=black, dashed, fill=black!5!white, minimum width=100mm, minimum height=35mm] at (70mm, -105mm) {};
+
+        \node (B51) [field6, fill=red!10!white] at (37mm, -97mm) {Giá trị \\đầu vào/đầu ra};
+
+        \node (B61) [below=4mm of B51, field8, fill=green!10!white, draw=black] {Giá trị học};
+
+        \node (B52) [right=7mm of B51, circle, fill=blue!10!white, draw=black] {$\times$};
+        \draw[arrow] (B52) -- ([xshift=3mm]B52.east) node [pos=0, right=3mm] {Nhân};
+
+        \node (B53) [below=7mm of B52, circle, fill=blue!10!white, draw=black] {$+$};
+        \draw[arrow] (B53) -- ([xshift=3mm]B53.east) node [pos=0, right=3mm] {Cộng};
+
+        \node (B54) [right=20mm of B52, circle, fill=blue!10!white, draw=black] {$\rho$};
+        \draw[arrow] (B54) -- ([xshift=10mm]B54.east) node [pos=0, right=10mm, above, label={below}:{tuyến tính}] {Toán tử};
+
+        \node (B55) [right=20mm of B53, circle, fill=blue!10!white, draw=black] {$-$};
+        \draw[arrow] (B55) -- ([xshift=3mm]B55.east) node [pos=0, right=3mm] {Trừ};
+    \end{tikzpicture}
+    \caption{Kiến trúc của lớp đầu tiên trong mô hình mạng ISD đề xuất.}
+    \label{fig:ISD}
+\end{figure}
+
+\begin{algorithm}[ht]
+    \caption{Iterative Sequential Algorithm Detection~\cite{Mandloi2017}.}\label{alg:cap}
+    \begin{algorithmic}[1]
+        \Require $y, H, N, \sigma^2, E_x, K, L$
+        \Ensure $x_{fin} = \Phi_L^{2K}$
+        \State $G \gets H^TH$
+        \State $A \gets G + \frac{\sigma^2}{E_x} \mathbf{I}_{2K}$
+        \State $\Phi_0 \gets x_{in} = \mathbf{D}^{-1} \mathbf{b}$ \\
+        \For{ $i=0, i < L$}
+            \For{ $j=0, j < L$}
+                \State $\phi_i(j+1) \leftarrow \phi_i(j)+\frac{1}{\mathbf{G}(j, j)}\left(\mathbf{b}(j)-\sum_{k=1}^{2 K} \mathbf{G}(j, k) \phi_i(k)\right)$ \\ 
+                \State $\Phi_{i+1}^j \leftarrow\left[\phi_{i+1}(1) . . \phi_{i+1}(j), \phi_i(j+1) . . \phi_i(2 K)\right]$
+            \EndFor
+        \EndFor
+    \end{algorithmic}
+\end{algorithm}
+
 \section{Mô phỏng và đánh giá}
+
+\subsection{Tạo bộ dữ liệu}
+
+\begin{table}[ht]
+    \centering
+    \caption{So sánh độ phức tạp của các thuật toán nhận dạng kênh truyền.}
+    \label{tab:computational}
+    \begin{tabular}{|l|c|c|}
+    \hline
+    \multicolumn{1}{|c|}{Detector} & Computational complexity & Trainable parameters \\ \hline
+    ZF & $\mathcal{O}$ ($NK^3$) &  \\ \hline
+    MMSE & $\mathcal{O}$ ($NK^3$) &  \\ \hline
+    ML & $\mathcal{O}$ ($NK^3$) &  \\ \hline
+    DetNet~\cite{Samuel2019} & $\mathcal{O}$ ($NK^2$) & 249600 \\ \hline
+    Proposed ISD & $\mathcal{O}$ ($NK^2$) & 12 \\ \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}
+    \centering
+    \caption{Các tham số mô phỏng kênh truyền vô tuyến.}
+    \label{tab:simu_param}
+    \begin{tabular}{p{8cm}|p{6cm}} 
+    \hline
+    \hline
+    \multicolumn{1}{c|}{\textbf{Thông số mô phỏng}} & \multicolumn{1}{c} {\textbf{Giá trị}} \\ 
+    \hline
+    m-MIMO & $N = 8~\text{txs}, K =64~\text{rxs}$ \\ 
+    \hline
+    Modulation & QAM-16\\
+    \hline
+    SNR for training & $[0, 5, 10, 15, 20]$~dB \\ 
+    \hline
+    Size of training data & 50,000 \\ 
+    \hline
+    Size of testing data & 10,000 \\ 
+    \hline
+    Optimization method & ADAM \\ 
+    \hline
+    Starting learning rate & 0.0001 \\ 
+    \hline
+    Number of iterations & 200,000 \\
+    \hline
+    \end{tabular}
+\end{table}
+
+\subsection{Đánh giá sự hội tụ của mạng ISD}
+
+\subsection{Đánh giá mô hình được đào tạo}
 
 \section{Kết luận chương}

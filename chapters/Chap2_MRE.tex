@@ -2,14 +2,14 @@
 \phantomsection
 
 \setcounter{chapter}{1}
-\chapter[{NHẬN DẠNG KÊNH TRUYỀN SỬ DỤNG THUẬT TOÁN BÁN MÙ MRE}]{Nhận dạng kênh truyền sử dụng thuật toán bán mù MRE}
+\chapter[{NHẬN DẠNG HỆ THỐNG SỬ DỤNG THUẬT TOÁN BÁN MÙ MRE}]{Nhận dạng hệ thống sử dụng thuật toán bán mù MRE}
 \label{sec:MRE}
 
-Trong chương này, tác giả sẽ trình bày các tìm hiểu sơ lược về một thuật toán ước lượng kênh truyền mù truyền thống là bộ cân bằng kênh tham chiếu (MRE - Mutually referenced equalizers). Trước hết, B-MRE sẽ được phát triển để hoạt động với các hệ thống MIMO. Sau đó, phương pháp SB-MRE được đề xuất bằng cách sử dụng thêm một số lượng nhỏ pilot cùng với thông tin từ B-MRE. Sau đó, các hai phương pháp nhằm giảm thiểu chi phí của thuật toán SB-MRE được đề xuất, bao gồm giảm độ phức tạp của B-MRE và giảm thiểu độ dài chuỗi pilot. Cuối cùng, các mô phỏng được thực hiện để kiểm chứng thuật toán đề xuất và đưa ra kết luận.
+Trong chương này, trước hết, tác giả sẽ trình bày các tìm hiểu sơ lược về một thuật toán ước lượng kênh truyền mù truyền thống là bộ cân bằng kênh tham chiếu (MRE - Mutually referenced equalizers). Giải thuật B-MRE sẽ được phát triển để hoạt động với các hệ thống MIMO. Sau đó, phương pháp SB-MRE được đề xuất bằng cách sử dụng thêm một số lượng nhỏ pilot cùng với thông tin từ B-MRE. Sau đó, các hai phương pháp nhằm giảm thiểu chi phí của thuật toán SB-MRE được đề xuất, bao gồm giảm độ phức tạp của B-MRE và giảm thiểu độ dài chuỗi pilot. Cuối cùng, các mô phỏng được thực hiện để kiểm chứng thuật toán đề xuất và đưa ra kết luận.
 
 \section{Sơ lược về thuật toán B-MRE}
 
-Trong luận văn này, thuật toán bộ cân bằng kênh tham chiếu (MRE - Mutually referenced equalizers)~\cite{original} được lựa chọn để phát triển theo hướng tiếp cận SB. Giải thuật gốc đã được đề xuất từ năm 1997 bởi Gesbert D. và các đồng tác giả. Lý do lựa chọn MRE là phương pháp này có tốc độ xử lý nhanh, đảm bảo điều kiện hội tụ toàn phần, và đặc biệt có nhiều phương pháp thực thi, có thể kể đến như nhóm (batch), bình phương nhỏ nhất (LMS - Least mean squares),~\ldots. Kể từ năm 1997, nhiều công bố đã được đề xuất nhằm cải thiện giải thuật B-MRE. Trong~\cite{GesbertSPAWC}, các tác giả đã đề xuất phương pháp thực thi bình phương nhỏ nhất đệ quy (RLS - Recursive least squares) hiệu quả cho B-MRE. Tiếp đến, Gasbert D. và các đồng tác giả~\cite{Gesbert1997} tiếp tục trình bày ý tưởng về một phiên bản cải tiến hỗ trợ MIMO của B-MRE. Năm 2000, J. van der Veen và các cộng sự~\cite{Veen2000} đã đề xuất cải thiện hiệu suất của phương pháp nhận dạng mù bằng việc kết hợp thuật toán B-MRE với một thuật toán mù khác là CMA~\cite{Treichler1983} cho các hệ thống SIMO. Đến năm 2015,~\cite{Yu2015} đã trình bày ý tưởng về việc giảm thiểu số lượng bộ lọc cần ước lượng của B-MRE từ $K$ về chỉ $2$ bộ lọc. Qua đó giảm đáng kể độ phức tạp của thuật toán tuy nhiên phải đánh đổi một phần đổi chính xác. Sau hơn 20 năm phát triển, B-MRE vẫn còn các điểm hạn chế cố hữu cần được giải quyết như sau
+Trong luận văn này, thuật toán bộ cân bằng kênh tham chiếu (MRE - Mutually referenced equalizers)~\cite{original} được lựa chọn để phát triển theo hướng tiếp cận SB. Giải thuật gốc đã được đề xuất từ năm 1997 bởi Gesbert D. và các đồng tác giả. Lý do lựa chọn MRE là phương pháp này có tốc độ xử lý nhanh, đảm bảo điều kiện hội tụ toàn phần, và đặc biệt có nhiều phương pháp thực thi, có thể kể đến như nhóm (batch), trung bình bình phương nhỏ nhất (LMS - Least mean squares),~\ldots. Kể từ năm 1997, nhiều công bố đã được đề xuất nhằm cải thiện giải thuật B-MRE. Trong~\cite{GesbertSPAWC}, các tác giả đã đề xuất phương pháp thực thi bình phương nhỏ nhất đệ quy (RLS - Recursive least squares) hiệu quả cho B-MRE. Tiếp đến, Gasbert D. và các đồng tác giả~\cite{Gesbert1997} tiếp tục trình bày ý tưởng về một phiên bản cải tiến hỗ trợ MIMO của B-MRE. Năm 2000, J. van der Veen và các cộng sự~\cite{Veen2000} đã đề xuất cải thiện hiệu suất của phương pháp nhận dạng mù bằng việc kết hợp thuật toán B-MRE với một thuật toán mù khác là CMA~\cite{Treichler1983} cho các hệ thống SIMO. Đến năm 2015,~\cite{Yu2015} đã trình bày ý tưởng về việc giảm thiểu số lượng bộ lọc cần ước lượng của B-MRE từ $K$ về chỉ $2$ bộ lọc. Qua đó giảm đáng kể độ phức tạp của thuật toán tuy nhiên phải đánh đổi một phần đổi chính xác. Sau hơn 20 năm phát triển, B-MRE vẫn còn các điểm hạn chế cố hữu cần được giải quyết như sau
 \begin{enumerate}
     \item Yêu cầu khả năng tính toán lớn khi số lượng các bộ lọc cần ước lượng tăng, ví dụ số lượng các mẫu trong bộ đệm $N$ lớn. Hơn nữa, đa số các phiên bản B-MRE được đề xuất kể trên chưa hỗ trợ MIMO.
     \item Yêu cầu một số thông tin về kênh truyền ví dụ bậc của kênh và độ trễ giữa các ăng-ten thu. Hơn nữa, độ chính xác của B-MRE cũng chưa thể so sánh với các phương pháp NB.
@@ -67,6 +67,9 @@ trong đó $\mathbf{U}$ được biểu diễn như phương trình~(\ref{eq:U})
 
 Đến đây, tuỳ thuộc vào ràng buộc C1, C2, hoặc C3, việc ước lượng $\mathbf{g}$ sẽ được thực hiện khác nhau. Cụ thể, C1 là ràng buộc bậc 2 (quadratic) đơn giản nhất, chỉ để đảm bảo tính chất đã được đưa ra ở phương trình (~\ref{eq:contrant}). Tiếp đến, C2 là ràng buộc tuyến tính (linear) yêu cầu $\operatorname{trace}(\mathbf{U^H \mathbf{\bar{G}}}) = 1$. Cuối cùng, C3 là ràng buộc giữ cho công suất đầu ra của bộ cân bằng không đổi, C3 yêu cầu $\mathbb{E}\| \mathbf{\bar{G}}^H \mathbf{x}(i) \|^2 = 1$. Trong luận văn này, ràng buộc C1 quadratic đơn giản nhất sẽ được lựa chọn. Qua đó, giá trị duy nhất nhỏ nhất và ổn đỉnh $\mathbf{g}$ thu được bằng cách chọn giá trị véc-tơ riêng nhỏ nhất của ma trận $\mathbf{R}$.
 
+\begin{equation}
+    \mathbf{g} = \mathbf{v}^{\downarrow} (\mathbf{R})
+\end{equation}
 \section{Đề xuất phương pháp nhận dạng hệ thống SB-MRE cho MIMO}
 
 Phương pháp nhận dạng hệ thống SB-MRE được đề xuất dựa trên hướng tiếp cận đơn giản nhất của SB như đã trình bày ở mục~\ref{sec:semi} đó là sử dụng thêm một phần nhỏ pilot để kết hợp với B-MRE. Đi vào chi tiết, giả sử tại bộ phát thứ $t$, các chuỗi ký hiệu $\mathbf{s}_t$ có độ dài $N_s$ sẽ được truyền đi. Trong đó, $\mathbf{s}_t$ bao gồm $N_p$ ký hiệu pilot và $N_s - N_p$ ký hiệu dữ liệu. $\mathbf{s}_t$ được biểu diễn như sau
@@ -145,7 +148,7 @@ Trong mục này, hai phương pháp nhằm giảm thiểu độ phức tạp c�
 
 \subsection{Giảm thiểu độ phức tạp của thành phần B-MRE}
 
-Trong đề xuất gốc và đề xuất SB-MRE đã trình bày ở trên, độ phức tạp của thành phần B-MRE là $\mathcal{O}(LNKT)$~\cite{original}. Trong đó $KT$ bộ cân bằng kênh sẽ được ước lượng, tuy nhiên chỉ một được sử dụng sau đó. Điều này làm ra tăng lượng tài nguyên tính toán không cần thiết đặc biệt là khi $N$ lớn. Do đó, trong nghiên cứu này, số lượng các bộ lọc phải ước lượng sẽ được giảm từ $K$ còn 2 bộ lọc, bao gồm bộ lọc không trễ (thứ tự $0$) và bộ lọc có độ trễ lớn nhất (thứ tự $K-1$). Với đề xuất này, độ phức tạp của B-MRE được giảm về $\mathcal{O}(LNT)$, và ma trận cân bằng kênh truyền cho bộ phát thứ $t$ sẽ có dạng
+Trong đề xuất gốc và đề xuất SB-MRE đã trình bày ở trên, độ phức tạp của thành phần B-MRE là $\mathcal{O}(LNKT)$~\cite{original}. Trong đó $KT$ bộ cân bằng kênh sẽ được ước lượng, tuy nhiên chỉ một được sử dụng sau đó. Điều này làm ra tăng lượng tài nguyên tính toán không cần thiết đặc biệt là khi $N$ lớn. Do đó, trong nghiên cứu này, số lượng các bộ lọc phải ước lượng sẽ được giảm từ $K$ còn 2 bộ lọc, bao gồm bộ lọc không trễ (thứ tự $0$) và bộ lọc có độ trễ lớn nhất (thứ tự $K-1$). Giải thuật B-MRE sau khi đã được giảm độ phức tạp sẽ được viết ngắn gọn là `B-MRE rc' (reduced cost) và giải thuật SB-MRE sử dụng thông tin từ B-MRE rc sẽ được viết tắt là `SB-MRE rc'. Với đề xuất này, độ phức tạp của B-MRE được giảm về $\mathcal{O}(LNT)$, và ma trận cân bằng kênh truyền cho bộ phát thứ $t$ sẽ có dạng
 \begin{equation}
     \mathbf{V}_{t} = [\mathbf{g}_{t, 0}, \mathbf{g}_{t, K-1}]
 \end{equation}
@@ -162,17 +165,17 @@ cuối cùng, việc tính toán toàn bộ bậc của ma trận $\mathbf{R}$ l
 
 Ngoài việc giảm độ phức tạp của thành phần B-MRE, số lượng pilots được sử dụng cho SB-MRE cũng cần được xem xét giảm thiểu để thu được hiệu suất sử dụng phổ tốt nhất. 
 
-// Chứng minh
+\noindent// Chứng minh
 
 \section{Mô phỏng và đánh giá}
 
 \begin{table}[H]
 \centering
-\caption{Các tham số mô phỏng cho hệ thống truyền thông vô tuyến}
+\caption{Các tham số mô phỏng cho hệ thống truyền thông vô tuyến.}
 \label{tab:simulation_param}
     \begin{tabular}{p{8cm}|p{6cm}} 
     \hline\hline
-    \textbf{Thông số mô phỏng} & \textbf{Giá trị} \\ 
+    \multicolumn{1}{c|}{\textbf{Thông số mô phỏng}} & \multicolumn{1}{c}{\textbf{Giá trị}} \\ 
     \hline
     Kích thước hệ thống MIMO & $T = 2, L= 4$ \\ 
     \hline
@@ -188,7 +191,7 @@ Ngoài việc giảm độ phức tạp của thành phần B-MRE, số lượng
     \hline
     Số lượng bộ làm bằng của B-MRE rc & $2$ \\ 
     \hline
-    Trọng số của thành phần B-MRE & $\lambda = 0.1$ \\
+    Trọng số của thành phần B-MRE & $\lambda =$ $0$,$1$ \\
     \hline
     \end{tabular}
 \end{table}
