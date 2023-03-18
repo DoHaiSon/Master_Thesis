@@ -21,7 +21,6 @@ Về cơ bản, MRE là phương pháp sử dụng các bộ làm bằng tuyến
 \begin{equation}
     \mathbf{g}^H_{t, i} * \mathbf{x}(n)=\sum_{l=0}^{L-1}\sum_{k=0}^{N-1} g^H_{t,i}(k) x^{(l)}(n-k) \approx \mathbf{s}_t(n-i)
 \end{equation}
-% At $i$-delay, $g_i$ is express as follows
 \begin{equation}
     \mathbf{g}_{t,i}=\big[g_{t, i}^{(0)}(0), \ldots, g_{t, i}^{(0)}(N - 1), \ldots,
     g_{t, i}^{(L-1)}(0), \ldots, g_{t, i}^{(L-1)} (N-1) \big]^\top
@@ -49,7 +48,6 @@ Trong trường hợp có sự xuất hiện của tạp âm AWGN, phương phá
     \mathbf{g}_i^H \mathbf{x}(i) = \mathbf{g}_{i+1}^H \mathbf{x}(i+1)
 \end{equation}
 trong đó $\mathbf{g}$ là dạng véc-tơ của ma trận làm bằng $\bar{\mathbf{G}}$ như được biểu diễn trong phương trình~(\ref{eq:vecG}). Phương pháp MRE chọn hàm chi phí (cost function) của $\bar{\mathbf{G}}$ cho trường hợp không có ràng buộc như dưới đây
-
 \begin{equation}
 \label{eq:loss_mre}
     \mathcal{L}(\bar{\mathbf{G}})=\mathbf{g}^H \mathbf{R} \mathbf{g}
@@ -66,10 +64,10 @@ trong đó $\mathbf{U}$ được biểu diễn như phương trình~(\ref{eq:U})
 \end{equation}
 
 Đến đây, tuỳ thuộc vào ràng buộc C1, C2, hoặc C3, việc ước lượng $\mathbf{g}$ sẽ được thực hiện khác nhau. Cụ thể, C1 là ràng buộc bậc 2 (quadratic) đơn giản nhất, chỉ để đảm bảo tính chất đã được đưa ra ở phương trình (~\ref{eq:contrant}). Tiếp đến, C2 là ràng buộc tuyến tính (linear) yêu cầu $\operatorname{trace}(\mathbf{U^H \mathbf{\bar{G}}}) = 1$. Cuối cùng, C3 là ràng buộc giữ cho công suất đầu ra của bộ cân bằng không đổi, C3 yêu cầu $\mathbb{E}\| \mathbf{\bar{G}}^H \mathbf{x}(i) \|^2 = 1$. Trong luận văn này, ràng buộc C1 quadratic đơn giản nhất sẽ được lựa chọn. Qua đó, giá trị duy nhất nhỏ nhất và ổn đỉnh $\mathbf{g}$ thu được bằng cách chọn giá trị véc-tơ riêng nhỏ nhất của ma trận $\mathbf{R}$.
-
 \begin{equation}
     \mathbf{g} = \mathbf{v}^{\downarrow} (\mathbf{R})
 \end{equation}
+
 \section{Đề xuất phương pháp nhận dạng hệ thống SB-MRE cho MIMO}
 
 Phương pháp nhận dạng hệ thống SB-MRE được đề xuất dựa trên hướng tiếp cận đơn giản nhất của SB như đã trình bày ở mục~\ref{sec:semi} đó là sử dụng thêm một phần nhỏ pilot để kết hợp với B-MRE. Đi vào chi tiết, giả sử tại bộ phát thứ $t$, các chuỗi ký hiệu $\mathbf{s}_t$ có độ dài $N_s$ sẽ được truyền đi. Trong đó, $\mathbf{s}_t$ bao gồm $N_p$ ký hiệu pilot và $N_s - N_p$ ký hiệu dữ liệu. $\mathbf{s}_t$ được biểu diễn như sau

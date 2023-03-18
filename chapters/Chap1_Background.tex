@@ -88,7 +88,6 @@ Từ cách phân loại kể trên, chương đầu tiên sẽ đưa ra mô hìn
 \end{figure}
 
 Hình~\ref{fig:sys_model} minh hoạ một hệ thống thu phát MIMO/mMIMO, với $T$ ăng-ten phát và $L$ ăng-ten thu. Mỗi kênh truyền vô tuyến giữa ăng-ten phát thứ $t$ và ăng-ten nhận thứ $l$ sẽ được mô hình hoá bằng một bộ lọc đáp ứng xung hữu hạn (FIR - Finite impulse response) tương ứng là một véc-tơ của các hệ số bộ lọc có độ dài $M+1$. Giả sử ở mỗi thời điểm $i$, mỗi ăng-ten thu sẽ thu thập một chuỗi $N$ ký hiệu (symbol) liên tiếp. Từ các giả thiết trên, mô hình toán học của hệ thu phát MIMO được biểu diễn dưới dạng ma trận như sau
-
 \begin{equation}
     \mathbf{x}(i) = \sum_{t=0}^{T-1}\mathbf{H}_t \mathbf{s}_t(i) + \mathbf{w}_t
 \end{equation}
