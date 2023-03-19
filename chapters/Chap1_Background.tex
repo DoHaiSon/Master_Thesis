@@ -173,11 +173,11 @@ trong đó $(.)^H$ là ma trận Hermitian. Với $\mathbf{G}_{ZF}$, tín hiệu
 Hiệu năng của bộ nhận dạng ZF thường bị ảnh hưởng bởi nhiễu AWGN. Do vậy, MMSE là giải thuật tốt hơn bằng việc kết hợp thêm thông tin phương sai của nhiễu trước khi nghịch đảo ma trận. Ma trận làm bằng $\mathbf{G}_{MMSE}$ của bộ nhận dạng MMSE được biểu diễn dưới dạng
 
 \begin{equation}
-    \mathbf{G}_{MMSE}=\left(\mathbf{H}^H \mathbf{H}+\frac{\sigma^2}{\mathbb{E}_\mathbf{x}} \mathbf{I}\right)^{-1} \mathbf{H}^H
+    \mathbf{G}_{MMSE}=\left(\mathbf{H}^H \mathbf{H}+\frac{\sigma^2}{\mathbb{E}_\mathbf{s}} \mathbf{I}\right)^{-1} \mathbf{H}^H
 \end{equation}
-với $\sigma^2$ là phương sai của nhiễu AWGN, $\mathbb{E}_\mathbf{x}$ là công suất của tín hiệu thu được, và $\mathbf{I}$ là ma trận đơn vị. với $\mathbf{G}_{MMSE}$, tín hiệu gốc được khôi phục như sau
+với $\sigma^2$ là phương sai của nhiễu AWGN, $\mathbb{E}_\mathbf{s}$ là công suất trung bình của mỗi ký hiệu gửi đi, và $\mathbf{I}$ là ma trận đơn vị. với $\mathbf{G}_{MMSE}$, tín hiệu gốc được khôi phục như sau
 \begin{equation}
-    \hat{\mathbf{s}}_{MMSE}=\left(\mathbf{H}^H \mathbf{H}+\frac{\sigma^2}{\mathbb{E}_\mathbf{x}} \mathbf{I}\right)^{-1} \mathbf{H}^H \mathbf{x}
+    \hat{\mathbf{s}}_{MMSE}=\left(\mathbf{H}^H \mathbf{H}+\frac{\sigma^2}{\mathbb{E}_\mathbf{s}} \mathbf{I}\right)^{-1} \mathbf{H}^H \mathbf{x}
 \end{equation}
 
 Ưu điểm của MMSE, các giá trị thấp trong quá trình đảo ngược có thể dẫn đến hiện tượng khuếch đại tạp âm (deep null) khi sử dụng ZF, được khắc phục bởi công suất tạp âm khác không. Tuy nhiên, có thể nhận thấy cả hai giải thuật ZF và MMSE cần các chuỗi pilot để ước lượng kênh truyền, sau đó nội suy ra ma trận $\mathbf{H}$.
