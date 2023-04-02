@@ -38,7 +38,7 @@
 \usepackage{algpseudocode}
 \usepackage{tabularx,multicol,multirow,longtable}
 \usepackage{etoolbox}
-\usepackage{tikz}	\usetikzlibrary{calc,arrows,decorations.pathmorphing,backgrounds,positioning,fit,shapes,decorations.shapes, shapes.geometric, decorations.pathreplacing, decorations.text}
+\usepackage{tikz}	\usetikzlibrary{calc,arrows,decorations.pathmorphing,backgrounds,positioning,fit,shapes,decorations.shapes, shapes.geometric, decorations.pathreplacing, decorations.text,  calligraphy, arrows.meta}
  
 	\tikzstyle{block} = [draw,rectangle,thick,minimum height=2em,minimum width=2em,drop shadow,fill=blue!50]
 	\tikzstyle{sum} = [draw,circle,inner sep=0mm,minimum size=2mm]
@@ -51,10 +51,14 @@
 \usepackage{circuitikz}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.16}
+\usepackage{listofitems} % for \readlist to create arrays
+\usepackage[outline]{contour} % glow around text
+
 \usepackage[numbers]{natbib}
 \usepackage{titlesec}
 \usepackage[labelsep=period]{caption}
-\usepackage{subfigure}
+% \usepackage{subfigure}
+\usepackage{subcaption}
 \DeclareCaptionFormat{myformat}{\fontsize{13}{15}\selectfont#1#2#3}
 \captionsetup{format=myformat}
 \usepackage{titletoc}
@@ -75,7 +79,7 @@
 \titlespacing\subsubsection{0pt}{6pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
 \titlespacing\subsubsubsection{0pt}{6pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
 
-\usepackage[subfigure]{tocloft} 
+\usepackage[titles]{tocloft}
 
 \cftsetpnumwidth{20pt}
 \titlecontents{chapter}
@@ -134,7 +138,7 @@
 \setlength{\parskip}{0.6ex}
 
 \fontsize{13}{16}\selectfont
-\renewcommand{\contentsname}{\vspace{-70pt}\centerline{\fontsize{14}{16}\selectfont\MakeUppercase{Mục lục}}}
+\renewcommand{\contentsname}{\centerline{\fontsize{14}{16}\selectfont\MakeUppercase{Mục lục}}}
 \clearpage
 \phantomsection
 \addcontentsline{toc}{chapter}{Mục lục}
@@ -146,7 +150,7 @@
 \clearpage
 \phantomsection
 \addcontentsline{toc}{chapter}{Danh mục hình vẽ}
-\renewcommand{\listfigurename}{\vspace{-70pt}\centerline{\fontsize{14}{16}\selectfont{\MakeUppercase{Danh mục hình vẽ}}}}
+\renewcommand{\listfigurename}{\centerline{\fontsize{14}{16}\selectfont{\MakeUppercase{Danh mục hình vẽ}}}}
 \listoffigures
 \fontsize{13}{16}\selectfont
 
@@ -154,7 +158,7 @@
 \clearpage
 \phantomsection
 \addcontentsline{toc}{chapter}{Danh mục bảng biểu}
-\renewcommand{\listtablename}{\vspace{-70pt}\centerline{\fontsize{14}{16}\selectfont{\MakeUppercase{Danh mục bảng biểu}}}}
+\renewcommand{\listtablename}{\centerline{\fontsize{14}{16}\selectfont{\MakeUppercase{Danh mục bảng biểu}}}}
 \listoftables
 \fontsize{13}{16}\selectfont
 \newpage
@@ -185,7 +189,7 @@
 \bibliographystyle{./footage/agsm_uet.bst}
 \bibliography{library.bib}
 
-% \newpage
-% \appendix
-% \input{chapters/PhuLuc.tex}
+\newpage
+\appendix
+\input{chapters/PhuLuc.tex}
 \end{document}

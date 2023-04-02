@@ -82,24 +82,65 @@ Từ cách phân loại kể trên, chương đầu tiên sẽ đưa ra mô hìn
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.6\linewidth]{figures/sys_model.pdf}
+    \begin{tikzpicture}
+        \node[antenna, thick, scale=0.6] at (0, 0) (Tx0) {};
+        \node at (0, 17mm) (text_Tx0) {Tx $0$};
+        \draw[line] (-10mm, 0) -- (Tx0) node [pos=0, left] {$\mathbf{s}_0$};
+
+        \node[antenna, thick, scale=0.6] at (0, -25mm) (Tx1) {};
+        \node at (0, -8mm) (text_Tx1) {Tx $1$};
+        \draw[line] (-10mm, -25mm) -- (Tx1) node [pos=0, left] {$\mathbf{s}_1$};
+
+        \node[scale=1.5] at (0, -30mm) (dotss) {$\mathbf{\vdots}$};
+
+        \node[antenna, thick, scale=0.6] at (0, -55mm) (TxT) {};
+        \node at (0, -38mm) (text_TxT) {Tx $T-1$};
+        \draw[line] (-10mm, -55mm) -- (TxT) node [pos=0, left] {$\mathbf{s}_{T-1}$};
+
+        \node[antenna, thick, scale=0.6] at (70mm, 0) (Rx0) {};
+        \node at (70mm, 17mm) (text_Rx0) {Rx $0$};
+        \draw[line] (80mm, 0) -- (Rx0) node [pos=0, right] {$\mathbf{x}^{(0)}$};
+
+        \node[antenna, thick, scale=0.6] at (70mm, -25mm) (Rx1) {};
+        \node at (70mm, -8mm) (text_Rx1) {Rx $1$};
+        \draw[line] (80mm, -25mm) -- (Rx1) node [pos=0, right] {$\mathbf{x}^{(1)}$};
+
+        \node[scale=1.5] at (70mm, -30mm) (dotss) {$\mathbf{\vdots}$};
+
+        \node[antenna, thick, scale=0.6] at (70mm, -55mm) (RxL) {};
+        \node at (70mm, -38mm) (text_RxL) {Rx $L - 1$};
+        \draw[line] (80mm, -55mm) -- (RxL) node [pos=0, right] {$\mathbf{x}^{(L-1)}$};
+
+        \draw[arrow] (3mm, 6mm) -- (67mm, 6mm);
+        \draw[arrow] (3mm, 5mm) -- (67mm, -20mm);
+        \draw[arrow] (3mm, 4mm) -- (67mm, -49mm);
+
+        \draw[arrow] (3mm, -19mm) -- (67mm, 5mm);
+        \draw[arrow] (3mm, -20mm) -- (67mm, -21mm);
+        \draw[arrow] (3mm, -21mm) -- (67mm, -50mm);
+
+        \draw[arrow] (3mm, -49mm) -- (67mm, 4mm);
+        \draw[arrow] (3mm, -50mm) -- (67mm, -22mm);
+        \draw[arrow] (3mm, -51mm) -- (67mm, -51mm);
+
+        \node at (35mm, -60mm) (H) {$\mathbf{H} \in \mathbb{C}^{LN \times KT}$};
+    \end{tikzpicture}
     \caption{Mô hình minh hoạ hệ thống truyền thông MIMO.}
     \label{fig:sys_model}
 \end{figure}
 
-Hình~\ref{fig:sys_model} minh hoạ một hệ thống thu phát MIMO/mMIMO, với $T$ ăng-ten phát và $L$ ăng-ten thu. Mỗi kênh truyền vô tuyến giữa ăng-ten phát thứ $t$ và ăng-ten nhận thứ $l$ sẽ được mô hình hoá bằng một bộ lọc đáp ứng xung hữu hạn (FIR - Finite impulse response) tương ứng là một véc-tơ của các hệ số bộ lọc có độ dài $M+1$. Giả sử ở mỗi thời điểm $i$, mỗi ăng-ten thu sẽ thu thập một chuỗi $N$ ký hiệu (symbol) liên tiếp. Từ các giả thiết trên, mô hình toán học của hệ thu phát MIMO được biểu diễn dưới dạng ma trận như sau
+Hình~\ref{fig:sys_model} minh hoạ một hệ thống thu phát MIMO/mMIMO, với $T$ ăng-ten phát và $L$ ăng-ten thu. Mỗi kênh truyền vô tuyến giữa ăng-ten phát thứ $t$ và ăng-ten nhận thứ $l$ sẽ được mô hình hoá bằng một bộ lọc đáp ứng xung hữu hạn (FIR - Finite impulse response) tương ứng là một véc-tơ của các hệ số bộ lọc có độ dài $M+1$. Giả sử ở mỗi thời điểm $n$, mỗi ăng-ten thu sẽ thu thập một chuỗi $N$ ký hiệu (symbol) liên tiếp. Từ các giả thiết trên, mô hình toán học của hệ thu phát MIMO được biểu diễn dưới dạng ma trận như sau
 \begin{equation}
-    \mathbf{x}(i) = \sum_{t=0}^{T-1}\mathbf{H}_t \mathbf{s}_t(i) + \mathbf{w}_t
+    \mathbf{x}(n) = \sum_{t=0}^{T-1}\mathbf{H}_t \mathbf{s}_t(n) + \mathbf{w}_t
 \end{equation}
-trong đó $\mathbf{s}_t(i) \in \mathbb{C}^{M+N \times 1}$ là các ký hiệu được gửi đi từ bộ phát thứ $t$. Ma trận kênh truyền dạng tích chập (convolution)~\cite{original} giữa bộ phát thứ $t$ và toàn bộ $L$ ăng-ten thu được ký hiệu $\mathbf{H}_t$. Giả sử rằng $\mathbf{H}_t \in \mathbb{C}^{LN \times K}$ là một ma trận đầy đủ hạng theo cột (full column rank) với hạng $K = M+N$. Tiếp đến, $\mathbf{x}(i) \in \mathbb{C}^{LN \times 1}$ là véc-tơ biểu diễn tín hiệu thu được từ $L$ ăng-ten. Cuối cùng, $\mathbf{w}_t \in \mathbb{C}^{LN \times 1}$ đại diện cho tạp âm trắng cộng sinh (AWGN - Additive white Gaussian noise). Giả sử kênh truyền và tạp âm ở các kênh khác nhau là độc lập và phân bố giống nhau (i.i.d) với các phân bố lần lượt được chọn là $\mathcal{CN}(0, \sigma_{\mathbf{H}_t}^2 \mathbf{I})$ và $\mathcal{CN}(0, \sigma^2 \mathbf{I})$. Dưới đây là biểu diễn đầy đủ của các thành phần kể trên với $(.)^\top$ là phép chuyển vị (transpose) ma trận.
+trong đó $\mathbf{s}_t(n) \in \mathbb{C}^{M+N \times 1}$ là các ký hiệu được gửi đi từ bộ phát thứ $t$. Ma trận kênh truyền dạng tích chập (convolution)~\cite{original} giữa bộ phát thứ $t$ và toàn bộ $L$ ăng-ten thu được ký hiệu $\mathbf{H}_t$. Giả sử rằng $\mathbf{H}_t \in \mathbb{C}^{LN \times K}$ là một ma trận đầy đủ hạng theo cột (full column rank) với hạng $K = M+N$. Tiếp đến, $\mathbf{x}(n) \in \mathbb{C}^{LN \times 1}$ là véc-tơ biểu diễn tín hiệu thu được từ $L$ ăng-ten. Cuối cùng, $\mathbf{w}_t \in \mathbb{C}^{LN \times 1}$ đại diện cho tạp âm trắng cộng sinh (AWGN - Additive white Gaussian noise). Giả sử kênh truyền và tạp âm ở các kênh khác nhau là độc lập và phân bố giống nhau (i.i.d) với các phân bố lần lượt được chọn là $\mathcal{CN}(0, \sigma_{\mathbf{H}_t}^2 \mathbf{I})$ và $\mathcal{CN}(0, \sigma^2 \mathbf{I})$. Dưới đây là biểu diễn đầy đủ của các thành phần kể trên với $(.)^\top$ là phép chuyển vị (transpose) ma trận.
 
 \begin{equation}
-    \mathbf{s}_t(i) = [s_t(i), s_t(i-1),\ldots,s_t(i-K+1)]^\top
+    \mathbf{s}_t(n) = [s_t(n), s_t(n-1),\ldots,s_t(n-K+1)]^\top
 \end{equation}
 
 \begin{equation}
-    \small
-    \mathbf{H}_t= \hspace{-0.7cm}
+    \mathbf{H}_t= 
     \begin{array}{cc}
          & \underset{\longleftrightarrow}{K}\\
          & \left(\begin{array}{cccccc}
@@ -117,8 +158,8 @@ trong đó $\mathbf{s}_t(i) \in \mathbb{C}^{M+N \times 1}$ là các ký hiệu �
 \end{equation}
 
 \begin{equation}
-        \mathbf{x}(i) = \big[x^{(0)}(i), \cdots, x^{(0)}(i-N+1), \cdots, 
-        x^{(L-1)}(i), \cdots, x^{(L-1)}(i-N+1)\big]^\top
+        \mathbf{x}(n) = \big[x^{(0)}(n), \cdots, x^{(0)}(n-N+1), \cdots, 
+        x^{(L-1)}(n), \cdots, x^{(L-1)}(n-N+1)\big]^\top
 \end{equation} 
 
 Cần lưu ý rằng, cách biểu diễn toán học dưới dạng ma trận số phức như trên chỉ phù hợp trên lý thuyết và các phần mềm mô phỏng như Matlab. Các phương pháp sử dụng ML/DL nhằm nhận dạng kênh thường được phát triển trên ngôn ngữ Python và các thư viện nền tảng thông dụng như Tensorflow\footnote{\url{https://github.com/tensorflow/tensorflow}} của Google hay Pytorch\footnote{\url{https://github.com/pytorch/pytorch}} của Facebook, cả hai thư viện này không trực tiếp hỗ trợ các phép toán/toán tử với số phức. Do vậy, không làm mất đi tính tổng quát, trong chương~\ref{sec:ML}, các ma trận trên mô hình kênh kể trên sẽ được biểu diễn dưới dạng ma trận của các thành phần thực ($\Re$) và ảo ($\Im$) riêng biệt như sau
@@ -150,11 +191,11 @@ Cần lưu ý rằng, cách biểu diễn toán học dưới dạng ma trận s
 \section{Nhận dạng kênh không mù}
 Như trên hình~\ref{fig:classify}, các phương pháp nhận dạng kênh không mù có thể chia làm hai nhóm chính, bao gồm các phương pháp sử dụng dữ liệu (Data-aided)~\cite{vilas2022} và các phương pháp dựa trên hướng quyết định (Decision-directed)~\cite{Ozdemir2007}. Các thuật toán sử dụng dữ liệu có thể chia làm hai loại nhỏ hơn, gồm có các phương pháp dựa trên việc đào tạo (Training-based) và các phương pháp dựa trên tín hiệu hoa tiêu (Pilot-assisted). Khác biệt chính giữa hai phương pháp là loại tín hiệu được dùng để ước lượng kênh truyền. Với Training-based, bên phát sẽ phát các dữ liệu huấn luyện gốc, bên thu chỉ biết thời điểm dữ liệu huấn luyện này được truyền nhưng không biết trước thông tin của dữ liệu. Tín hiệu bên thu nhận được gồm tín hiệu gốc và tín hiệu đã bị méo, từ đó, một mô hình ước lượng được huấn luyện bằng cách tối ưu hóa một hàm mất mát (loss function) giữa kết quả ước lượng kênh truyền và giá trị thực tế của kênh truyền. Với Pilot-assisted, các ký hiệu pilot được chèn trực tiếp vào khung dữ liệu gửi đi, và bên phát biết cả thời gian, vị trí, và giá trị gốc của các ký hiệu pilot này. Từ đó, bên thu có thể ước lượng ra ảnh hưởng của kênh truyền đến các tín hiệu pilot và nội suy ra ảnh hưởng của kênh truyền đến toàn bộ khung dữ liệu. Các giải thuật phổ biến được sử dụng cho phương pháp Data-aided có thể kể đến như bộ phát hiện ép về không (ZF - Zero forcing), lỗi trung bình phương sai tối thiểu (MMSE - Minimum mean square error)~\cite{Jiang2011}. Hai giải thuật này là các giải thuật tuyến tính và sẽ được trình bày chi tiết hơn ở mục~\ref{sec:zf} và~\ref{sec:mmse}. Tuy phổ biến và được áp dụng trong các hệ truyền thông thực tế, nhưng các phương pháp sử dụng dữ liệu để ước lượng kênh truyền có một nhược điểm đó là giảm hiệu quả sử dụng phổ do một phần băng thông bị lãng phí để truyền tải các dữ liệu huấn luyện hoặc pilot. 
 
-Phương pháp hướng quyết định (DDCE - Decision-directed channel estimation) cũng dựa trên việc sử dụng dữ liệu, tuy nhiên, thay vì ước lượng kênh truyền chỉ trong một bước DDCE có thêm một bước nữa~\cite{vilas2022}. Cụ thể, tại bước một, DDCE vẫn ước lượng kênh truyền dựa trên một trong hai phương pháp Training-based hoặc Pilot-assisted như Data-aided. Sau đó, khôi phục các tín hiệu dựa trên trạng thái kênh truyền vừa ước lượng được. Ở bước tiếp theo, các dữ liệu mới được khôi phục sẽ tiếp tục được đưa vào thuật toán ước lượng nhằm cập nhật trạng thái thông tin về kênh truyền cho đến khi các ký hiệu trong một phiên được truyền hết. Chi tiết hơn, bộ thu sẽ so sánh ký tự đã nhận được với ký tự được dự đoán dựa trên ký tự trước đó và ước lượng kênh truyền hiện tại. Nếu có sai sót giữa ký tự đã nhận và ký tự dự đoán, bộ thu sẽ điều chỉnh ước lượng kênh truyền để cải thiện độ chính xác của dự đoán ký tự tiếp theo. Quá trình này được lặp lại cho mỗi ký tự nhận được. Vậy ra quyết định bít là 0 hay 1 trong DDCE sẽ được thực hiện theo hai giải thuật gồm quyết định mềm (soft) và quyết định cứng (hard). Quyết định mềm~\cite{Park2015} sẽ xác định giá trị của các bít dữ liệu bằng cách tính toán xác suất bit đó được truyền qua kênh truyền. Ngược lại, với quyết định cứng~\cite{Kai2005}, một ngưỡng xác định được đưa ra, nếu lớn hơn ngưỡng này sẽ là bít 1, ngược lại là bít 0. Tuy nhiên, phương pháp DDCE có điểm hạn chế đó là quá trình ước lượng lại bị phụ thuộc vào các dữ liệu cũ, dẫn đến việc, có thể kênh truyền hiện tại không còn tương ứng với các dữ liệu từ thời điểm quá khứ. Điều này dẫn đến các lỗi tích luỹ và làm giảm hiệu năng của hệ thống nhận dạng.
+Phương pháp hướng quyết định (DDCE - Decision-directed channel estimation) cũng dựa trên việc sử dụng dữ liệu, tuy nhiên, thay vì ước lượng kênh truyền chỉ trong một bước DDCE có thêm một bước nữa~\cite{vilas2022}. Cụ thể, tại bước một, DDCE vẫn ước lượng kênh truyền dựa trên một trong hai phương pháp Training-based hoặc Pilot-assisted như Data-aided. Sau đó, khôi phục các tín hiệu dựa trên trạng thái kênh truyền vừa ước lượng được. Ở bước tiếp theo, các dữ liệu mới được khôi phục sẽ tiếp tục được đưa vào thuật toán ước lượng nhằm cập nhật trạng thái thông tin về kênh truyền cho đến khi các ký hiệu trong một phiên được truyền hết. Chi tiết hơn, bộ thu sẽ so sánh ký tự đã nhận được với ký tự được dự đoán dựa trên ký tự trước đó và ước lượng kênh truyền hiện tại. Nếu có sai sót giữa ký tự đã nhận và ký tự dự đoán, bộ thu sẽ điều chỉnh ước lượng kênh truyền để cải thiện độ chính xác của dự đoán ký tự tiếp theo. Quá trình này được lặp lại cho mỗi ký tự nhận được. Vậy ra quyết định bít là $0$ hay $1$ trong DDCE sẽ được thực hiện theo hai giải thuật gồm quyết định mềm (soft) và quyết định cứng (hard). Quyết định mềm~\cite{Park2015} sẽ xác định giá trị của các bít dữ liệu bằng cách tính toán xác suất bit đó được truyền qua kênh truyền. Ngược lại, với quyết định cứng~\cite{Kai2005}, một ngưỡng xác định được đưa ra, nếu lớn hơn ngưỡng này sẽ là bít $1$, ngược lại là bít $0$. Tuy nhiên, phương pháp DDCE có điểm hạn chế đó là quá trình ước lượng lại bị phụ thuộc vào các dữ liệu cũ, dẫn đến việc, có thể kênh truyền hiện tại không còn tương ứng với các dữ liệu từ thời điểm quá khứ. Điều này dẫn đến các lỗi tích luỹ và làm giảm hiệu năng của hệ thống nhận dạng.
 
 \subsection{Zero Forcing (ZF)} \label{sec:zf}
 
-Các giải thuật nhận dạng tuyến tính dựa trên các phép biến đổi tuyến tính của các tính hiệu nhận được $\mathbf{x}$. Các giải thuật tuyến tính thường có độ phức tạp thấp, hoặc trung bình. Nhưng độ phức tạp sẽ tăng lên nếu hệ thống có số chiều lớn, ví dụ số lượng ăng-ten $T$ hay $L$ rất lớn trong mMIMO dẫn đến phép nghịch đảo ma trận tiêu tốn nhiều tài nguyên tính toán hơn. Một bộ nhận dạng tuyến tính có thể biểu diễn như bên dưới
+Các giải thuật nhận dạng tuyến tính dựa trên các phép biến đổi tuyến tính của các tính hiệu nhận được $\mathbf{x}$. Các giải thuật này thường có độ phức tạp thấp, hoặc trung bình. Nhưng độ phức tạp sẽ tăng lên nếu hệ thống có số chiều lớn, ví dụ số lượng ăng-ten $T$ hay $L$ rất lớn trong mMIMO dẫn đến phép nghịch đảo ma trận tiêu tốn nhiều tài nguyên tính toán hơn. Một bộ nhận dạng tuyến tính có thể biểu diễn như bên dưới
 \begin{equation}
     \mathbf{s} = \mathbf{G} \mathbf{x}
 \end{equation}
@@ -173,11 +214,11 @@ trong đó $(.)^H$ là ma trận Hermitian. Với $\mathbf{G}_{ZF}$, tín hiệu
 Hiệu năng của bộ nhận dạng ZF thường bị ảnh hưởng bởi nhiễu AWGN. Do vậy, MMSE là giải thuật tốt hơn bằng việc kết hợp thêm thông tin phương sai của nhiễu trước khi nghịch đảo ma trận. Ma trận làm bằng $\mathbf{G}_{MMSE}$ của bộ nhận dạng MMSE được biểu diễn dưới dạng
 
 \begin{equation}
-    \mathbf{G}_{MMSE}=\left(\mathbf{H}^H \mathbf{H}+\frac{\sigma^2}{\mathbb{E}_\mathbf{s}} \mathbf{I}\right)^{-1} \mathbf{H}^H
+    \mathbf{G}_{MMSE}=\left(\mathbf{H}^H \mathbf{H}+\frac{\sigma^2}{\mathbb{E}(\mathbf{s})} \mathbf{I}\right)^{-1} \mathbf{H}^H
 \end{equation}
-với $\sigma^2$ là phương sai của nhiễu AWGN, $\mathbb{E}_\mathbf{s}$ là công suất trung bình của mỗi ký hiệu gửi đi, và $\mathbf{I}$ là ma trận đơn vị. với $\mathbf{G}_{MMSE}$, tín hiệu gốc được khôi phục như sau
+với $\sigma^2$ là phương sai của nhiễu AWGN, $\mathbb{E}(\mathbf{s})$ là công suất trung bình của mỗi ký hiệu gửi đi, và $\mathbf{I}$ là ma trận đơn vị. với $\mathbf{G}_{MMSE}$, tín hiệu gốc được khôi phục như sau
 \begin{equation}
-    \hat{\mathbf{s}}_{MMSE}=\left(\mathbf{H}^H \mathbf{H}+\frac{\sigma^2}{\mathbb{E}_\mathbf{s}} \mathbf{I}\right)^{-1} \mathbf{H}^H \mathbf{x}
+    \hat{\mathbf{s}}_{MMSE}=\left(\mathbf{H}^H \mathbf{H}+\frac{\sigma^2}{\mathbb{E}(\mathbf{s})} \mathbf{I}\right)^{-1} \mathbf{H}^H \mathbf{x}
 \end{equation}
 
 Ưu điểm của MMSE, các giá trị thấp trong quá trình đảo ngược có thể dẫn đến hiện tượng khuếch đại tạp âm (deep null) khi sử dụng ZF, được khắc phục bởi công suất tạp âm khác không. Tuy nhiên, có thể nhận thấy cả hai giải thuật ZF và MMSE cần các chuỗi pilot để ước lượng kênh truyền, sau đó nội suy ra ma trận $\mathbf{H}$.
@@ -199,7 +240,7 @@ Tiếp đến, ngoài các đặc trưng của tín hiệu, các thông tin bên
 
 Nhận dạng kênh truyền sử dụng ML/DL là hướng tiếp cận bùng nổ trong các năm trở lại đây. Do các bước tiến đã đạt được trước đó của việc xử lý các loại tín hiệu âm thanh, hình ảnh sử dụng các mạng học sâu. Việc chuyển tiếp các kỹ thuật sẵn có này sang viễn thông được xảy ra nhanh chóng và bước đầu các nghiên cứu đã chỉ ra các kết quả tiềm năng. Điểm khác biệt của hướng tiếp cận này đó là nó bao hàm được lý thuyết của cả ba hướng tiếp cận kể trên bao gồm mù, bán mù, và không mù. Tuy nhiên, thay vì việc tìm các phương pháp tối ưu và nghiệm chính xác, ML/DL sử dụng các thuật toán ML cơ bản, mạng nơ-ron (NN - Neural network), hay học tăng cường (RL - Reinforcement learning) cho các đầu vào của hệ thống nhận dạng B, SB, NB.
 
-Các phương pháp sử dụng học cổ điển để nhận dạng kênh truyền được phát triển trước tiên, do độ phức tạp ở mức thấp. Trong~\cite{Simeon2022}, việc ước lượng ma trận làm bằng $\mathbf{G}_{MMSE}$ được thay thế bằng thuật toán hồi quy Gaussian (GPR - Gaussian process regression). Các ưu điểm của GPR như tỷ (i) lệ lỗi bít (BER - Bit error rate) thấp hơn MMSE truyền thống; (ii) nội suy chính xác hơn ước tính kênh ở giữa các ký hiệu pilot so với kỹ thuật nội suy tuyến tính. Ngoài phương pháp hồi quy, các giải thuật cổ điển của học máy như giảm số chiều của dữ liệu (PCA - Principal components analysis, ICA - Independent component analysis), học Bayesian cũng được đề xuất và cho thấy sự hiệu quả~\cite{vilas2022}.
+Các phương pháp sử dụng học cổ điển để nhận dạng kênh truyền được phát triển trước tiên, do độ phức tạp ở mức thấp. Trong~\cite{Simeon2022}, việc ước lượng ma trận làm bằng $\mathbf{G}_{MMSE}$ được thay thế bằng thuật toán hồi quy Gaussian (GPR - Gaussian process regression). Các ưu điểm của GPR như (i) tỷ lệ lỗi bít (BER - Bit error rate) thấp hơn MMSE truyền thống; (ii) nội suy chính xác hơn ước tính kênh ở giữa các ký hiệu pilot so với kỹ thuật nội suy tuyến tính. Ngoài phương pháp hồi quy, các giải thuật cổ điển của học máy như giảm số chiều của dữ liệu (PCA - Principal components analysis, ICA - Independent component analysis), học Bayesian cũng được đề xuất và cho thấy sự hiệu quả~\cite{vilas2022}.
 
 Các phương pháp nhận dạng sử dụng các mạng nơ-rơn còn có những bước tiến rõ ràng hơn, khi NN phức tạp hơn và số lượng tham số đào tạo cũng là rất lớn để đáp ứng được các mô hình kênh phức tạp. Các nghiên cứu trong mục~\ref{sec:semi} như~\cite{Lin2020, Wan2008} cũng sử dụng các thông tin bên lề cho SB nhưng thay vì phương pháp tối ưu đại số, các mạng nơ-ron sâu (DNN - Deep-neural network) đã được đề xuất đề ước lượng kênh truyền. Một trong những mạng DNN đầu tiên được đề xuất cho việc nhận dạng hệ thống MIMO đó là mạng phát hiện (DetNet - Detection network)~\cite{Samuel2019}. Với kiến trúc là các phép lặp của thuật toán giảm độ dốc dự kiến kết (gradient descent) hợp thành một mạng. DetNet đã cho kết quả về độ chính xác vượt trội các phương pháp nhận dạng tuyến tính ở mức BER đạt $10^-3$~dB tại tỷ số tín trên tạp (SNR - Signal noise ratio) $10$~dB. Tuy nhiên, do số lượng tham số cần đào tạo là lớn nên quá trình đào tạo có thể tốn chi phí, từ đó một số mạng ISD đã được đề xuất~\cite{Mandloi2017, Liao2020}, với độ chính xác tốt hơn DetNet nhưng số lượng tham số đào tạo chỉ dưới 100. Ngoài ra, rất nhiều các mô hình mạng NN khác đã được đề xuất, như mạng trí nhớ dài hạn/ngắn hạn (LSTM - Long/short-term memory), bộ tự mã hoá (Autoencoders),~\ldots~\cite{vilas2022}.
 

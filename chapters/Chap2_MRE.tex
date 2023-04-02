@@ -5,7 +5,8 @@
 \chapter[{NHẬN DẠNG HỆ THỐNG SỬ DỤNG PHƯƠNG PHÁP BÁN MÙ}]{Nhận dạng hệ thống sử dụng phương pháp bán mù}
 \label{sec:MRE}
 
-Trong chương này, trước hết, tác giả sẽ trình bày các tìm hiểu sơ lược về một thuật toán ước lượng kênh truyền mù truyền thống là bộ cân bằng kênh tham chiếu (MRE - Mutually referenced equalizers). Giải thuật B-MRE sẽ được phát triển để hoạt động với các hệ thống MIMO. Sau đó, phương pháp SB-MRE được đề xuất bằng cách sử dụng thêm một số lượng nhỏ pilot cùng với thông tin từ B-MRE. Sau đó, các hai phương pháp nhằm giảm thiểu chi phí của thuật toán SB-MRE được đề xuất, bao gồm giảm độ phức tạp của B-MRE và giảm thiểu độ dài chuỗi pilot. Cuối cùng, các mô phỏng được thực hiện để kiểm chứng thuật toán đề xuất và đưa ra kết luận.
+Trong chương này, trước hết, tác giả sẽ trình bày các tìm hiểu sơ lược về một thuật toán ước lượng kênh truyền mù truyền thống là bộ cân bằng kênh tham chiếu (MRE - Mutually referenced equalizers). Giải thuật B-MRE sẽ được phát triển để hoạt động với các hệ thống MIMO. Sau đó, phương pháp SB-MRE được đề xuất bằng cách sử dụng thêm một số lượng nhỏ pilot cùng với thông tin từ B-MRE. Sau đó, các hai phương pháp nhằm giảm thiểu chi phí của thuật toán SB-MRE được đề xuất thông qua việc giảm độ phức tạp của B-MRE. Cuối cùng, các mô phỏng được thực hiện để kiểm chứng thuật toán đề xuất và đưa ra kết luận.
+% Sau đó, các hai phương pháp nhằm giảm thiểu chi phí của thuật toán SB-MRE được đề xuất, bao gồm giảm độ phức tạp của B-MRE và giảm thiểu độ dài chuỗi pilot. Cuối cùng, các mô phỏng được thực hiện để kiểm chứng thuật toán đề xuất và đưa ra kết luận.
 
 \section{Sơ lược về thuật toán B-MRE}
 
@@ -16,6 +17,35 @@ Trong luận văn này, thuật toán bộ cân bằng kênh tham chiếu (MRE -
 \end{enumerate}
 
 Từ các phân tích kể trên, trong phần tiếp theo, thuật toán B-MRE gốc được sửa đổi để hỗ trợ MIMO sẽ được trình bày. Sau đó là phương pháp SB-MRE được đề xuất nhằm khác phục các hạn chế của B-MRE kể trên.
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \node[antenna, thick, scale=0.6] at (0, 0) (Tx0) {};
+        \node at (0, 17mm) (text_Tx0) {Tx $t$};
+        \draw[line] (-10mm, 0) -- (Tx0) node [pos=-1, below=3mm] {$[s_t(n), s_t(n-1), \ldots, (s_t(n-K+1)]^\top$};
+
+        \node[antenna, thick, scale=0.6] at (50mm, 0) (Rx1) {};
+        \node at (50mm, 17mm) (text_Rx1) {Rx $1$};
+        \draw[line] (60mm, 0) -- (Rx1) node [pos=-1, below=3mm] {$[x^{(1)}(n), x^{(1)}(n-1), \ldots, x^{(1)}(n-N+1)]^\top$};
+
+        \node[antenna, thick, scale=0.6] at (50mm, 30mm) (Rx0) {};
+        \node at (50mm, 47mm) (text_Rx0) {Rx $0$};
+        \draw[line] (60mm, 30mm) -- (Rx0) node [pos=-1, below=3mm] {$[x^{(0)}(n), x^{(0)}(n-1), \ldots, x^{(0)}(n-N+1)]^\top$};
+
+        \node[scale=1.5] at (50mm, -14mm) () {$\mathbf{\vdots}$};
+
+        \node[antenna, thick, scale=0.6] at (50mm, -40mm) (RxL) {};
+        \node at (50mm, -23mm) (text_RxL) {Rx $L-1$};
+        \draw[line] (60mm, -40mm) -- (RxL) node [pos=0, below=3mm] {$[x^{(L-1)}(n), x^{(L-1)}(n-1), \ldots, x^{(L-1)}(n-N+1)]^\top$};
+
+        \draw[arrow] (3mm, 6mm) -- (47mm, 35mm) node [pos=0.5, above=3mm] {$\mathbf{H}_t^{(0)}$};
+        \draw[arrow] (3mm, 5mm) -- (47mm, 5mm) node [pos=0.5, above=3mm] {$\mathbf{H}_t^{(1)}$};
+        \draw[arrow] (3mm, 4mm) -- (47mm, -35mm) node [pos=0.5, below=4mm] {$\mathbf{H}_t^{(L-1)}$};
+    \end{tikzpicture}
+    \caption{Minh hoạ hệ thống SIMO sử dụng phương pháp nhận dạng B-MRE.}
+    \label{fig:MRE_model}
+\end{figure}
 
 Về cơ bản, MRE là phương pháp sử dụng các bộ làm bằng tuyến tính để khôi phục tín hiệu của bên phát tương tự như ZF và MMSE đã trình bày ở chương~\ref{sec:back}. Tuy nhiên, thay vì chỉ ước lượng một bộ lọc để làm bằng kênh, MRE sẽ tìm $KT$ bộ lọc để làm bằng mỗi kênh truyền giữa ăng-ten phát thứ $t$ và tương ứng với độ trễ $i$. Ký hiệu $\mathbf{g}_{t, i}  \in \mathbb{C}^{LN \times 1}$ là bộ lọc tương ứng độ trễ $i$ và ăng-ten phát thứ $t$. Với \mbox{$i=0, \ldots, K-1$}, tại thời điểm $n$, phương trình cân bằng kênh truyền sử dụng MRE như sau
 \begin{equation}
@@ -32,66 +62,88 @@ Tổng hợp lại $K$ độ trễ, ma trận cân bằng cho bộ phát thứ $
     \mathbf{G}_t = [\mathbf{g}_{t, 0}, \ldots, \mathbf{g}_{t, K-1}]
 \end{equation}
 
-Trong trường hợp kênh truyền không có tạp âm AWGN, việc khôi phục các ký hiệu gửi đi có thể được thực hiện chính xác toàn bộ với ma trận cân bằng đầy đủ cho $T$ bên phát $\bar{\mathbf{G}}$ tương ứng là bật kỳ nghịch đảo chéo nào của $\mathbf{H}$. Với $\bar{\mathbf{G}}$, việc khôi phục tín hiệu được biểu diễn như sau
+Trong trường hợp kênh truyền không có tạp âm AWGN, việc khôi phục các ký hiệu gửi đi có thể được thực hiện chính xác với ma trận cân bằng đầy đủ cho $T$ bên phát, $\bar{\mathbf{G}}$, tương ứng là bất kỳ nghịch đảo chéo nào của $\mathbf{H}$. Với $\bar{\mathbf{G}}$, việc khôi phục tín hiệu được biểu diễn như sau
 \begin{equation}
     \begin{aligned}
         \relax[\mathbf{G}_0, \ldots, \mathbf{G}_{T-1}]^{H} 
-        \mathbf{x}(i)
-        &= [\mathbf{s}_0^\top(i), \ldots, \mathbf{s}^\top_{T-1}(i)]^\top \\
-        \bar{\mathbf{G}}^H \mathbf{x}(i) &= \bar{\mathbf{s}}(i)
+        \mathbf{x}(n)
+        &= [\mathbf{s}_0^\top(n), \ldots, \mathbf{s}^\top_{T-1}(n)]^\top \\
+        \bar{\mathbf{G}}^H \mathbf{x}(n) &= \bar{\mathbf{s}}(n)
     \end{aligned}   
 \end{equation}
 
-Trong trường hợp có sự xuất hiện của tạp âm AWGN, phương pháp MRE khai thác sự phân tập của độ trễ từ các kênh truyền khác nhau để tìm ra tất cả các nghịch đảo của kênh truyền. Tính chất phân tập độ trễ này được biểu diễn là
+Trong trường hợp có sự xuất hiện của tạp âm AWGN, phương pháp MRE khai thác sự phân tập của độ trễ từ các kênh truyền khác nhau để tìm ra tất cả các nghịch đảo của kênh truyền. Trên hình~\ref{fig:MRE_model} là minh hoạ của một hệ thống SIMO sử dụng phương pháp MRE.
+% , có thể nhận thấy, tín hiệu tại các ăng-ten thu khác nhau có sự phân tập về độ trễ. 
+Tính chất phân tập độ trễ này được biểu diễn là
 \begin{equation}
 \label{eq:contrant}
-    \mathbf{g}_i^H \mathbf{x}(i) = \mathbf{g}_{i+1}^H \mathbf{x}(i+1)
+    \mathbf{g}_i^H \mathbf{x}(n) = \mathbf{g}_{i+1}^H \mathbf{x}(n+1)
 \end{equation}
-trong đó $\mathbf{g}$ là dạng véc-tơ của ma trận làm bằng $\bar{\mathbf{G}}$ như được biểu diễn trong phương trình~(\ref{eq:vecG}). Phương pháp MRE chọn hàm chi phí (cost function) của $\bar{\mathbf{G}}$ cho trường hợp không có ràng buộc như dưới đây
+trong đó $\mathbf{g}$ là dạng véc-tơ của ma trận làm bằng $\bar{\mathbf{G}}$ như được biểu diễn trong phương trình~(\ref{eq:vecG}). Đầu ra của bộ làm bằng thứ $i$ và $i+1$ ``được tham chiếu'' (referenced) lẫn nhau cho đến độ trễ chu kỳ của ký hiệu. Phương pháp MRE chọn hàm chi phí (cost function) của $\bar{\mathbf{G}}$ cho trường hợp không có ràng buộc như dưới đây
 \begin{equation}
 \label{eq:loss_mre}
     \mathcal{L}(\bar{\mathbf{G}})=\mathbf{g}^H \mathbf{R} \mathbf{g}
 \end{equation}
-trong đó ma trận $\mathbf{R} \in \mathbb{C}^{LNKT \times LNKT}$ được tạo thành từ hai ma trận của tín hiệu thu được gồm $\mathbf{x}(i)$ và $\mathbf{x}(i+1)$. $\mathbf{R}$ có thể được biểu diễn như sau
+trong đó ma trận $\mathbf{R} \in \mathbb{C}^{LNKT \times LNKT}$ được tạo thành từ hai ma trận của tín hiệu thu được gồm $\mathbf{x}(n)$ và $\mathbf{x}(n+1)$. $\mathbf{R}$ có thể được biểu diễn như sau
 \begin{equation}
 \label{eq:R}
-\mathbf{R} \stackrel{\text { def }}{=} \mathbb{E}\left(\mathbf{U}^{H} \mathbf{U}\right)
+\mathbf{R} \stackrel{\text { def }}{=} \mathbf{\mathit{E}}\left(\mathbf{U}^{H} \mathbf{U}\right)
 \end{equation}
-trong đó $\mathbf{U}$ được biểu diễn như phương trình~(\ref{eq:U}) với $\mathbf{I}_{T (K-1)}$ là các ma trận đơn vị có kích thước $T(K-1) \times T(K-1)$ và $\mathbf{0}$ là véc-tơ cột có kích thước $T \times 1$.
+trong đó $\mathbf{\mathit{E}}$ kỳ vọng thống kê, $\mathbf{U}$ được biểu diễn như phương trình~(\ref{eq:U}) với $\mathbf{I}_{T (K-1)}$ là các ma trận đơn vị có kích thước $T(K-1) \times T(K-1)$ và $\mathbf{0}$ là véc-tơ cột có kích thước $T \times 1$.
 \begin{equation}
 \label{eq:U}
-\mathbf{U} = \left(\mathbf{I}_{T (K-1)}, \mathbf{0}\right) \otimes \mathbf{x}^{H}(i)-\left(\mathbf{0}, \mathbf{I}_{T (K-1)}\right) \otimes \mathbf{x}^{H}(i+1)
+\mathbf{U} = \left(\mathbf{I}_{T (K-1)}, \mathbf{0}\right) \otimes \mathbf{x}^{H}(n)-\left(\mathbf{0}, \mathbf{I}_{T (K-1)}\right) \otimes \mathbf{x}^{H}(n+1)
 \end{equation}
 
-Đến đây, tuỳ thuộc vào ràng buộc C1, C2, hoặc C3, việc ước lượng $\mathbf{g}$ sẽ được thực hiện khác nhau. Cụ thể, C1 là ràng buộc bậc 2 (quadratic) đơn giản nhất, chỉ để đảm bảo tính chất đã được đưa ra ở phương trình (~\ref{eq:contrant}). Tiếp đến, C2 là ràng buộc tuyến tính (linear) yêu cầu $\operatorname{trace}(\mathbf{U^H \mathbf{\bar{G}}}) = 1$. Cuối cùng, C3 là ràng buộc giữ cho công suất đầu ra của bộ cân bằng không đổi, C3 yêu cầu $\mathbb{E}\| \mathbf{\bar{G}}^H \mathbf{x}(i) \|^2 = 1$. Trong luận văn này, ràng buộc C1 quadratic đơn giản nhất sẽ được lựa chọn. Qua đó, giá trị duy nhất nhỏ nhất và ổn đỉnh $\mathbf{g}$ thu được bằng cách chọn giá trị véc-tơ riêng nhỏ nhất của ma trận $\mathbf{R}$.
+Đến đây, tuỳ thuộc vào ràng buộc C1, C2, hoặc C3, việc ước lượng $\mathbf{g}$ sẽ được thực hiện khác nhau. Cụ thể, C1 là ràng buộc bậc 2 (quadratic) đơn giản nhất, chỉ để đảm bảo tính chất đã được đưa ra ở phương trình (~\ref{eq:contrant}). Tiếp đến, C2 là ràng buộc tuyến tính (linear) yêu cầu $\operatorname{trace}(\mathbf{U}^H \mathbf{\bar{G}}) = 1$. Cuối cùng, C3 là ràng buộc giữ cho công suất đầu ra của bộ cân bằng không đổi, C3 yêu cầu $\mathbb{E}\| \mathbf{\bar{G}}^H \mathbf{x}(n) \|^2 = 1$. Trong luận văn này, ràng buộc C1 quadratic đơn giản nhất sẽ được lựa chọn. Qua đó, giá trị duy nhất nhỏ nhất và ổn định $\mathbf{g}$ thu được bằng cách chọn giá trị véc-tơ riêng nhỏ nhất của ma trận $\mathbf{R}$.
 \begin{equation}
     \mathbf{g} = \mathbf{v}^{\downarrow} (\mathbf{R})
 \end{equation}
 
 \section{Đề xuất phương pháp nhận dạng hệ thống SB-MRE cho MIMO}
 
-Phương pháp nhận dạng hệ thống SB-MRE được đề xuất dựa trên hướng tiếp cận đơn giản nhất của SB như đã trình bày ở mục~\ref{sec:semi} đó là sử dụng thêm một phần nhỏ pilot để kết hợp với B-MRE. Đi vào chi tiết, giả sử tại bộ phát thứ $t$, các chuỗi ký hiệu $\mathbf{s}_t$ có độ dài $N_s$ sẽ được truyền đi. Trong đó, $\mathbf{s}_t$ bao gồm $N_p$ ký hiệu pilot và $N_s - N_p$ ký hiệu dữ liệu. $\mathbf{s}_t$ được biểu diễn như sau
+\begin{figure}
+    \centering
+    \begin{tikzpicture}[node distance = 0mm]
+        \node[field5, minimum height=20mm, minimum width=20mm, fill=red!10!white] (B1) {$s_t(0)$};
+        \node[right=-1mm of B1, field5, minimum height=20mm, minimum width=20mm, fill=red!10!white] (B2) {$s_t(1)$};
+        \node[right=-1mm of B2, field5, minimum height=20mm, minimum width=20mm, fill=red!10!white] (B3) {$\cdots$};
+        \node[right=-1mm of B3, field5, minimum height=20mm, minimum width=20mm, fill=red!10!white] (B4) {$s_t(N_p - 1)$};
+        \node[right=-1mm of B4, field5, minimum height=20mm, minimum width=20mm] (B5) {$s_t(N_p)$};
+        \node[right=-1mm of B5, field5, minimum height=20mm, minimum width=20mm] (B6) {$s_t(N_p + 1)$};
+        \node[right=-1mm of B6, field5, minimum height=20mm, minimum width=20mm] (B7) {$\cdots$};
+        \node[right=-1mm of B7, field5, minimum height=20mm, minimum width=20mm] (B8) {$s_t(N_s - 1)$};
+
+        \draw [very thick,decorate,decoration={calligraphic brace,amplitude=10pt}] (-10mm, 12mm) -- (68mm, 12mm) node [pos=0.5, above=3mm] {$N_p$ ký hiệu pilot} ;
+        \draw [very thick,decorate,decoration={calligraphic brace,amplitude=10pt}] (69mm, 12mm) -- (149mm, 12mm) node [pos=0.5, above=3mm] {$N_s - N_p$ ký hiệu dữ liệu} ;
+    \end{tikzpicture}
+    \caption{Minh hoạ chuỗi một ký hiệu $\mathbf{s}_t$ sử dụng cho SB-MRE.}
+    \label{fig:mre_sequence}
+\end{figure}
+
+Phương pháp nhận dạng hệ thống SB-MRE được đề xuất dựa trên hướng tiếp cận đơn giản nhất của SB như đã trình bày ở mục~\ref{sec:semi} đó là sử dụng thêm một phần nhỏ pilot để kết hợp với B-MRE. Đi vào chi tiết, giả sử tại bộ phát thứ $t$, các chuỗi ký hiệu $\mathbf{s}_t$ có độ dài $N_s$ sẽ được truyền đi. Trong đó, $\mathbf{s}_t$ bao gồm $N_p$ ký hiệu pilot và $N_s - N_p$ ký hiệu dữ liệu như minh hoạ trên hình~\ref{fig:mre_sequence}, được biểu diễn như sau
 \begin{equation}
-\mathbf{s}_t = \left[s(0), \ldots s\left(N_{p-1}\right), s\left(N_p\right), \ldots, s\left(N_s-1\right)\right]
+    \mathbf{s}_t(n) = [s_t(n), \ldots, s_t\left(n-N_{p} + 1\right),
+    s_t\left(n - N_p\right), \ldots, s_t\left(n - N_s+1\right)]^\top
 \end{equation}
 
 Các ký hiệu pilot sẽ được thu thập ở bên nhận, và sử dụng để nhận dạng kênh truyền theo hướng tiếp cận mù. Trong nghiên cứu này, phương pháp bình phương nhỏ nhất (LS - Least squares) được đề xuất để tìm ra ma trận nghịch đảo $\bar{\mathbf{G}}$ của $\mathbf{H}$. Giải thuật LS được biểu diễn như dưới đây
 % Pilot signals estimate the full set of channel inverse by the least-square method.
 \begin{equation}
 \label{eq:ls}
-    \hat{\mathbf{G}} = \arg \underset{\bar{\mathbf{G}} \in \mathbb{C}^{LN \times KT}}{\min} \sum_{i=N-1}^{N_{p} - 1}\|\bar{\mathbf{s}}(i)- \bar{\mathbf{G}}^H \mathbf{x}(i)\|_F^2 
+    \hat{\mathbf{G}} = \arg \underset{\bar{\mathbf{G}} \in \mathbb{C}^{LN \times KT}}{\min} \sum_{i=N-1}^{N_{p} - 1}\|\bar{\mathbf{s}}(n)- \bar{\mathbf{G}}^H \mathbf{x}(n)\|_F^2 
 \end{equation}
 trong đó $\lVert . \rVert _F$ là Frobenius norm. Như đã trình bày ở trên, hàm mất mát của $\bar{\mathbf{G}}$ cho giải thuật B-MRE được đưa ra ở phương trình (\ref{eq:loss_mre}). Để kết hợp thành phần pilot như trên phương trình (\ref{eq:ls}) với thành phần B-MRE kể trên, một hàm mất mát mới kết hợp tự B-MRE và LS dựa trên pilot được đề xuất dựa trên phương pháp Lagrange multiplier~\cite{bertsekas2014constrained}. Hàm mất mát chung của SB-MRE sẽ là
 \begin{equation}
 \label{eq:cost}
-    \mathcal{L}(\bar{\mathbf{G}})=\sum_{i=N-1}^{N_{p} - 1}\|\bar{\mathbf{s}}(i)- \bar{\mathbf{G}}^H \mathbf{s}(i)\|_F^2 +\lambda \mathbf{g}^H \mathbf{R} \mathbf{g}
+    \mathcal{L}(\bar{\mathbf{G}})=\sum_{i=N-1}^{N_{p} - 1}\|\bar{\mathbf{s}}(n)- \bar{\mathbf{G}}^H \mathbf{x}(n)\|_F^2 +\lambda \mathbf{g}^H \mathbf{R} \mathbf{g}
 \end{equation}
 trong đó $\lambda$ là trọng số của thành phần mù trong SB-MRE, $\mathbf{R}$ của B-MRE được đưa ra ở công thức (\ref{eq:R}) cho ràng buộc bậc hai. $\mathbf{g}$ là dạng véc-tơ của ma trận làm bằng kênh $\bar{\mathbf{G}}$ được biểu diễn như sau
 \begin{equation}
 \label{eq:vecG}
     \begin{aligned}
         \mathbf{g} = \operatorname{vec}(\bar{\mathbf{G}}) &=\left[\vec{\mathbf{G}}_0^\top, \vec{\mathbf{G}}_1^\top, \ldots, \vec{\mathbf{G}}_{K-1}^\top\right]^\top \\
-        \vec{\mathbf{G}_i} &= \left[\begin{array}{ll}
+        \vec{\mathbf{G}}_i &= \left[\begin{array}{ll}
         \mathbf{g}_{0, i}^\top, \mathbf{g}_{1, i}^\top, \cdots, \mathbf{g}_{T-1, i}^\top
         \end{array}\right]^\top
     \end{aligned}
@@ -100,7 +152,7 @@ trong đó $\lambda$ là trọng số của thành phần mù trong SB-MRE, $\ma
 Không làm mất đi tính tổng quát, thành phần LS trong công thức (\ref{eq:cost}) được chuyển vị và lấy liên hợp phức, toán tử $\sum$ chuyển sang dạng ma trận của các tín hiệu nguồn và thu lần lượt là $\widetilde{\mathbf{S}}$ và $\widetilde{\mathbf{X}}$. Từ đó, hàm mất mát của $\bar{\mathbf{G}}$ sẽ có dạng là
 \begin{equation}
     \begin{aligned}
-    \mathcal{L}(\bar{\mathbf{G}})&=\sum_{i=N-1}^{N_{p} - 1}\left\|{\bar{\mathbf{s}}^H(i)}- \mathbf{x}^H(i) \bar{\mathbf{G}}\right\|^2_F +\lambda \mathbf{g}^H \mathbf{R} \mathbf{g}\\
+    \mathcal{L}(\bar{\mathbf{G}})&=\sum_{i=N-1}^{N_{p} - 1}\left\|{\bar{\mathbf{s}}^H(n)}- \mathbf{x}^H(n) \bar{\mathbf{G}}\right\|^2_F +\lambda \mathbf{g}^H \mathbf{R} \mathbf{g}\\
     &=\left\|\widetilde{\mathbf{S}}^H-\widetilde{\mathbf{X}}^H \bar{\mathbf{G}}\right\|^2_F +\lambda \mathbf{g}^H \mathbf{R} \mathbf{g}
     \end{aligned}
 \end{equation}
@@ -123,7 +175,7 @@ biểu diễn LS được véc-tơ hoá, từ đó, dạng của hàm mất mát
     \begin{aligned}
     \mathcal{L}(\mathbf{g}) &= \left\|\operatorname{vec}(\widetilde{\mathbf{S}}^H) - (\mathbf{I}_{KT} \otimes \widetilde{\mathbf{X}}^H) \operatorname{vec}(\bar{\mathbf{G}})\right\|^2_F + \lambda \mathbf{g}^H \mathbf{R} \mathbf{g}\\
          &= \left\| \bar{\mathbf{s}} - \mathbf{A} \mathbf{g} \right\|^2_F + \lambda \mathbf{g}^H \mathbf{R} \mathbf{g} \\
-         &= \mathbf{g}^H \mathbf{A}^H \mathbf{A} \mathbf{g} + \left\| \bar{\mathbf{s}} \right\|^2_F - 2\Re (\mathbf{g}^h \mathbf{A}^H \bar{\mathbf{s}}) + \lambda \mathbf{g}^H \mathbf{R} \mathbf{g}    \end{aligned}
+         &= \mathbf{g}^H \mathbf{A}^H \mathbf{A} \mathbf{g} + \left\| \bar{\mathbf{s}} \right\|^2_F - 2\Re (\mathbf{g}^H \mathbf{A}^H \bar{\mathbf{s}}) + \lambda \mathbf{g}^H \mathbf{R} \mathbf{g}    \end{aligned}
 \end{equation}
 
 Để tìm giá trị cực tiểu của hàm mất mát trên phương trình (\ref{eq:cost_final}), lấy đạo hàm riêng của $\mathcal{L}(\mathbf{g})$ theo $\mathbf{g}$ như sau 
@@ -142,32 +194,32 @@ Giá trị cuối cùng của ma trận cân bằng kênh $\bar{\mathbf{G}}$ dư
 
 \section{Đề xuất giảm thiểu chi phí của thuật toán SB-MRE}
 
-Trong mục này, hai phương pháp nhằm giảm thiểu độ phức tạp của thành phần B-MRE và số lượng pilot $N_s$ của SB-MRE sẽ được đề xuất.
+% Trong mục này, hai phương pháp nhằm giảm thiểu độ phức tạp của thành phần B-MRE và số lượng pilot $N_s$ của SB-MRE sẽ được đề xuất.
 
-\subsection{Giảm thiểu độ phức tạp của thành phần B-MRE}
+% \subsection{Giảm thiểu độ phức tạp của thành phần B-MRE}
 
 Trong đề xuất gốc và đề xuất SB-MRE đã trình bày ở trên, độ phức tạp của thành phần B-MRE là $\mathcal{O}(LNKT)$~\cite{original}. Trong đó $KT$ bộ cân bằng kênh sẽ được ước lượng, tuy nhiên chỉ một được sử dụng sau đó. Điều này làm ra tăng lượng tài nguyên tính toán không cần thiết đặc biệt là khi $N$ lớn. Do đó, trong nghiên cứu này, số lượng các bộ lọc phải ước lượng sẽ được giảm từ $K$ còn 2 bộ lọc, bao gồm bộ lọc không trễ (thứ tự $0$) và bộ lọc có độ trễ lớn nhất (thứ tự $K-1$). Giải thuật B-MRE sau khi đã được giảm độ phức tạp sẽ được viết ngắn gọn là `B-MRE rc' (reduced cost) và giải thuật SB-MRE sử dụng thông tin từ B-MRE rc sẽ được viết tắt là `SB-MRE rc'. Với đề xuất này, độ phức tạp của B-MRE được giảm về $\mathcal{O}(LNT)$, và ma trận cân bằng kênh truyền cho bộ phát thứ $t$ sẽ có dạng
 \begin{equation}
-    \mathbf{V}_{t} = [\mathbf{g}_{t, 0}, \mathbf{g}_{t, K-1}]
+    \mathbf{V}_{t} = [\mathbf{g}_{t, 0}, \; \mathbf{g}_{t, K-1}]
 \end{equation}
 theo đó, tín hiệu nguồn được ước lượng cho ăng-ten phát thứ $t$ được biểu diễn như sau
 \begin{equation}
-    \mathbf{V}_t^H \mathbf{x}(i) = [s_t(i), \; s_t(i-K+1)]^\top = \mathbf{s}_{t}(i)
+    \mathbf{V}_t^H \mathbf{x}(n) = [s_t(n), \; s_t(n-K+1)]^\top = \mathbf{s}_{t}(n)
 \end{equation}
 cuối cùng, việc tính toán toàn bộ bậc của ma trận $\mathbf{R}$ là không cần thiết. Phương trình (\ref{eq:R}) được sửa đổi trở thành
 \begin{equation}
-\mathbf{U} = \left(\mathbf{I}_{T}, \mathbf{0}\right) \otimes \mathbf{x}^{H}(i)-\left(\mathbf{0}, \mathbf{I}_{T}\right) \otimes \mathbf{x}^{H}(i+K-1)
+\mathbf{U} = \left(\mathbf{I}_{T}, \mathbf{0}\right) \otimes \mathbf{x}^{H}(n)-\left(\mathbf{0}, \mathbf{I}_{T}\right) \otimes \mathbf{x}^{H}(n+K-1)
 \end{equation}
-// Chứng minh
-\subsection{Giảm thiểu độ dài chuỗi pilot}
+% // Chứng minh
+% \subsection{Giảm thiểu độ dài chuỗi pilot}
 
-Ngoài việc giảm độ phức tạp của thành phần B-MRE, số lượng pilots được sử dụng cho SB-MRE cũng cần được xem xét giảm thiểu để thu được hiệu suất sử dụng phổ tốt nhất. 
+% Ngoài việc giảm độ phức tạp của thành phần B-MRE, số lượng pilots được sử dụng cho SB-MRE cũng cần được xem xét giảm thiểu để thu được hiệu suất sử dụng phổ tốt nhất. 
 
-\noindent// Chứng minh
+% \noindent// Chứng minh
 
 \section{Mô phỏng và đánh giá}
 
-\begin{table}[H]
+\begin{table}[ht]
 \centering
 \caption{Các tham số mô phỏng hệ thống truyền thông không dây của SB-MRE.}
 \label{tab:simulation_param}
@@ -203,7 +255,7 @@ với $K$ là thứ tự chạy mô phỏng và $N_e$ là số lượng các ký
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=.8\linewidth]{figures/performance.eps}
+    \includegraphics[width=\linewidth]{figures/performance.eps}
     \caption{So sánh $\operatorname{SER}$ của thuật toán đề xuất SB-MRE với các phương pháp nhận dạng tuyến tính.}
     \label{fig:performance}
 \end{figure}
@@ -211,14 +263,14 @@ với $K$ là thứ tự chạy mô phỏng và $N_e$ là số lượng các ký
 Tiếp đến, để kiểm chứng sự ảnh hưởng của số lượng ký hiệu pilot ($N_p$) đến hiệu suất của phương pháp đề xuất SB-MRE và SB-MRE rc, $\operatorname{SER}$ tương ứng với các $N_p$ được mô phỏng và đưa ra trong hình~\ref{fig:vary_N_p}. Số lượng pilot được thay đổi từ $N \rightarrow N_s/4$ tương ứng là $10\rightarrow 64$ và $\operatorname{SNR}$ được cố định là $5, 10$ hoặc $15$~dB. Dễ nhận thấy, khi số lượng ký hiệu pilot và $\operatorname{SNR}$ tăng thì $\operatorname{SER}$ sẽ giảm, tuy nhiên độ suy giảm là khác nhau. Với SB-MRE rc, tỷ lệ lỗi ký hiệu sẽ giảm nhanh khi $N_p$ tăng từ $10 \rightarrow 20$ ký hiệu, và giảm chậm và gần như hội tụ khi $N_p$ tiếp tục tăng lên đến 64. Các mức $\operatorname{SNR}$ lớn hơn sẽ cho $\operatorname{SER}$ tốt hơn và có thể đạt thấp hơn $10^{-2}$ cho SB-MRE giảm chi phí với $\operatorname{SNR}=15$~dB, $N_p > 20$ ký hiệu. Với SB-MRE, trước hết hiệu suất của SB-MRE sẽ vượt trội trên $10^1$~dB so với SB-MRE đã giảm chi phí ở tất cả các giá trị $\operatorname{SNR}$ khác nhau. Thứ hai, nhìn chung $\operatorname{SER}$ sẽ giảm dần đều ở tất cả các giá trị $N_p$. Thứ ba, độ dốc của các đường $\operatorname{SER}$ là tăng dần với $\operatorname{SNR}$ lớn hơn. Ở giá trị $\operatorname{SNR}=15$~dB, chỉ cần $31$ ký hiệu pilot để SB-MRE đạt được $\operatorname{SER}$ tuyệt đối. Tóm lại, số lượng pilot ảnh hưởng lớn đến độ chính xác của SB-MRE và ít hơn cho SB-MRE rc.
 \begin{figure}[ht]
     \centering
-    \begin{subfigure}
+    \begin{subfigure}[b]{\textwidth}
          \centering
-         \includegraphics[width=0.8\linewidth]{figures/vary_N_p_1.eps}
+         \includegraphics[width=\linewidth]{figures/vary_N_p_1.eps}
      \end{subfigure}
      \hfill
-     \begin{subfigure}
+     \begin{subfigure}[b]{0.7\textwidth}
          \centering
-         \includegraphics[width=.6\linewidth]{figures/legend.pdf}
+         \includegraphics[width=\linewidth]{figures/legend.pdf}
      \end{subfigure}
      \hfill
     \caption{So sánh $\operatorname{SER}$ của thuật toán đề xuất SB-MRE với các số lượng pilot ($N_p$) và $\operatorname{SNR}$ khác nhau.}
@@ -227,16 +279,16 @@ Tiếp đến, để kiểm chứng sự ảnh hưởng của số lượng ký 
 
 Cuối cùng, ảnh hưởng của thành phần B-MRE trong SB-MRE sẽ được khảo sát thông qua trọng số $\lambda$. Trên hình~\ref{fig:vary_lambda}, hai phương pháp được đề xuất SB-MRE và SB-MRE rc sẽ được mô phỏng với các $\lambda$ và $\operatorname{SNR}$ khác nhau. Cụ thể, giá trị $\lambda$ sẽ được thay đổi trong khoảng $0,01 \rightarrow 0,2$ với bước $0,01$ và $\operatorname{SNR}$ được cố định là $5, 10$ hoặc $15$~dB. Có thể thấy rằng, $\operatorname{SER}$ của SB-MRE và SB-MRE rc không bị ảnh hưởng bởi $\lambda$ nhiều như số lượng pilot. Đặc biệt khi $\operatorname{SNR}$ thấp như $5$~dB, $\operatorname{SER}$ giảm rất ít khi $\lambda$ tăng, do ảnh hiệu suất của B-MRE ở các mức $\operatorname{SNR}$ thấp như đã khảo sát trên hình~\ref{fig:performance}. Khi $\operatorname{SNR}$ cao hơn như $10$~dB, B-MRE bắt đầu ảnh hưởng đến độ chính xác chung, đặc biệt là với SB-MRE khi ước lượng toàn bộ $K$ bộ làm bằng khi độ dốc của đường $\operatorname{SER}$ là rõ ràng hơn. Tuy nhiên, phải đến khi $\operatorname{SNR}=15$~dB, B-MRE mới thực sự gây ra ảnh hưởng, đường $\operatorname{SER}$ của SB-MRE rc giảm rõ rệt từ $10^{-3} \rightarrow 10^{-4}$ khi $\lambda$ tăng lên. Ở mức $\operatorname{SNR}$ này, SB-MRE đã đạt độ chính xác tuyệt đối chỉ với thành phần pilot $N_p = 32$ như đã khảo sát trên hình~\ref{fig:performance} và~\ref{fig:vary_N_p} nên không được biểu diễn trên hình~\ref{fig:vary_lambda}. Qua đó, có thể nhận xét trọng số của thành phần mù có ảnh hưởng đến độ chính xác của SB-MRE nhưng chỉ khi tỷ lệ tín hiệu tạp âm ở mức cao để thành phần mù bắt đầu cho thấy tác dụng.
 
-\begin{figure}
+\begin{figure}[ht]
     \centering
-    \begin{subfigure}
+    \begin{subfigure}[b]{\textwidth}
          \centering
-         \includegraphics[width=.8\linewidth]{figures/vary_lambda.eps}
+         \includegraphics[width=\linewidth]{figures/vary_lambda.eps}
      \end{subfigure}
      \hfill
-     \begin{subfigure}
+     \begin{subfigure}[b]{0.7\textwidth}
          \centering
-         \includegraphics[width=.6\linewidth]{figures/legend_1.pdf}
+         \includegraphics[width=\linewidth]{figures/legend_1.pdf}
      \end{subfigure}
      \hfill
     \caption{So sánh $\operatorname{SER}$ của thuật toán đề xuất SB-MRE với trọng số thành phần B-MRE ($\lambda$) và $\operatorname{SNR}$ khác nhau.}

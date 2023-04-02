@@ -18,6 +18,50 @@
 \hline
 3&in hoa, đậm&Ma trận \\
 \hline
+4 & (.)$^\top$ & Chuyển vị \\ \hline
+5 & (.)$^{-1}$ & Nghịch đảo \\ \hline
+6 & (.)$^H$ & Chuyển vị liên hợp phức \\ \hline
+7 & $\alpha$ & Tham số học của mạng ISDNN \\ \hline
+8 & $\delta$ & Tốc độ học / độ dài bước \\ \hline
+9 & $\Im$ & Phần ảo \\ \hline
+10 & $\lambda$ & Trọng số của thành phần B-MRE \\ \hline
+11 & $\mathbb{E}$(.) & Công suất trung bình \\ \hline
+12 & $\mathbf{e}$ & Véc-tơ phần dư / lỗi \\ \hline
+13 & $\mathcal{L}$ & Hàm mất mát \\ \hline
+14 & $\mathcal{O}$ & Độ phức tạp \\ \hline
+15 & $\mathcal{U}$ & Phân bố đều \\ \hline
+16 & $\Psi$ & Toán tử phi tuyến tính \\ \hline
+17 & $\Psi_t$ & Hàm phi tuyến tính phân đoạn \\ \hline
+18 & $\Re$ & Phần thực \\ \hline
+19 & $\sigma$ & Độ lệch chuẩn \\ \hline
+20 & $\mathbf{\theta}$ & Bộ tham số của việc học \\ \hline
+21 & $\lVert . \rVert _F$ & Frobenius norm \\ \hline
+22 & $\mathbf{0}_T$ & Véc-tơ cột có kích thước $T \times 1$ \\ \hline
+23 & $\operatorname{arg}$ & Vị trí \\ \hline
+24 & $b$ & Bias của bộ biến đổi tuyến tính \\ \hline
+25 & $\mathcal{CN}$ & Tạp âm AWGN phức \\ \hline
+26 & $\operatorname{con}$ & Phép nối \\ \hline
+27 & $\partial$ & Đạo hàm riêng \\ \hline
+28 & dB & Đơn vị decibel \\ \hline
+29 & $\operatorname{diag}$ & Thành phần đường chéo \\ \hline
+30 & $\mathbf{G}$ & Ma trận của bộ nhận dạng tuyến tính \\ \hline
+31 & $\mathbf{G}_H$ & Ma trận Gram của $\mathbf{H}$ \\ \hline
+32 & $\mathbf{H}$ & Ma trận kênh truyền \\ \hline
+33 & $\mathbf{I}_K$ & Ma trận đơn vị kích thước K \\ \hline
+34 & $K$ & Số lượng bộ cân bằng của B-MRE \\ \hline
+35 & $L$ & Số ăng-ten thu \\ \hline
+36 & $M$ & Bậc kênh truyền \\ \hline
+37 & $\operatorname{min}$ & Giá trị nhỏ nhất \\ \hline
+38 & $N$ & Số lượng ký hiệu tại mỗi thời điểm bên thu lưu lại \\ \hline
+39 & $N_p$ & Độ dài chuỗi ký hiệu pilot \\ \hline
+40 & $N_s$ & Độ dài chuỗi ký hiệu $\mathbf{s}$ \\ \hline
+41 & $\rho$ & Toán tử tuyến tính \\ \hline
+42 & $\mathbf{s}$ & Các ký hiệu được gửi đi từ bộ phát \\ \hline
+43 & $T$ & Số ăng-ten phát / người dùng bên phát \\ \hline
+44 & $\operatorname{vec}(\mathbf{X})$ & Véc-tơ hoá ma trận $\mathbf{X}$ \\ \hline
+45 & $\mathbf{w}$ & Tạp âm AWGN \\ \hline
+46 & $w$ & Trọng số của bộ biến đổi tuyến tính \\ \hline
+47 & $\mathbf{x}$ & Các ký hiệu bên thu nhận được \\ \hline
 \end{longtable}
 }}
 \newpage
@@ -38,52 +82,56 @@
 2 & AWGN & Additive white Gaussian noise & Tạp âm trắng cộng sinh \\ \hline
 3 & B & Blind & Kỹ thuật nhận dạng mù \\ \hline
 4 & BER & Bit error rate & Tỷ lệ lỗi bít \\ \hline
-5 & CMA & Constant modulus algorithm & Thuật toán mô-đun không đổi \\ \hline
-6 & CSI & Channel state information & Thông tin về trạng thái kênh truyền \\ \hline
-7 & Data-driven & Data-driven & Hướng dữ liệu \\ \hline
-8 & DDCE & Decision-directed channel estimation & Phương pháp hướng quyết định \\ \hline
-9 & DetNet & Detection Network & Mạng nơ-ron học sâu phát hiện \\ \hline
-10 & DL & Deep learning & Học sâu \\ \hline
-11 & DNN & Deep-neural network & Mạng nơ-ron sâu \\ \hline
-12 & DoA & Direction of arrival & Hướng sóng đến \\ \hline
-13 & DoD & Direction of departure & Hướng phát sóng \\ \hline
-14 & FIR & Finite impulse response & Đáp ứng xung hữu hạn \\ \hline
-15 & GPR & Gaussian process regression & Thuật toán hồi quy Gaussian \\ \hline
-16 & HOS & Higer-order statistics & Đặc tính thống kê bậc cao \\ \hline
-17 & I.i.d & Independent and identically distributed & Biến độc lập và phân phối đồng nhất \\ \hline
-18 & ICA & Independent component analysis & Phân tích thành phần độc lập \\ \hline
-19 & ISD & Iterative sequential detection & Mạng học sâu phát hiện tuần tự lặp lại \\ \hline
-20 & LMMSE & Linear Minimum mean square error & Kỹ thuật ước lượng lỗi bình phương trung bình nhỏ nhất tuyến tính \\ \hline
-21 & LMS & Least mean squares & Kỹ thuật trung bình bình phương nhỏ nhất \\ \hline
-22 & LS & Least square & Kỹ thuật bình phương nhỏ nhất \\ \hline
-23 & LSTM & Long/short-term memory & Mạng trí nhớ dài hạn/ngắn hạn \\ \hline
-24 & MIMO & Multi-input multi-output & Hệ thống đa đầu vào đa đầu ra \\ \hline
-25 & ML & Machine learning & Học máy \\ \hline
-26 & MLE & Maximum likelihood estimator & Bộ ước lượng hợp lẽ cực đại \\ \hline
-27 & mMIMO & Massive Multi-input multi-output & Hệ thống đa đầu vào đa đầu ra kích thước lớn \\ \hline
-28 & MMSE & Minimum mean square error & Kỹ thuật lỗi trung bình phương sai tối thiểu \\ \hline
-29 & mmWave & Millimeter wave & Bước sóng mi-li-mét \\ \hline
-30 & Model-driven & Model-driven & Hướng mô hình \\ \hline
-31 & MRE & Mutually referenced equalizers & Bộ cân bằng kênh tham chiếu \\ \hline
-32 & NB & Non-blind & Kỹ thuật nhận dạng không mù \\ \hline
-33 & NN & Neural network & Mạng nơ-ron \\ \hline
-34 & PC & Pilot contamination & Ô nhiễm pilot \\ \hline
-35 & PCA & Principal components analysis & Phân tích thành phần chính \\ \hline
-36 & Pilot & Pilot & Ký hiệu hoa tiêu \\ \hline
-37 & Pilot-assisted & Pilot-assisted & Phương pháp dựa trên tín hiệu hoa tiêu \\ \hline
-38 & PSK & Phase-shift keying & Điều chế pha \\ \hline
-39 & QAM & Quadrature amplitude modulation & Điều chế biên độ cầu phương \\ \hline
-40 & Rc & Reduced cost & Giảm thiểu chi phí \\ \hline
-41 & RL & Reinforcement learning & Học tăng cường \\ \hline
-42 & RLS & Recursive least squares & Kỹ thuật bình phương đệ quy nhỏ nhất \\ \hline
-43 & SB & Semi-blind & Kỹ thuật nhận dạng bán mù \\ \hline
-44 & SER & Symbol error rate & Tỷ lệ sai số ký hiệu \\ \hline
-45 & SIMO & Single-input multi-output & Hệ thống đơn đầu vào đa đầu ra \\ \hline
-46 & SISO & Single-input single-output & Hệ thống đơn đầu đơn vào đầu ra \\ \hline
-47 & SNR & Signal noise ratio & Tỷ lệ tín hiệu tạp âm \\ \hline
-48 & SOS & Second-order statistics & Đặc tính thống kê bậc hai \\ \hline
-49 & Training-based & Training-based & Phương pháp dựa trên việc đào tạo \\ \hline
-50 & ZF & Zero forcing & Kỹ thuật ép không \\ \hline
+5 & C1 & Constraint 1 & Ràng buộc bậc hai \\ \hline
+6 & C2 & Constraint 2 & Ràng buộc tuyến tính \\ \hline
+7 & C3 & Constraint 3 & Ràng buộc công suất \\ \hline
+8 & CMA & Constant modulus algorithm & Thuật toán mô-đun không đổi \\ \hline
+9 & CSI & Channel state information & Thông tin về trạng thái kênh truyền \\ \hline
+10 & Data-driven & Data-driven & Hướng dữ liệu \\ \hline
+11 & DDCE & Decision-directed channel estimation & Phương pháp hướng quyết định \\ \hline
+12 & DetNet & Detection Network & Mạng nơ-ron học sâu phát hiện \\ \hline
+13 & DL & Deep learning & Học sâu \\ \hline
+14 & DNN & Deep-neural network & Mạng nơ-ron sâu \\ \hline
+15 & DoA & Direction of arrival & Hướng sóng đến \\ \hline
+16 & DoD & Direction of departure & Hướng phát sóng \\ \hline
+17 & FIR & Finite impulse response & Đáp ứng xung hữu hạn \\ \hline
+18 & GPR & Gaussian process regression & Thuật toán hồi quy Gaussian \\ \hline
+19 & HOS & Higer-order statistics & Đặc tính thống kê bậc cao \\ \hline
+20 & i.i.d & Independent and identically distributed & Biến độc lập và phân phối đồng nhất \\ \hline
+21 & ICA & Independent component analysis & Phân tích thành phần độc lập \\ \hline
+22 & ISD & Iterative sequential detection & Mạng học sâu phát hiện tuần tự lặp lại \\ \hline
+23 & ISDNN & Iterative sequential Deep-neural network & Mạng nơ-ron sâu tuần tự lặp lại \\ \hline
+24 & LMMSE & Linear Minimum mean square error & Kỹ thuật ước lượng lỗi bình phương trung bình nhỏ nhất tuyến tính \\ \hline
+25 & LMS & Least mean squares & Kỹ thuật trung bình bình phương nhỏ nhất \\ \hline
+26 & LS & Least square & Kỹ thuật bình phương nhỏ nhất \\ \hline
+27 & LSTM & Long/short-term memory & Mạng trí nhớ dài hạn/ngắn hạn \\ \hline
+28 & MIMO & Multi-input multi-output & Hệ thống đa đầu vào đa đầu ra \\ \hline
+29 & ML & Machine learning & Học máy \\ \hline
+30 & MLE & Maximum likelihood estimator & Bộ ước lượng hợp lẽ cực đại \\ \hline
+31 & mMIMO & Massive Multi-input multi-output & Hệ thống đa đầu vào đa đầu ra kích thước lớn \\ \hline
+32 & MMSE & Minimum mean square error & Kỹ thuật lỗi trung bình phương sai tối thiểu \\ \hline
+33 & mmWave & Millimeter wave & Bước sóng mi-li-mét \\ \hline
+34 & Model-driven & Model-driven & Hướng mô hình \\ \hline
+35 & MRE & Mutually referenced equalizers & Bộ cân bằng kênh tham chiếu \\ \hline
+36 & NB & Non-blind & Kỹ thuật nhận dạng không mù \\ \hline
+37 & NN & Neural network & Mạng nơ-ron \\ \hline
+38 & PC & Pilot contamination & Ô nhiễm pilot \\ \hline
+39 & PCA & Principal components analysis & Phân tích thành phần chính \\ \hline
+40 & Pilot & Pilot & Ký hiệu hoa tiêu \\ \hline
+41 & Pilot-assisted & Pilot-assisted & Phương pháp dựa trên tín hiệu hoa tiêu \\ \hline
+42 & PSK & Phase-shift keying & Điều chế pha \\ \hline
+43 & QAM & Quadrature amplitude modulation & Điều chế biên độ cầu phương \\ \hline
+44 & rc & Reduced cost & Giảm thiểu chi phí \\ \hline
+45 & RL & Reinforcement learning & Học tăng cường \\ \hline
+46 & RLS & Recursive least squares & Kỹ thuật bình phương đệ quy nhỏ nhất \\ \hline
+47 & SB & Semi-blind & Kỹ thuật nhận dạng bán mù \\ \hline
+48 & SER & Symbol error rate & Tỷ lệ sai số ký hiệu \\ \hline
+49 & SIMO & Single-input multi-output & Hệ thống đơn đầu vào đa đầu ra \\ \hline
+50 & SISO & Single-input single-output & Hệ thống đơn đầu đơn vào đầu ra \\ \hline
+51 & SNR & Signal noise ratio & Tỷ lệ tín hiệu tạp âm \\ \hline
+52 & SOS & Second-order statistics & Đặc tính thống kê bậc hai \\ \hline
+53 & Training-based & Training-based & Phương pháp dựa trên việc đào tạo \\ \hline
+54 & ZF & Zero forcing & Kỹ thuật ép không \\ \hline
 
 \end{longtable}
 }

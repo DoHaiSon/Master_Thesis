@@ -5,37 +5,95 @@
 \chapter[NHẬN DẠNG HỆ THỐNG SỬ DỤNG MẠNG HỌC SÂU]{Nhận dạng hệ thống sử dụng mạng học sâu}
 \label{sec:ML}
 
-Trong chương này, tác giả sẽ đề xuất một mô hình mạng học sâu ISD sử dụng cho nhận dạng hệ thống viễn thông MIMO/mMIMO. Đầu tiên, sơ lược về hai hướng tiếp cận sử dụng mạng nơ-ron học sâu sẽ được giới thiệu. Kế đến là khái niệm về kỹ thuật mở rộng sâu (Deep unfolding). Một mô hình được mở rộng sâu từ thuật toán ISD gốc là DetNet được trình bày để so sánh ở mục các kết quả mô phỏng. Tiếp đến, từ một giải thuật ISD đã được đề xuất trong~\cite{Mandloi2017}, kết hợp với cách tiếp cận mở rộng sâu tại~\cite{Liao2020}, tác giả sẽ đề xuất một mạng học sâu DNN để nhận dạng hệ thống. Các bước mô phỏng và đánh giá sẽ được đưa ra để cho thấy tiềm năng của phương pháp đề xuất và đưa ra kết luận của chương. 
+Trong chương này, tác giả sẽ đề xuất một mô hình mạng học sâu ISDNN sử dụng cho nhận dạng hệ thống viễn thông MIMO/mMIMO. Đầu tiên, sơ lược về hai hướng tiếp cận sử dụng mạng nơ-ron sâu sẽ được giới thiệu. Kế đến là khái niệm về kỹ thuật mở rộng sâu (Deep unfolding). Một mô hình được mở rộng sâu từ bộ tối ưu hợp lẽ cực đại (MLE) là DetNet được trình bày để so sánh ở mục các kết quả mô phỏng. Tiếp đến, từ một giải thuật ISD đã được đề xuất trong~\cite{Mandloi2017}, kết hợp với cách tiếp cận mở rộng sâu tại~\cite{Liao2020}, tác giả đề xuất một mạng nơ-ron sâu ISDNN để nhận dạng hệ thống. Các bước mô phỏng và đánh giá sẽ được đưa ra để cho thấy tiềm năng của phương pháp đề xuất và kết luận của chương. 
 
-\section{Giới thiệu về mạng nơ-ron học sâu và mở rộng sâu (Deep unfolding)}
+\section{Giới thiệu về mạng nơ-ron sâu và mở rộng sâu (Deep unfolding)}
+\begin{figure} [H]
+    \centering
+    \begin{tikzpicture}[x=2.2cm,y=1.4cm]
+        \node[antenna, thick, scale=0.6] at (5mm, 14mm) (Rx0) {};
+        \node at (5mm, 30mm) (text_Rx0) {Rx $1$};
+        \draw[line] (5mm, 14mm) -- (18mm,14mm);
+    
+        \node[antenna, thick, scale=0.6] at (0mm, 0mm) (Rx1) {};
+        \node at (0mm, 16mm) (text_Rx0) {Rx $2$};
+        \draw[line] (0mm, 0) -- (18mm, 0);
 
-Trong chương~\ref{sec:back}, các phương pháp nhận dạng hệ thống sử dụng các phương pháp ML/DL đã được chia làm ba loại, trong đó phương pháp sử dụng các mạng nơ-ron đang được quan tâm nghiên cứu. Các mạng nơ-ron sâu (DNN - Deep-neural network) đã được sử rụng rộng rãi trong các ứng dụng như xử lý tiếng nói, ngôn ngữ tự nhiên, hình ảnh, thị giác máy, trò chơi trực tuyến~\cite{Samek2021}. Mười năm trở lại đây, nhiều nghiên cứu ứng dụng các mô hình mạng DNN khác nhau cho nhận dạng hệ thống viễn thông không dây. Có thể chia các phương pháp này thành hai kiểu chính, bao gồm hướng dữ liệu (data-driven) và hướng mô hình (model-driven)~\cite{Liao2020}. Các phương pháp data-driven trực tiếp học các đặc trưng từ một tập lớn các dữ liệu (dataset) để phục vụ cho các mục đích như ước lượng kênh truyền, phản hồi CSI,~\ldots. Tuy các phương pháp data-driven được đề xuất đều cho độ chính xác cao nhưng vẫn có những thách thức khi yêu cầu số lượng mẫu rất lớn và kéo theo đó là thời gian cho việc đào tạo lâu. Các phương pháp model-driven~\cite{He2019} có thể một phần khắc phục các hạn chế này bằng việc tối ưu/đưa thêm các tham số học bằng DL vào các một hình có sẵn để kết hợp ưu điểm của data-driven và các mô hình toán học truyền thống. 
+        \node[antenna, thick, scale=0.6] at (-5mm, -14mm) (Rx2) {};
+        \node at (-5mm, 2mm) (text_Rx0) {Rx $3$};
+        \draw[line] (-5mm, -14mm) -- (18mm, -14mm);
+    
+        \node[scale=1.5] at (0mm, -23mm) (dotss) {$\mathbf{\vdots}$};
+    
+        \node[antenna, thick, scale=0.6] at (-10mm, -35mm) (RxL) {};
+        \node at (-10mm, -19mm) (text_RxL) {Rx $L$};
+        \draw[line] (-10mm, -35mm) -- (18mm, -35mm);
 
-Trong các năm gần đây, kỹ thuật mở rộng sâu (Deep unfolding)~\cite{Wisdom2016} là một giải pháp tiềm năng để chuyển các giải thuật truyền thống thành các kiến trúc mạng DNN theo hướng tiếp cận model-driven. Chi tiết về mở rộng sâu tại~\cite{John2014}, chuyển đổi các phương pháp yêu cầu các vòng lặp đi lặp lại (iteractive inference) sang từng lớp của một mạng NN. Sau đó, sử dụng các giải thuật giảm độ dốc dự kiến (gradient descent), các tham số đào tạo trên các lớp được tách ra và đào tạo một cách riêng biệt. Sau $K$ lớp đào tạo tương tự như $K$ vòng lặp trong thuật toán gốc, mô hình có thể đạt được mục tiêu mong muốn. Ví dụ, DetNet~\cite{Samuel2017} là một mạng DNN dựa trên việc mở rộng sâu giải thuật `projected gradient descent'~\cite{Chen2015} cho bộ tối ưu hợp lẽ cực đại (MLE). Trong mục tiếp theo, mô hình mạng nơ-ron sâu DetNet sẽ được giới thiệu ngắn gọn và kết quả của DetNet sẽ so sánh với mạng sẽ được đề xuất.
+    
+      \readlist\Nnod{4,5,5,5,3} % array of number of nodes per layer
+      \readlist\Nstr{L,m,m,m,T} % array of string number of nodes per layer
+      \readlist\Cstr{\strut x,a^{\prev},a^{\prev},a^{\prev}, s} % array of coefficient symbol per layer
+      \def\yshift{0.5} % shift last node for dots
+      
+      \foreachitem \N \in \Nnod{ % loop over layers
+        \def\lay{\Ncnt} % alias of index of current layer
+        \pgfmathsetmacro\prev{int(\Ncnt-1)} % number of previous layer
+        \message{\lay,}
+        \foreach \i [evaluate={\c=int(\i==\N); \y=\N/2-\i-\c*\yshift;
+                     \index=(\i<\N?int(\i):"\Nstr[\lay]");
+                     \x=\lay; \n=\nstyle;}] in {1,...,\N}{ % loop over nodes
+          % NODES
+          \node[node \n] (N\lay-\i) at (\x,\y) {$\Cstr[\lay]_{\index}$};
+          
+          % CONNECTIONS
+          \ifnum\lay>1 % connect to previous layer
+            \foreach \j in {1,...,\Nnod[\prev]}{ % loop over nodes in previous layer
+              \draw[connect,white,line width=1.2] (N\prev-\j) -- (N\lay-\i);
+              \draw[connect] (N\prev-\j) -- (N\lay-\i);
+              %\draw[connect] (N\prev-\j.0) -- (N\lay-\i.180); % connect to left
+            }
+          \fi % else: nothing to connect first layer
+          
+        }
+        \path (N\lay-\N) --++ (0,1+\yshift) node[midway,scale=1.5] {$\vdots$};
+      }
+      
+      % LABELS
+      \node[above=2,align=center,green!60!black] at (1, 0) {Đầu vào};
+      \node[above=2,align=center,blue!60!black] at (65mm, 0) {Lớp ẩn};
+      \node[above=2,align=center,red!60!black] at (110mm, 0) {Đầu ra};
+      
+    \end{tikzpicture}
+    \caption{Minh hoạ sử dụng DNN để nhận dạng hệ thống viễn thông.}
+    \label{fig:DNN_model}
+\end{figure}
+Trong chương~\ref{sec:back}, các phương pháp nhận dạng hệ thống sử dụng các phương pháp ML/DL đã được chia làm ba loại, trong đó phương pháp sử dụng các mạng nơ-ron đang được quan tâm nghiên cứu. Các mạng nơ-ron sâu (DNN - Deep-neural network) đã được sử dụng rộng rãi trong các ứng dụng như xử lý tiếng nói, ngôn ngữ tự nhiên, hình ảnh, thị giác máy, trò chơi trực tuyến~\cite{Samek2021}. Mười năm trở lại đây, đã có nhiều nghiên cứu ứng dụng các mô hình mạng DNN khác nhau cho vấn đề nhận dạng hệ thống viễn thông không dây. Trên hình~\ref{fig:DNN_model} là một mô hình minh hoạ việc sử dụng DNN để ước lượng kênh truyền và khôi phục tín hiệu gốc. Có thể chia các phương pháp này thành hai hướng tiếp cận, bao gồm hướng dữ liệu (data-driven) và hướng mô hình (model-driven)~\cite{Liao2020}. Các phương pháp data-driven trực tiếp học các đặc trưng từ một tập lớn các dữ liệu (dataset) để phục vụ cho các mục đích như ước lượng kênh truyền, phản hồi CSI,~\ldots. Tuy các phương pháp data-driven được đề xuất đều cho độ chính xác cao nhưng vẫn có những thách thức khi yêu cầu số lượng mẫu rất lớn và kéo theo đó là thời gian/chi phí cho việc đào tạo lớn. Các phương pháp model-driven~\cite{He2019} có thể một phần khắc phục các hạn chế này bằng việc tối ưu/đưa thêm các tham số học vào các một hình có sẵn để kết hợp ưu điểm của data-driven và các mô hình toán học truyền thống. 
+
+Trong các năm gần đây, kỹ thuật mở rộng sâu (Deep unfolding)~\cite{Wisdom2016} là một giải pháp tiềm năng để chuyển các giải thuật truyền thống thành các kiến trúc mạng DNN theo hướng tiếp cận model-driven. Chi tiết về mở rộng sâu tại~\cite{John2014}, các phương pháp yêu cầu các vòng lặp đi lặp lại (iteractive inference) có thể dễ dàng chuyển đổi sang từng lớp của một mạng NN. Sau đó, sử dụng các giải thuật giảm dần độ dốc (GD - gradient descent) để đào tạo tham số trên các lớp mạng. Sau $K$ lớp đào tạo tương tự như $K$ vòng lặp trong thuật toán gốc, mô hình có thể đạt được mục tiêu mong muốn. Ví dụ, DetNet~\cite{Samuel2017} là một mạng DNN dựa trên việc mở rộng sâu bộ nhận dạng MLE và sử dụng giảm dần độ dốc dự kiến (PGD - projected gradient descent)~\cite{Chen2015}. Trong mục tiếp theo, mô hình mạng nơ-ron sâu DetNet sẽ được giới thiệu ngắn gọn và kết quả của DetNet sẽ so sánh với mạng sẽ được đề xuất.
 
 \section{Mạng nơ-ron học sâu DetNet}
 
-Xét hệ thống MIMO/mMIMO tương tự đã trình bày ở hình~\ref{fig:sys_model}. Tuy nhiên, thay vì mô hình hoá tín kênh truyền vô tuyến dưới dạng các bộ lọc FIR có chiều dài $M+1$, trong DNN, giả sử: (i) $T$ có thể coi là số lượng ăng-ten bên phát hoặc số lượng người dùng (user) với mỗi người dùng chỉ có một ăng-ten phát, (ii) ma trận $\mathbf{H}$ là biến đổi tuyến tính của tín hiệu truyền thành tín hiệu nhận được, (iii) $N=1$ tức mỗi ăng-ten nhận chỉ thu thập một ký hiệu tại một thời điểm, (iv) các ma trận sẽ được chuyển đổi sang dạng phần thực, ảo riêng biệt như phương trình (\ref{eq:matrixtras1}) và (\ref{eq:matrixtras2}). Biểu diễn đơn giản cho hệ thống MIMO/mMIMO như sau
+Xét hệ thống MIMO/mMIMO tương tự đã trình bày ở hình~\ref{fig:sys_model}. Tuy nhiên, thay vì mô hình hoá tín kênh truyền vô tuyến dưới dạng các bộ lọc FIR có chiều dài $M+1$, trong DNN, giả sử: (i) $T$ có thể coi là số lượng ăng-ten bên phát hoặc số lượng người dùng (user) với mỗi người dùng chỉ có một ăng-ten phát, (ii) ma trận $\mathbf{H}$ là biến đổi tuyến tính của tín hiệu truyền thành tín hiệu nhận được tức $M=0$, (iii) $N=1$ tức mỗi ăng-ten nhận chỉ thu thập một ký hiệu tại một thời điểm, (iv) các ma trận sẽ được chuyển đổi sang dạng phần thực, ảo riêng biệt như phương trình (\ref{eq:matrixtras1}) và (\ref{eq:matrixtras2}). Biểu diễn đơn giản cho hệ thống MIMO/mMIMO như sau
 \begin{equation}
     \mathbf{x} = \mathbf{H} \mathbf{s} + \mathbf{w}
 \end{equation}
-trong đó, $\mathbf{H} \in \mathbb{R}^{2L \times 2T}$, $\mathbf{s} \in \mathbb{R}^{2T \times 1}$, $\mathbf{w} \in \mathbb{R}^{2L \times 1}$, và $\mathbf{x} \in \mathbb{R}^{2L \times 1}$. Để tìm bộ nhận dạng cho hệ thống kể trên, định nghĩa hàm mất mát $l\left(\mathbf{s} ; \hat{\mathbf{s}}_{\boldsymbol{\theta}}(\mathbf{H}, \mathbf{x})\right)$ là khoảng cách giữa ký hiệu gốc và ký hiệu được ước lượng. Tìm giá trị $\mathbf{\theta}$ bằng cách tối thiểu hoá hàm mất mát kể trên.
+trong đó, $\mathbf{H} \in \mathbb{R}^{2L \times 2T}$, $\mathbf{s} \in \mathbb{R}^{2T \times 1}$, $\mathbf{w} \in \mathbb{R}^{2L \times 1}$, và $\mathbf{x} \in \mathbb{R}^{2L \times 1}$. Để tìm bộ nhận dạng cho hệ thống kể trên, định nghĩa hàm mất mát $\mathcal{L}\left(\mathbf{s} ; \hat{\mathbf{s}}_{\boldsymbol{\theta}}(\mathbf{H}, \mathbf{x})\right)$ là khoảng cách giữa ký hiệu gốc và ký hiệu được ước lượng. Tìm giá trị $\mathbf{\theta}$ bằng cách tối thiểu hoá hàm mất mát kể trên.
 \begin{equation}
 \label{eq:lossf}
-\min _{\boldsymbol{\theta}} \mathbb{E}\left\{l\left(\mathbf{s} ; \hat{\mathbf{s}}_{\boldsymbol{\theta}}(\mathbf{H}, \mathbf{x})\right)\right\}
+\min _{\boldsymbol{\theta}} \mathbb{E}\left\{\mathcal{L}\left(\mathbf{s} ; \hat{\mathbf{s}}_{\boldsymbol{\theta}}(\mathbf{H}, \mathbf{x})\right)\right\}
 \end{equation}
 
-Giải thuật cho độ chính xác cao nhất để giải quyết (\ref{eq:lossf}) là bộ ước lượng hợp lẽ cực đại (MLE - Maximum likelihood estimator) như sau
+Giải thuật tối ưu để giải quyết (\ref{eq:lossf}) là bộ ước lượng hợp lẽ cực đại (MLE - Maximum likelihood estimator) như sau
 \begin{equation}
 \label{eq:mle}
 \hat{\mathbf{s}}_{\boldsymbol{\theta}}(\mathbf{x}, \mathbf{H})=\arg \min _{\mathbf{s} \in \mathbb{R}^{2T}}\|\mathbf{x}-\mathbf{H} \mathbf{s}\|^2
 \end{equation}
-Tuy nhiên, độ phức tạp của MLE sẽ tăng theo cấp số mũ $\mathcal{O}(2^T)$ nên khó để triển khai trong các hệ mMIMO. Do vậy, DetNet được đề xuất nhằm tạo ra một kiến trúc mạng DNN đạt được tiệm cận độ chính xác với MLE. Trong nghiên cứu gốc, thay vì tạo ra một mạng nơ-ron nhằm ánh xạ trực tiếp từ $\mathbf{x}$ về $\mathbf{s}$, việc phân tách $\mathbf{x}$ thành các thành phần $\mathbf{H}, \mathbf{s},$ và $\mathbf{w}$ sẽ hiệu quả hơn.
+Tuy nhiên, độ phức tạp của MLE sẽ tăng theo cấp số mũ $\mathcal{O}(2^T)$ nên khó để triển khai trong các hệ mMIMO. Do vậy, DetNet được đề xuất nhằm tạo ra một kiến trúc mạng DNN đạt được tiệm cận độ chính xác với MLE. Trong nghiên cứu gốc, thay vì tạo ra một mạng nơ-ron nhằm ánh xạ trực tiếp từ $\mathbf{x}$ về $\mathbf{s}$, việc phân tách $\mathbf{x}$ thành các thành phần $\mathbf{H}, \mathbf{s},$ và $\mathbf{w}$ sẽ cho hiệu quả cao hơn.
 \begin{equation}
     \mathbf{H}^\top \mathbf{x}=\mathbf{H}^\top \mathbf{H s}+\mathbf{H}^\top \mathbf{w}
 \end{equation}
 
-Kiến trúc DetNet dựa trên phương pháp giảm độ dốc dựa kiến (projected gradient descent)~\cite{Chen2015} cho việc tối ưu MLE như trên (\ref{eq:mle}). Đạo hàm riêng được tách như trên (\ref{eq:pgd}) sử dụng luật chuỗi (chain rule)~\cite{Minka2000}.
+Kiến trúc DetNet dựa trên phương pháp PGD~\cite{Chen2015} cho việc tối ưu MLE như trên (\ref{eq:mle}). Đạo hàm riêng được tách như trên (\ref{eq:pgd}) sử dụng luật chuỗi (chain rule)~\cite{Minka2000}.
 \begin{equation}
 \label{eq:pgd}
     \begin{aligned}
@@ -43,7 +101,7 @@ Kiến trúc DetNet dựa trên phương pháp giảm độ dốc dựa kiến (
     & =\Pi\left[\hat{\mathbf{s}}_k-\delta_k \mathbf{H}^\top \mathbf{x}+\delta_k \mathbf{H}^\top \mathbf{H} \hat{\mathbf{s}}_k\right]
     \end{aligned}
 \end{equation}
-với $\mathbf{s}_k$ là giá trị ước lượng tại lớp thứ $k$, $\Pi [.]$ là một phép chiếu phi tuyến tính, và $\delta_k$ là độ dài bước (step size) của quá trình học. Kiến trúc của mạng DetNet đề xuất trong~\cite{Samuel2017} được biểu biến như trên hình~\ref{fig:detnet} và cách biểu diễn dưới dạng ma trận như sau
+với $\mathbf{s}_k$ là giá trị ước lượng tại lớp thứ $k$, $\Pi [.]$ là một phép biến đổi phi tuyến tính, và $\delta_k$ là độ dài bước (step size) của quá trình học. Kiến trúc của mạng DetNet đề xuất trong~\cite{Samuel2017} được biểu biến như trên hình~\ref{fig:detnet} và cách biểu diễn dưới dạng ma trận như sau
 \allowdisplaybreaks
 \begin{subequations}
 \begin{alignat}{4}
@@ -59,7 +117,7 @@ với $\mathbf{s}_k$ là giá trị ước lượng tại lớp thứ $k$, $\Pi 
     \hat{\mathbf{s}}_1 & =\mathbf{0}
 \end{alignat}
 \end{subequations}
-trong đó, $k = 1, \ldots, K$ là số các lớp của mạng DetNet, $\rho$ là một toán tử tuyến tính như ReLu hoặc Tanh. $\psi_{t_k}$ ký hiệu cho hàm tuyến tính phân đoạn, ở các mức $t$ khác nhau, $\psi_{t_k}(s)$ được minh hoạ trên hình~\ref{fig:soft_sign} và có biểu diễn toán học như sau
+trong đó, $k = 1, \ldots, K$ là số các lớp của mạng DetNet, $\rho$ là một toán tử tuyến tính. $\psi_{t_k}$ ký hiệu cho phép biến đổi phi tuyến tính phân đoạn, ở các mức $t$ khác nhau, $\psi_{t_k}(s)$ được minh hoạ trên hình~\ref{fig:soft_sign} và có biểu diễn toán học như sau
 \begin{equation}
     \psi_{t_k}(s)=-1+\frac{\rho\left(s + t_k \right)}{\left|t_k\right|}-\frac{\rho\left(s- t_k \right)}{\left|t_k\right|}
 \end{equation}
@@ -156,10 +214,10 @@ trong đó, $k = 1, \ldots, K$ là số các lớp của mạng DetNet, $\rho$ l
     \label{fig:detnet}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
-    \includegraphics[width=.6\linewidth]{figures/soft_sign.eps}
-    \caption{Hàm tuyến tính phân đoạn $\psi_{t_k}(s)$ được sử dụng trong DetNet.}
+    \includegraphics[width=.8\linewidth]{figures/soft_sign.eps}
+    \caption{Hàm phi tuyến tính phân đoạn $\psi_{t_k}(s)$ được sử dụng trong DetNet.}
     \label{fig:soft_sign}
 \end{figure}
 Các tham số của việc học sẽ bao gồm 
@@ -167,27 +225,34 @@ Các tham số của việc học sẽ bao gồm
 \boldsymbol{\theta}=\left\{\mathbf{W}^1_{k}, \mathbf{b}^1_{k}, \mathbf{W}^2_{k}, \mathbf{b}^2_{k}, \mathbf{W}^3_{k}, \mathbf{b}^3_{ k}, \mathbf{t}_k\right\}_{k=1}^K
 \end{equation}
 
-Một hàm mất mát sẽ tổng hợp sai số từ kết quả đầu ra của tất cả các lớp để ước lượng sự hội tụ của mạng DetNet. Ngoài ra, vì các lỗi ước lượng từ DetNet còn phụ thuộc vào tính ngẫu nhiên của kênh truyền nên sẽ được chuẩn hoá bằng lỗi của bộ giải mã ZF. Hàm mất mát như dưới đây
+Một hàm mất mát có dạng sai số toàn phương trung bình (MSE - Mean Squared Error) sẽ tổng hợp sai số từ kết quả đầu ra của tất cả các lớp để ước lượng sự hội tụ của mạng DetNet. Hàm mất mát như dưới đây
 \begin{equation}
 \label{eq:lossdetnet}
-    l(\mathbf{s} ; \hat{\mathbf{s}}(\mathbf{H}, \mathbf{x}))=\sum_{k=1}^K \log (k) \frac{\left\|\mathbf{s}-\hat{\mathbf{s}}_k\right\|^2}{\|\mathbf{s}-\tilde{\mathbf{s}}\|^2}
+    \mathcal{L}(\mathbf{s} ; \hat{\mathbf{s}}(\mathbf{H}, \mathbf{x}))= \frac{1}{2T} \sum_{t=1}^{2T} {\left\| s_t-\hat{s}_t\right\|^2}
 \end{equation}
-với $\tilde{\mathbf{s}}$ là ước lượng của $\mathbf{s}$ thu được từ bộ giải mã ZF như trình bày trong mục~\ref{sec:zf}. Lưu ý rằng, do $\mathbf{H}$ là ma trận của các số thực nên phép chuyển vị liên hợp phức $(.)^H$ sẽ được chuyển thành chuyển vị $(.)^\top$.
-\begin{equation}
-    \tilde{\mathbf{s}}=\left(\mathbf{H}^\top \mathbf{H}\right)^{-1} \mathbf{H}^\top \mathbf{x}
-\end{equation}
+% \begin{equation}
+% \label{eq:lossdetnet}
+%     l(\mathbf{s} ; \hat{\mathbf{s}}(\mathbf{H}, \mathbf{x}))=\sum_{k=1}^K \log (k) \frac{\left\|\mathbf{s}-\hat{\mathbf{s}}_k\right\|^2}{\|\mathbf{s}-\tilde{\mathbf{s}}\|^2}
+% \end{equation}
+% với $\tilde{\mathbf{s}}$ là ước lượng của $\mathbf{s}$ thu được từ bộ giải mã ZF như trình bày trong mục~\ref{sec:zf}. Lưu ý rằng, do $\mathbf{H}$ là ma trận của các số thực nên phép chuyển vị liên hợp phức $(.)^H$ sẽ được chuyển thành chuyển vị $(.)^\top$.
+% \begin{equation}
+%     \tilde{\mathbf{s}}=\left(\mathbf{H}^\top \mathbf{H}\right)^{-1} \mathbf{H}^\top \mathbf{x}
+% \end{equation}
 
 \section{Đề xuất mạng nơ-ron sâu ISDNN cho nhận dạng kênh truyền}
 
-Trong phần này, giải thuật của bộ nhận dạng ISD đã được đề xuất trước đây sẽ được trình bày. Từ đó, một mạng nơ-ron sâu ISDNN được đề xuất dựa trên kỹ thuật mở rộng sâu cho giải thuật ISD trước đó.
+Trong phần này, giải thuật của bộ nhận dạng ISD công bố tại~\cite{Mandloi2017} sẽ được trình bày. Từ đó, một mạng nơ-ron sâu ISDNN được đề xuất dựa trên kỹ thuật mở rộng sâu cho giải thuật ISD trước đó.
 
-\subsection{Bộ nhận dạng ISD cho kênh đường lên mMIMO}
+\subsection{Bộ nhận dạng ISD cho hệ thống mMIMO}
 
-Giải thuật gốc tại~\cite{Mandloi2017} đã đề xuất một bộ nhận dạng kênh truyền tuần tự lặp lại gọi tắt là ISD để đạt được hiệu suất của MMSE với độ phức tạp thấp. Trong đó, bộ nhận dạng MMSE đã được chứng minh~\cite{Rusek2013} có thể đạt được độ chính xác tiệm cận của MLE cho kênh đường lên cho các hệ mMIMO với $L/T \ge 10$.
+Giải thuật gốc tại~\cite{Mandloi2017} đã đề xuất một bộ nhận dạng kênh truyền tuần tự lặp lại gọi tắt là ISD để đạt được hiệu suất của MMSE với độ phức tạp thấp. Trong đó, bộ nhận dạng MMSE đã được chứng minh~\cite{Rusek2013} có thể đạt được độ chính xác tiệm cận của MLE cho kênh đường lên cho các hệ mMIMO với $L/T \ge 10$. Lưu ý rằng, do $\mathbf{H}$ là ma trận của các số thực nên phép chuyển vị liên hợp phức $(.)^H$ sẽ được chuyển thành chuyển vị $(.)^\top$.
 \begin{equation}
-    \hat{\mathbf{s}}_{MMSE}=\left(\mathbf{H}^\top \mathbf{H}+\frac{\sigma^2}{\mathbb{E}_\mathbf{s}} \mathbf{I}_{2T}\right)^{-1} \mathbf{H}^\top \mathbf{x}=\mathbf{P}^{-1} \mathbf{q}
+    \hat{\mathbf{s}}_{MMSE}=\left(\mathbf{H}^\top \mathbf{H}+\frac{\sigma^2}{\mathbb{E}(\mathbf{s})} \mathbf{I}_{2T}\right)^{-1} \mathbf{H}^\top \mathbf{x}=\mathbf{P}^{-1} \mathbf{q}
 \end{equation}
-ký hiệu $\mathbf{G} = \mathbf{H}^\top \mathbf{H}$, $\mathbf{P} = \mathbf{H}^\top \mathbf{H}+\frac{\sigma^2}{\mathbb{E}_\mathbf{x}} \mathbf{I}_{2T}$, và $\mathbf{q} = \mathbf{H}^\top \mathbf{x}$. Các thành phần đường chéo (diagonal component) của ma trận $\mathbf{P}$ tạo thành ma trận $\mathbf{D}$. Lưu ý, độ phức tạp của việc nghịch đảo $\mathbf{P}$ là $\mathcal{O}(T^3)$, sẽ tăng nhanh khi $T$ lớn. 
+ký hiệu $\mathbf{G}_\mathbf{H} = \mathbf{H}^\top \mathbf{H}$, $\mathbf{P} = \mathbf{H}^\top \mathbf{H}+\frac{\sigma^2}{\mathbb{E}(\mathbf{s})} \mathbf{I}_{2T}$, và $\mathbf{q} = \mathbf{H}^\top \mathbf{x}$. 
+Các thành phần đường chéo (diagonal component) của ma trận $\mathbf{P}$ tạo thành ma trận $\mathbf{D} = \operatorname{diag}(\mathbf{P})$.
+% Định nghĩa ma trận $\mathbf{P}$ tạo thành ma trận $\mathbf{D} = \operatorname{diag}(\mathbf{H}^\top \mathbf{H})$.
+Lưu ý, độ phức tạp của việc nghịch đảo $\mathbf{P}$ là $\mathcal{O}(TL^3)$, sẽ tăng nhanh khi $L$ lớn. 
 
 Để đạt được hiệu năng cao hơn với ít số lần lặp lại,~\cite{Mandloi2017} đề xuất khởi tạo véc-tơ các ký hiệu đầu vào được ước lượng $\mathbf{s}$ như trên phương trình~(\ref{eq:sinit})~\cite{Gao2014} thay vì đặt tất cả bằng $0$.
 \begin{equation}
@@ -204,21 +269,21 @@ với $\hat{\mathbf{x}}_j$ thu được, ký hiệu được gửi từ người
 \label{eq:supdate}
     \begin{aligned}
         \hat{s}_{k+1}(j) & =\frac{\mathbf{h}_j^\top}{\left\|\mathbf{h}_j\right\|^2} \hat{\mathbf{x}}_j \\ 
-        & = \hat{s}_k(j)+\frac{1}{\mathbf{G}(j, j)}\left(\mathbf{q}(j)-\sum_{t=1}^{2T} \mathbf{G}(j, t) s_k(t)\right)
+        & = \hat{s}_k(j)+\frac{1}{\mathbf{G}_\mathbf{H}(j, j)}\left(\mathbf{q}(j)-\sum_{t=1}^{2T} \mathbf{G}_\mathbf{H}(j, t) s_k(t)\right)
     \end{aligned}
 \end{equation}
-trong đó, $\mathbf{h}_j$ là cột thứ $j$ của ma trận $\mathbf{H}$, $\mathbf{G}(i, j)$ là phần tử thứ $(i, j)$ của ma trận $\mathbf{G}$, và $\mathbf{q}(j)$ là phần tử thứ $j$ của véc-tơ $\mathbf{q}$. Véc-tơ các ký hiệu ước lượng $\hat{\mathbf{s}}$ được cập nhật như trong thuật toán~\ref{alg:cap} của giải thuật ISD~\cite{Mandloi2017}. 
+trong đó, $\mathbf{h}_j$ là cột thứ $j$ của ma trận $\mathbf{H}$, $\mathbf{G}_\mathbf{H}(i, j)$ là phần tử thứ $(i, j)$ của ma trận $\mathbf{G}_\mathbf{H}$, và $\mathbf{q}(j)$ là phần tử thứ $j$ của véc-tơ $\mathbf{q}$. Véc-tơ các ký hiệu ước lượng $\hat{\mathbf{s}}$ được cập nhật như trong thuật toán~\ref{alg:cap} của giải thuật ISD~\cite{Mandloi2017}. 
 \begin{algorithm}[ht]
     \caption{Bộ nhận dạng Iterative Sequential~\cite{Mandloi2017}.}\label{alg:cap}
-    \hspace*{\algorithmicindent} \textbf{Input: $\mathbf{x}, \mathbf{H}, L, T, K, \sigma^2, \mathbb{E}_\mathbf{s}$} \\
+    \hspace*{\algorithmicindent} \textbf{Input: $\mathbf{x}, \mathbf{H}, L, T, K, \sigma^2, \mathbb{E}(\mathbf{s})$} \\
     \hspace*{\algorithmicindent} \textbf{Output: $\hat{\mathbf{s}}_{out} = \hat{\mathbf{s}}^{2T}_K$} 
     \begin{algorithmic}[1]
-        \State $\mathbf{G} \leftarrow \mathbf{H}^\top \mathbf{H}$
-        \State $\mathbf{A} \leftarrow \mathbf{G} + \frac{\sigma^2}{\mathbb{E}_\mathbf{x}} \mathbf{I}_{2T}$
+        \State $\mathbf{G}_\mathbf{H} \leftarrow \mathbf{H}^\top \mathbf{H}$
+        \State $\mathbf{A} \leftarrow \mathbf{G}_\mathbf{H} + \frac{\sigma^2}{\mathbb{E}_\mathbf{x}} \mathbf{I}_{2T}$
         \State $\mathbf{s}_0 \leftarrow \mathbf{s}_{in} = \mathbf{D}^{-1} \mathbf{q}$ \\
         \For{ $k=0, k < K$}
             \For{ $j=1, j \le 2T$}
-                \State $\hat{s}_k(j+1) \leftarrow \hat{s}_k(j)+\frac{1}{\mathbf{G}(j, j)}\left(\mathbf{q}(j)-\sum_{t=1}^{2T} \mathbf{G}(j, t) \hat{s}_k(t)\right)$ \\ 
+                \State $\hat{s}_k(j+1) \leftarrow \hat{s}_k(j)+\frac{1}{\mathbf{G}_\mathbf{H}(j, j)}\left(\mathbf{q}(j)-\sum_{t=1}^{2T} \mathbf{G}_\mathbf{H}(j, t) \hat{s}_k(t)\right)$ \\ 
                 \State $\hat{\mathbf{s}}_{k+1}^j \leftarrow\left[\hat{s}_{k+1}(1),~\ldots, \hat{s}_{k+1}(j), \hat{s}_k(j+1),~\ldots, \hat{s}_k(2T)\right]$
                 \State $j \leftarrow j + 1$
             \EndFor
@@ -227,11 +292,11 @@ trong đó, $\mathbf{h}_j$ là cột thứ $j$ của ma trận $\mathbf{H}$, $\m
     \end{algorithmic}
 \end{algorithm}
 
-Để chức minh giải thuật ISD là hiệu quả cho việc cước lượng kênh truyền, véc-tơ phần dư lỗi sẽ được sử dụng. Cụ thể, véc-tơ lỗi thu được sau khi khởi tạo với các giá trị $\mathbf{s}_0$ là
+Để chức minh giải thuật ISD là hiệu quả cho việc ước lượng kênh truyền, véc-tơ phần dư (lỗi) sẽ được sử dụng. Cụ thể, véc-tơ phần dư thu được sau khi khởi tạo với các giá trị $\mathbf{s}_0$ là
 \begin{equation}
     \mathbf{e}_0 = \mathbf{x} - \mathbf{H} \mathbf{s}_0
 \end{equation}
-từ đó, véc-tơ phần dư lỗi sau khi cập nhật ký hiệu thứ $j$ tại vòng lặp/lớp thứ $k$ sẽ được biểu diễn như sau
+từ đó, véc-tơ phần dư sau khi cập nhật ký hiệu thứ $j$ tại lớp thứ $k$ sẽ được biểu diễn như sau
 \begin{equation}
     \mathbf{e}_k^{(j)}=\mathbf{x}-\mathbf{H} \hat{\mathbf{s}}_k^j
 \end{equation}
@@ -239,17 +304,17 @@ thay $\mathbf{s}_k(j)$ bằng các biểu diễn hồi quy như trong giải thu
 \begin{equation}
 \label{eq:eupdate}
 \begin{aligned}
-    \mathbf{e}_k^{(j)} & =\mathbf{x}-\mathbf{h}_j\left(\hat{s}_k(j-1)+\frac{1}{\mathbf{G}(j-1, j-1)}\left(\mathbf{q}(j-1)-\sum_{t=1}^{2T} \mathbf{G}(j-1, t) \hat{s}_k(t)\right)\right) \\
-    & =\mathbf{x}-\mathbf{h}_j\left(\hat{s}_k(j-1)+\frac{1}{\mathbf{h}^\top_{j-1} \mathbf{h}_{j-1}}\left(\mathbf{h}_{j-1}^\top \mathbf{x}-\sum_{t=1}^{2T} \mathbf{G}(j-1, t) \hat{s}_k(t)\right)\right) \\
+    \mathbf{e}_k^{(j)} & =\mathbf{x}-\mathbf{h}_j\left(\hat{s}_k(j-1)+\frac{1}{\mathbf{G}_\mathbf{H}(j-1, j-1)}\left(\mathbf{q}(j-1)-\sum_{t=1}^{2T} \mathbf{G}_\mathbf{H}(j-1, t) \hat{s}_k(t)\right)\right) \\
+    & =\mathbf{x}-\mathbf{h}_j\left(\hat{s}_k(j-1)+\frac{1}{\mathbf{h}^\top_{j-1} \mathbf{h}_{j-1}}\left(\mathbf{h}_{j-1}^\top \mathbf{x}-\sum_{t=1}^{2T} \mathbf{G}_\mathbf{H}(j-1, t) \hat{s}_k(t)\right)\right) \\
     & =\mathbf{e}_k^{(j-1)}-\mathbf{h}_{j} \frac{\mathbf{h}_j^\top}{\left\|\mathbf{h}_j\right\|^2} \mathbf{e}_k^{(j-1)}
     \end{aligned}
 \end{equation}
 
-Trong~\cite{Mandloi2017} đã chứng minh rằng $\left\|\mathbf{e}_k^{(j)}\right\|^2<\left\|\mathbf{e}_k^{(j-1)}\right\|^2$. Điều đó chỉ ra rằng mỗi khi ký hiệu thứ $j$ được cập nhật, véc-tơ lỗi sẽ được chiếu lên mặt phẳng `null' của cột thứ $j$ thuộc ma trận $\mathbf{H}$. Hay véc-tơ lỗi sẽ trực giao với $\mathbf{h}_j$, do đó $l_2-\operatorname{norm}$ bình phương của véc-tơ lỗi sẽ giảm sau mỗi lần ký hiệu $j$ được cập nhật cho đến khi $\mathbf{e}$ trực giao với không gian con kéo dài bởi cột của ma trận $\mathbf{H}$.
+Trong~\cite{Mandloi2017}, Mandloi M. và các cộng sự đã chứng minh rằng $\left\|\mathbf{e}_k^{(j)}\right\|^2<\left\|\mathbf{e}_k^{(j-1)}\right\|^2$. Điều đó chỉ ra rằng mỗi khi ký hiệu thứ $j$ được cập nhật, véc-tơ phần dư sẽ được chiếu lên mặt phẳng `null' của cột thứ $j$ thuộc ma trận $\mathbf{H}$. Hay véc-tơ phần dư sẽ trực giao với $\mathbf{h}_j$, do đó $l_2-\operatorname{norm}$ bình phương của véc-tơ lỗi sẽ giảm sau mỗi lần ký hiệu $j$ được cập nhật cho đến khi $\mathbf{e}$ trực giao với không gian con kéo dài bởi cột của ma trận $\mathbf{H}$.
 
-\subsection{Đề xuất mạng nơ-ron sâu ISDNN cho kênh đường lên mMIMO}
+\subsection{Đề xuất mạng nơ-ron sâu ISDNN}
 
-Từ giải thuật ISD được trình bày ở trên, theo hướng tiếp cận mở rộng sâu, một kiến trúc mạng nơ-ron sâu có tên ISDNN (Iterative sequential deep neural network) tương ứng được đề xuất. Đầu tiên, việc cập nhật các ký hiệu $\mathbf{s}$ được viết lại dưới dạng ma trận như sau
+Từ giải thuật ISD được trình bày ở trên, theo hướng tiếp cận model-driven và kỹ thuật deep unfolding, một kiến trúc mạng nơ-ron sâu có tên ISDNN (Iterative sequential deep-neural network) tương ứng được đề xuất. Đầu tiên, việc cập nhật các ký hiệu $\mathbf{s}$ tại dòng $7$ của giải thuật~\ref{alg:cap} được viết lại dưới dạng ma trận như sau
 \begin{equation}
 \hat{\mathbf{s}}_{k+1}=\hat{\mathbf{s}}_k+\mathbf{e}_{k+1}
 \end{equation}
@@ -257,7 +322,9 @@ trong đó, $e_{k+1}$ là véc-tơ phần dư cũng được viết dưới dạ
 \begin{equation}
     \mathbf{e}_{k+1}=\mathbf{D}^{-1}\left(\mathbf{H}^\top \mathbf{x}-\mathbf{H}^\top \mathbf{H} \hat{\mathbf{s}}_k\right)
 \end{equation}
-Nhận thấy rằng, $\hat{\mathbf{s}}_{k+1}$ không chỉ chịu ảnh hưởng trực tiếp bởi $\mathbf{e}_{k+1}$ mà còn tất cả các véc-tơ phần dư trước đó $\mathbf{e}_{k}, \mathbf{e}_{k-1},~\ldots, \mathbf{e}_{1}$ như biểu diễn ở công thức (\ref{eq:eupdate}). Do vậy, để đạt được hiệu quả cao hơn trong việc loại bỏ tạp âm từ các người dùng khác, chúng tôi đề xuất thêm vào các tham số học $\alpha^1_k$ vào mỗi lớp (layer) của mạng nơ-ron.
+với $\mathbf{D}$ được đơn giản hoá lấy ý tưởng từ bộ nhận dạng ZF khi không có thông tin về SNR tại bên thu, tức nghịch đảo của ma trận Gram $\mathbf{G}_\mathbf{H}$, $\mathbf{D} = \operatorname{diag}(\mathbf{H}^\top \mathbf{H})$. 
+% Việc thay đổi này làm giảm độ phức tạp của phép nghịch đảo $\mathbf{D}$. 
+Nhận thấy rằng, $\hat{\mathbf{s}}_{k+1}$ không chỉ chịu ảnh hưởng trực tiếp bởi $\mathbf{e}_{k+1}$ mà còn tất cả các véc-tơ phần dư trước đó $\mathbf{e}_{k}, \mathbf{e}_{k-1},~\ldots, \mathbf{e}_{1}$ như biểu diễn ở công thức (\ref{eq:eupdate}). Do vậy, để đạt được hiệu quả cao hơn trong việc loại bỏ tạp âm từ các người dùng khác, tác giả đề xuất thêm vào các tham số học $\alpha^1$ vào mỗi lớp (layer) của mạng nơ-ron.
 \begin{equation}
 \label{eq:supdate1}
 \hat{\mathbf{s}}_{k+1}=\hat{\mathbf{s}}_k+\mathbf{e}_{k+1}+\alpha_k^{1} \mathbf{e}_k+\alpha_{k-1}^{1} \mathbf{e}_{k-1}+\cdots+\alpha_1^{1} \mathbf{e}_1
@@ -268,22 +335,24 @@ Tuy nhiên, mối tương quan giữa các véc-tơ phần dư liền kề là l
 \mu_{k}=\hat{\mathbf{s}}_k+\mathbf{e}_{k+1}+\alpha_k^1 \mathbf{e}_k
 \end{equation}
 
-Để đảm bảo $\hat{\mathbf{s}}_{k+1}$ sẽ hội tụ, tác giả đề xuất thêm một tham số học $\alpha^2_k$ với $\sum_{i=k}^{k+1} \alpha_i^{2} \hat{\mathbf{s}}_i$ with $\sum_{i=k}^{k+1} \alpha_i^{2}=1$ tại mỗi lớp như sau
+Thay vì gán trực tiếp $\hat{\mathbf{s}}_{k+1} = \mu_k$, tác giả đề xuất xem xét thêm sự tương quan giữa $\mu_k$ và $\hat{\mathbf{s}}_k$ trước khi đưa làm đầu vào của lớp tiếp theo. Sử dụng kết hợp lồi (convex combination)~\cite{hammad2023} của $\hat{\mathbf{s}}_k$ và $\mu_k$ với hệ số $\alpha^2$. Do đó, $\hat{\mathbf{s}}_{k+1}$ chịu ảnh hưởng bởi cả $\hat{\mathbf{s}}_k$ và $\mu_k$ theo tỷ lệ $\alpha^2$. 
+% Để đảm bảo $\hat{\mathbf{s}}_{k+1}$ sẽ hội tụ, tác giả đề xuất thêm một tham số học $\alpha^2_k$ 
+Trong đó, $\alpha^2_k$ là tham số có thể học, $\sum_{i=k}^{k+1} \alpha_i^{2} \hat{\mathbf{s}}_i$ với $\sum_{i=k}^{k+1} \alpha_i^{2}=1$, tại mỗi lớp. Kết hợp tuyến tính của $\hat{\mathbf{s}}_k$ và $\mu_k$ có dạng như sau
 \begin{equation}
 \hat{\mathbf{s}}_{k+1}=\left(1-\alpha_k^2\right) \mu_k + \alpha_k^2 \hat{\mathbf{s}}_k
 \end{equation}
 
-Ngoài ra, để đạt được độ chính xác cao hơn ở các loại điều chế bậc cao như (16-QAM, 64-QAM,~\ldots), véc-tơ phần dư sẽ được điều chỉnh linh hoạt hơn bằng cách thêm hai lớp nhỏ hơn vào kiến trúc mạng ISDNN để cập nhật $\mathbf{e}_k$ trước khi nhân với $\alpha^1_k$.
+Ngoài ra, để đạt được độ chính xác cao hơn ở các loại điều chế bậc cao như (16-QAM, 64-QAM,~\ldots), véc-tơ phần dư sẽ được điều chỉnh linh hoạt hơn bằng cách thêm hai bộ biến đổi tuyến tính vào kiến trúc mạng ISDNN để cập nhật $\mathbf{e}_k$ trước khi nhân với $\alpha^1_k$.
 \begin{equation}
-\mathbf{e}_k \leftarrow \mathbf{W}^2_{k}\left(\mathbf{W}^1_{k} \mathbf{e}_k+\mathbf{b}^1_{k}\right)+\mathbf{b}^2_{k}
+\mathbf{e}_k \leftarrow w^2_{k}\left(w^1_{k} \mathbf{e}_k+b^1_{k}\right)+b^2_{k}
 \end{equation}
 
-Kiến trúc cuối cùng của mạng ISDNN được đề xuất trong luận văn như trên hình~\ref{fig:ISD}. So với giải thuật ISD được đề xuất trước đó, mạng nơ-ron sâu ISDNN được đề xuất có sự cải tiến bằng việc (i) thêm véc-tơ phần dư của lớp trước đó và tham số học $\alpha^1$ để ước lượng $\hat{\mathbf{s}}$, (ii) tham số học $\alpha^2$ được thêm vào để đảm bảo sự hội tụ của việc học, (iii) véc-tơ phần dư được đưa qua hai lớp mạng để có được tính linh hoạt cho các loại điều chế bậc cao.
+Kiến trúc cuối cùng của mạng ISDNN được đề xuất trong luận văn như trên hình~\ref{fig:ISD}. So với giải thuật ISD được đề xuất trước đó, mạng nơ-ron sâu ISDNN được đề xuất có sự cải tiến bằng việc (i) thêm véc-tơ phần dư của lớp trước đó và tham số học $\alpha^1$ để ước lượng $\hat{\mathbf{s}}$, (ii) tham số học $\alpha^2$ được thêm vào để tăng tính chính xác của việc học, (iii) véc-tơ phần dư được đưa qua hai lớp mạng để có được tính linh hoạt cho các loại điều chế bậc cao.
 \begin{figure}[ht]
     \centering
     \begin{tikzpicture}
-        \node (B11) [field6, fill=red!10!white] at (0, 0) {$\mathbf{e}_0$};
-        \node (B21) [below=10mm of B11, field6, fill=red!10!white] {$\mathbf{s}_0$};
+        \node (B11) [field6, fill=red!10!white] at (0, 0) {$\mathbf{e}_k$};
+        \node (B21) [below=10mm of B11, field6, fill=red!10!white] {$\mathbf{s}_k$};
         \node (B31) [below=10mm of B21, field6, fill=red!10!white] {$\mathbf{H}^\top \mathbf{H}$};
         \node (B41) [below=10mm of B31, field6, fill=red!10!white] {$\mathbf{H}^\top \mathbf{x}$};
         \node (B51) [below=10mm of B41, field6, fill=red!10!white] {$\mathbf{D}^{-1}$};
@@ -293,28 +362,28 @@ Kiến trúc cuối cùng của mạng ISDNN được đề xuất trong luận 
         \node (B14) [right=5mm of B13, circle, fill=blue!10!white, draw=black] {$\times$};
         \node (B15) [right=5mm of B14, circle, fill=blue!10!white, draw=black] {$+$};
         \node (B16) [right=5mm of B15, circle, fill=blue!10!white, draw=black] {$\times$};
-        \node (B17) [right=18mm of B16, field8, fill=green!10!white, draw=black] {$\alpha^2_0$};
+        \node (B17) [right=18mm of B16, field8, fill=green!10!white, draw=black] {$\alpha^2_k$};
         \node (B18) [right=5mm of B17, circle, fill=blue!10!white, draw=black] {$\times$};
 
-        \node (B61) [below=4mm of B12, field8, fill=green!10!white, draw=black] {$\mathbf{W}^1_{0}$};
-        \node (B62) [below=4mm of B13, field8, fill=green!10!white, draw=black] {$\mathbf{b}^1_{0}$};
-        \node (B63) [below=4mm of B14, field8, fill=green!10!white, draw=black] {$\mathbf{W}^2_{0}$};
-        \node (B64) [below=4mm of B15, field8, fill=green!10!white, draw=black] {$\mathbf{b}^2_{0}$};
-        \node (B65) [below=4mm of B16, field8, fill=green!10!white, draw=black] {$\alpha^1_0$};
+        \node (B61) [below=4mm of B12, field8, fill=green!10!white, draw=black] {$w^1_{k}$};
+        \node (B62) [below=4mm of B13, field8, fill=green!10!white, draw=black] {$b^1_{k}$};
+        \node (B63) [below=4mm of B14, field8, fill=green!10!white, draw=black] {$w^2_{k}$};
+        \node (B64) [below=4mm of B15, field8, fill=green!10!white, draw=black] {$b^2_{k}$};
+        \node (B65) [below=4mm of B16, field8, fill=green!10!white, draw=black] {$\alpha^1_k$};
 
         \node (B22) [right=75mm of B21, circle, fill=blue!10!white, draw=black] {$+$};
         \node (B23) [below=12mm of B18, circle, fill=blue!10!white, draw=black] {$+$};
-        \node (B24) [right=5mm of B23, circle, fill=blue!10!white, draw=black] {$\rho$};
+        \node (B24) [right=3mm of B23, circle, fill=blue!10!white, draw=black] {$\Psi$};
 
         \node (B25) [below=4mm of B23, circle, fill=blue!10!white, draw=black] {$\times$};
-        \node (B26) [below=4mm of B25, field8, fill=green!10!white, draw=black] {$1 - \alpha^2_0$};
+        \node (B26) [below=4mm of B25, field8, fill=green!10!white, draw=black] {$1 - \alpha^2_k$};
 
         \node (B32) [right=5mm of B31, circle, fill=blue!10!white, draw=black] {$\times$};
         \node (B42) [right=5mm of B41, circle, fill=blue!10!white, draw=black] {$-$};
         \node (B52) [right=5mm of B51, circle, fill=blue!10!white, draw=black] {$\times$};
 
-        \node (Phi1) [right=123mm of B21, field6, fill=red!10!white] {$\hat{\mathbf{s}}_1$};
-        \node (V1) [right=123mm of B51, field6, fill=red!10!white] {$\mathbf{e}_{1}$};
+        \node (Phi1) [right=123mm of B21, field6, fill=red!10!white] {$\hat{\mathbf{s}}_{k+1}$};
+        \node (V1) [right=123mm of B51, field6, fill=red!10!white] {$\mathbf{e}_{k+1}$};
 
         \draw[arrow] (B11) -- (B12);
         \draw[arrow] (B12) -- (B13);
@@ -370,81 +439,230 @@ Kiến trúc cuối cùng của mạng ISDNN được đề xuất trong luận 
         \node (B53) [below=7mm of B52, circle, fill=blue!10!white, draw=black] {$+$};
         \draw[arrow] (B53) -- ([xshift=3mm]B53.east) node [pos=0, right=3mm] {Cộng};
 
-        \node (B54) [right=20mm of B52, circle, fill=blue!10!white, draw=black] {$\rho$};
-        \draw[arrow] (B54) -- ([xshift=10mm]B54.east) node [pos=0, right=10mm, above, label={below}:{tuyến tính}] {Toán tử};
+        \node (B54) [right=20mm of B52, circle, fill=blue!10!white, draw=black] {$\Psi$};
+        \draw[arrow] (B54) -- ([xshift=10mm]B54.east) node [pos=0, right=11mm, above, label={below}:{phi tuyến tính}] {Toán tử};
 
         \node (B55) [right=20mm of B53, circle, fill=blue!10!white, draw=black] {$-$};
         \draw[arrow] (B55) -- ([xshift=3mm]B55.east) node [pos=0, right=3mm] {Trừ};
     \end{tikzpicture}
-    \caption{Kiến trúc của lớp đầu tiên trong mô hình mạng ISD đề xuất.}
+    \caption{Kiến trúc của một lớp trong mô hình mạng nơ-ron sâu ISDNN đề xuất.}
     \label{fig:ISD}
 \end{figure}
 
-Các tham số khởi tạo của mạng ISDNN được đề xuất như sau để nhanh chóng đạt được sự hội tụ~\cite{Narasimhan2014}: $\mathbf{s}_0 = \mathbf{D}^{-1}\mathbf{q}$; $\alpha^1_0$ được chọn ngẫu nhiên tiệm cận $0$ ($\alpha^1_0 \approx 0$); $\alpha^2_0 = 0$,$5$. Do các đầu vào cho lớp tiếp theo $\hat{\mathbf{s}}_{k+1}$ cần được ánh xạ về khoảng giá trị $[-1.0 \;\; 1.0]$, một hàm kích hoạt tuyến tính (activation function) sẽ được sử dụng. Trong DL, có nhiều hàm kích hoạt được sử dụng rộng rãi như ReLu, Tanh, Sigmoid,~\ldots như được biểu diễn trên hình~\ref{fig:tanh}. Cụ thể, trong ISDNN, tác giả lựa chọn sử dụng hàm Tanh có biểu diễn toán học như sau
+Các tham số khởi tạo của mạng ISDNN được đề xuất như sau để nhanh chóng đạt được sự hội tụ~\cite{Narasimhan2014}: $\mathbf{s}_0 = \mathbf{D}^{-1}\mathbf{q}$; $\alpha^1_0$ được chọn ngẫu nhiên tiệm cận $0$ ($\alpha^1_0 \approx 0$); $\alpha^2_0 = 0$,$5$; $\mathbf{e}_0$ được chọn lựa ngẫu nhiên theo phân bố chuẩn $\mathbf{e}_0 \in  \mathcal{U}[0 \;\; 1)$. Do các đầu vào cho lớp tiếp theo $\hat{\mathbf{s}}_{k+1}$ cần được ánh xạ về khoảng giá trị $[-1.0 \;\; 1.0]$, một hàm kích hoạt (activation function) sẽ được sử dụng. Trong DL, có nhiều hàm kích hoạt được sử dụng rộng rãi như ReLu, Tanh, Sigmoid,~\ldots như được biểu diễn trên hình~\ref{fig:tanh}. Cụ thể, trong ISDNN, tác giả lựa chọn sử dụng hàm Tanh có biểu diễn toán học như sau
 \begin{equation}
-    \operatorname{Tanh}(s) = \frac{e^s - e^{-s}}{e^s + e^{-s}}
+    \Psi(s) = \operatorname{Tanh}(s) = \frac{e^s - e^{-s}}{e^s + e^{-s}}
 \end{equation}
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=.6\linewidth]{figures/tanh.eps}
+    \includegraphics[width=.8\linewidth]{figures/tanh.eps}
     \caption{Minh hoạ một số hàm kích hoạt được dùng trong mô hình đề xuất.}
     \label{fig:tanh}
 \end{figure}
 
 Các tham số của việc học sẽ bao gồm 
 \begin{equation}
-\boldsymbol{\theta}=\left\{\mathbf{W}^1_{k}, \mathbf{b}^1_{k}, \mathbf{W}^2_{k}, \mathbf{b}^2_{k}, \alpha^1_k, \alpha^2_k \right\}_{k=1}^K
+\boldsymbol{\theta}=\left\{w^1_{k}, b^1_{k}, w^2_{k}, b^2_{k}, \alpha^1_k, \alpha^2_k \right\}_{k=1}^K
 \end{equation}
 
 Một hàm mất mát cũng được định nghĩa như trên phương trình (\ref{eq:lossdetnet}) để biểu diễn sự hội tụ của mô hình học ISDNN.
 
+Bốn bước của một vòng lặp (iteration) trong quá trình học như sau
+\begin{enumerate}
+    \item Khởi tạo các tham số ban đầu và véc-tơ phần dư của mạng ISDNN: $\mathbf{s}_0, \mathbf{e}_0$, $\alpha^1_0, \alpha^2_0$.
+
+    \item Bộ dữ liệu được đưa qua $K$ lớp của mạng (forward propagation) và ước lượng sai số đầu ra $\mathcal{L}(\mathbf{s}; \hat{\mathbf{s}}(\mathbf{H}, \mathbf{x}))$.
+
+    \item Back-propagate $\mathcal{L}(\mathbf{s}; \hat{\mathbf{s}}(\mathbf{H}, \mathbf{x}))$ để thu được độ dốc (gradient).
+
+    \item Từ gradient thu được, sử dụng một thuật toán tối ưu, ví dụ là Adam~\cite{Diederik2014} (xem thêm tại phụ lục~\ref{sec:adam}), cập nhật các $\boldsymbol{\theta}=\left\{w^1_{k}, b^1_{k}, w^2_{k}, b^2_{k}, \alpha^1_k, \alpha^2_k \right\}_{k=1}^K$.
+\end{enumerate}
 \section{Mô phỏng và đánh giá}
 
+Trong phần này, tác giả sẽ trình bày phương pháp tạo bộ dữ liệu đào tạo cho các mô hình mạng nơ-ron sâu DetNet và ISDNN. Sau khi được đào tạo, các kết quả so sánh và đánh giá về độ chính xác, độ phức tạp, và tính chống chịu lỗi sẽ được đưa ra.
 \subsection{Tạo bộ dữ liệu}
 
-\begin{table}
+\begin{table}[ht]
     \centering
-    \caption{Các tham số mô phỏng hệ thống truyền thông không dây của mạng ISD được đề xuất.}
+    \caption{Các tham số mô phỏng hệ thống truyền thông không dây của mạng nơ-ron sâu ISDNN được đề xuất.}
     \label{tab:simu_param}
     \begin{tabular}{p{8cm}|p{6cm}} 
     \hline
     \hline
     \multicolumn{1}{c|}{\textbf{Thông số mô phỏng}} & \multicolumn{1}{c} {\textbf{Giá trị}} \\ 
     \hline
-    Kích thước hệ thống m-MIMO & $T = 8, L =64$ \\ 
+    Kích thước hệ thống mMIMO & $T = 8, L =64$ \\ 
     \hline
-    Loại điều chế & 16-QAM\\
+    Loại điều chế & $16$-QAM\\
     \hline
     Các mức $\operatorname{SNR}$ của dataset  & $[0, 5, 10, 15, 20]$~dB \\ 
     \hline
-    Số mẫu đào tạo & 50.000 \\ 
+    Số mẫu đào tạo & $20.000$ \\ 
     \hline
-    Số mẫu thử nghiệm & 10.000 \\ 
+    Số mẫu thử nghiệm & $5.000$ \\ 
     \hline
-    Bộ tối ưu & ADAM \\ 
+    Số lớp mạng của DetNet & $K_{DetNet} = 4; 10$\\ 
     \hline
-    Giá trị khởi tạo của tỷ lệ học & $\delta = 0$,$0001$ \\ 
+    Số lớp mạng của ISDNN & $K_{ISDNN} = 4$ \\ 
     \hline
-    Số vòng lặp đào tạo & 200.000 \\
+    Thuật toán tối ưu & Adam~\cite{Diederik2014} \\ 
+    \hline
+    Giá trị khởi tạo của tốc độ học & $\delta = 0$,$0001$ \\ 
+    \hline
+    Số vòng lặp đào tạo & $20.000$ \\
     \hline
     \end{tabular}
 \end{table}
+Trong bảng~\ref{tab:simu_param}, các tham số mô phỏng của hệ thống mMIMO cũng như kiến trúc mạng DetNet và ISDNN được đưa ra. Chi tiết, các tập dữ liệu được tạo cho việc đào tạo (training) / thử nghiệm (testing) sẽ độc lập với nhau nhưng cùng chung phân bố. Mỗi tín hiệu của bên phát $\mathbf{s}$ sẽ được gieo ngẫu nhiên theo phân bố đều và sử dụng chung một loại điều chế. Tuy nhiên thay vì gieo trực tiếp các ký hiệu như mô phỏng của SB-MRE là các nhóm bít $\{0 , 1\}$. Tuỳ thuộc vào loại điều chế, mà một nhóm gồm $1, 2, 4, 8,~\ldots$ bít sẽ được nhóm thành ký hiệu. Trong mô phỏng của tác giả, điều chế $16$-QAM được lựa chọn, với $4$ bít liền nhau sẽ được gộp lại, $\mathbf{u}_i \in \mathbb{R}^4$, tạo thành ký hiệu $s_i$. Trên bảng~\ref{tab:mapping} và hình~\ref{fig:mapping} là biểu diễn ánh xạ các nhóm $4$ bít thành các ký hiệu $s_i$.
+\begin{table}[ht]
+\centering
+\caption{Ánh xạ các nhóm $4$ bít thành các ký hiệu sử dụng điều chế $16$-QAM.}
+\label{tab:mapping}
+\resizebox{\textwidth}{!}{
+    \begin{tabular}{|l|l|l|l|l|} 
+    \hline
+    \multirow{4}{*}{\begin{tabular}[c]{@{}l@{}}\textbf{Ký}\\ \textbf{hiệu}\end{tabular}}
+    & $s_0 = -1 -1i$ & $s_1 = -1 -0,33i$& $s_2 = -1 +0,33i$  & $s_3 = -1 +1i$ \\
+    \cline{2-5}
+    & $s_4 = -0,33 -1i$  & $s_5 = -0,33 -0,33i$ & $s_6 = -0,33 +0,33i$ &  $s_7 = -0,33 +1i$ \\
+    \cline{2-5}
+    & $s_8 = 0,33 -1i$ & $s_9 = 0,33 -0,33i$ & $s_{10} = 0,33 +0,33i$ & $s_{11} = 0,33 +1i$ \\
+    \cline{2-5}
+    & $s_{12} = 1 -1i$ & $s_{13} = 1 -0,33i$ & $s_{14} = 1 +0,33i$ & $s_{15} = 1 +1i$ \\
+    \hline
+    \multirow{4}{*}{\begin{tabular}[c]{@{}l@{}}\textbf{Nhóm}\\ \textbf{bít}\end{tabular}}
+    & $\mathbf{u}_0 = [0, 0, 0, 0]$ & $\mathbf{u}_1 = [0, 0, 0, 1]$ 
+    & $\mathbf{u}_2 = [0, 0, 1, 0]$ & $\mathbf{u}_3 = [0, 0, 1, 1]$ \\ \cline{2-5}
+    
+    & $\mathbf{u}_4 = [0, 1, 0, 0]$ & $\mathbf{u}_5 = [0, 1, 0, 1]$ 
+    & $\mathbf{u}_6 = [0, 1, 1, 0]$ & $\mathbf{u}_7 = [0, 1, 1, 1]$ \\
+    \cline{2-5}
+    
+    & $\mathbf{u}_8 = [1, 0, 0, 0]$ & $\mathbf{u}_9 = [1, 0, 0, 1]$ 
+    & $\mathbf{u}_{10} = [1, 0, 1, 0]$ & $\mathbf{u}_{11} = [1, 0, 1, 1]$ \\
+    \cline{2-5}
+    
+    & $\mathbf{u}_{12} = [1, 1, 0, 0]$ & $\mathbf{u}_{13} = [1, 1, 0, 1]$ 
+    & $\mathbf{u}_{14} = [1, 1, 1, 0]$ & $\mathbf{u}_{15} = [1, 1, 1, 1]$ \\
+    \hline
+    \end{tabular}
+}
+\end{table}
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=.8\linewidth]{figures/qam16_con.eps}
+    \caption{Ánh xạ các nhóm $4$ bít thành các ký hiệu sử dụng điều chế $16$-QAM.}
+    \label{fig:mapping}
+\end{figure}
+
+Kênh truyền $\mathbf{H}$ lấy theo mô hình kênh Rayleigh fading, trong đó, các hệ số phức của kênh truyền được gieo ngẫu nhiên độc lập và cùng phân bố Gaussian đối xứng tròn (circularly symmetric Gaussian) với giá trị trung bình $\mu$ và độ lệch chuẩn $\sigma^2$.
+\begin{equation}
+h_{l, t}=f(x \mid \mu, \sigma)=\frac{1}{\sigma \sqrt{2 \pi}} e^{\frac{-(x-\mu)^2}{2 \sigma^2}}, \quad \text { với } x \in \mathbb{R}
+\end{equation}
+\begin{figure}
+    \centering
+    \includegraphics[width=.8\linewidth]{figures/ray.eps}
+    \caption{Phân bố khi gieo ngẫu nhiên của các hệ số $h_{l, t}$ trong ma trận $\mathbf{H}$.}
+    \label{fig:ray}
+\end{figure}
+
+Ngoài việc đào tạo mô hình dựa trên các thông tin kênh truyền $\mathbf{H}$ chính xác, tác giả xem xét việc đào tạo ISDNN trong trường hợp thông tin $\mathbf{H}$ không chính xác (im - imperfect) để kiểm tra khả năng chịu lỗi của mô hình đề xuất. Lý do là vì, trong các điều kiện thực tế, các ma trận đầu vào để đào tạo được đo lường không thể có được sự chính xác hoàn hảo. Hai mức sai số sẽ được xem xét đó là $1\%$ và $5\%$.
+\begin{equation}
+\begin{aligned}
+     \mathbf{H}_{im} &= \mathbf{H} \pm 0,01\mathbf{H} \\
+     \mathbf{H}_{im} &= \mathbf{H} \pm 0,05\mathbf{H}
+\end{aligned}
+\end{equation}
+
+Sau khi đi qua kênh truyền $\mathbf{H}$, các ký hiệu sẽ được cộng thêm với AWGN ở các giá trị $\mathbf{SNR}$ khác nhau tính theo thang dB (decibel). 
+\begin{equation}
+\operatorname{SNR} = 10 \log \left(\frac{\mathbb{E}\left(\|\mathbf{H s}\|_2^2\right)}{\mathbb{E}\left(\|\mathbf{w}\|_2^2\right)}\right)~\text{(dB)}
+\end{equation}
 
 \subsection{Đào tạo và đánh giá mô hình đề xuất}
 
+Sau khi đã tạo được các bộ dữ liệu, việc đào tạo được triển khai trên máy tính với cấu hình: vi xử lý Intel Core I9-10900, 64~GB RAM. Ngôn ngữ lập trình Python được lựa chọn để xây dựng các mô phỏng của ISDNN và DetNet. Thư viện nền tảng Pytorch được sử dụng cho ISDNN, và Tensorflow được sử dụng cho DetNet. Mã nguồn của DetNet được sử dụng từ kho lưu trữ công khai của nhóm tác giả trên bài báo gốc tại Github\footnote{\url{https://github.com/neevsamuel/DeepMIMODetection}}. Sai số của các mạng nơ-ron này được đánh giá sử dụng thông số BER tương ứng là số bít ước lượng sai chia cho tổng số bít. Ở bước thử nghiệm, $100$ bộ dữ liệu thử nghiệm, mỗi bộ gồm $5,000$ mẫu được tạo ra, kết quả ước lượng của các mô hình sau đào tạo được tính bằng BER trung bình của $100$ lần thử nghiệm.
+\begin{equation}
+    \operatorname{BER} = \frac{1}{100} \sum_{K=1}^{100} \frac{N_e}{5000}
+\end{equation}
+
+Trước hết, độ phức tạp của các thuật toán sẽ được so sánh như trên bảng~\ref{tab:computational}. Trong đó, hai bộ nhận dạng truyền thống ZF và MMSE đều có độ phức tạp $\mathcal{O}(TL^3)$ do phép nghịch đảo của ma trận $\mathbf{H}$ với kích thước đầy đủ~\cite{Victor1992}. Tiếp đến, kiến trúc mạng DetNet cho độ phức tạp $\mathcal{O}(TL^2)$ do không phải nghịch đảo ma trận $\mathbf{G}_\mathbf{H}$ nên thành phần phức tạp nhất trong DetNet là các phép nhân ma trận $\mathbf{H}^\top \mathbf{H}$ và $\mathbf{H}^\top \mathbf{H} \mathbf{s}_k$. Cuối cùng là độ phức tạp của kiến trúc mạng ISDNN được đề xuất cũng ở mức $\mathcal{O}(TL^2)$. Dù có phép nghịch đảo ma trận $\mathbf{D}^{-1}$ ở đầu vào, tuy nhiên như đã trình bày ở trên, ma trận $\mathbf{D}$ chỉ gồm các phần tử trên đường chéo chính của ma trận Gram. Do vậy, việc nghịch đảo ma trận này chỉ có độ phức tạp $\mathcal{O}(TL)$, vì chỉ cần sử dụng phép biến đổi tuyến tính. Vậy nên, độ phức tạp tổng thể của ISDNN vẫn tương tự như DetNet chỉ dừng ở các phép nhân ma trận. Có thể kết luận rằng, các phương pháp sử dụng học sâu đã giảm thiểu độ phức tạp đi $\mathcal{O}(L)$ so với các bộ ước lượng tuyến tính truyền thống. Đây là khoảng cách rất lớn, vì trong các hệ mMIMO, giá trị của $L$ có thể lên đến trên $100$. So sánh riêng hai kiến trúc mạng DNN là DetNet và ISDNN, dù có chung độ phức tạp nhưng nhận thấy số lượng giá trị học của ISDNN là không đá kể khi so sánh với DetNet. Điều này có được là do các bộ biến đổi tuyến tính ($\mathbf{W}, \mathbf{b}$) trong DetNet ở dưới dạng véc-tơ có kích thước lớn. Trong khi đó, ISDNN chỉ yêu cầu hai tham số học vô hướng ($w, b$) cho mỗi bộ biến đổi tại mỗi lớp mạng. Do vậy, chỉ $24$ tham số học cần được sử dụng trong ISDNN, dẫn đến mô hình sau đào tạo chỉ có kích thước $7$~KB so với $1,236$~KB của DetNet với cùng số lớp mạng là $4$. Đây là lợi thế rất lớn, khi kích thước nhỏ và độ phức tạp thấp giúp mô hình có thể ứng dụng trên cả các thiết bị có giá thành thấp.
 \begin{table}[ht]
     \centering
     \caption{So sánh độ phức tạp của các thuật toán nhận dạng kênh truyền.}
     \label{tab:computational}
-    \begin{tabular}{|l|c|c|}
+    \begin{tabular}{l|c|c}
     \hline
-    \multicolumn{1}{|c|}{Detector} & Computational complexity & Trainable parameters \\ \hline
-    ZF & $\mathcal{O}$ ($NK^3$) &  \\ \hline
-    MMSE & $\mathcal{O}$ ($NK^3$) &  \\ \hline
-    MLE & $\mathcal{O}$ ($NK^3$) &  \\ \hline
-    DetNet~\cite{Samuel2019} & $\mathcal{O}$ ($NK^2$) & 249600 \\ \hline
-    Proposed ISD & $\mathcal{O}$ ($NK^2$) & 12 \\ \hline
+    \hline
+    \multicolumn{1}{c|}{Bộ nhận dạng} & Độ phức tạp & Số giá trị học \\ \hline
+    ZF & $\mathcal{O}$ ($TL^3$) &  \\ \hline
+    MMSE & $\mathcal{O}$ ($TL^3$) &  \\ \hline
+    DetNet: 4 layers~\cite{Samuel2019} & $\mathcal{O}$ ($TL^2$) & 105.416 \\ \hline
+    ISDNN & $\mathcal{O}$ ($TL^2$) & 24 \\ \hline
     \end{tabular}
 \end{table}
 
+Trên hình~\ref{fig:training_1} là quá trình đào tạo của hai mô hình mạng nơ-ron sâu ISDNN và DetNet với số lớp mạng khác nhau. Hình~\ref{fig:loss_1} xem xét về thời gian hội tụ thông qua chỉ số mất mát của véc-tơ ký hiệu gốc $\mathbf{s}$ và véc-tơ các ký hiệu ước lượng $\mathbf{\hat{s}}$. Nhận thấy, thời gian hội tụ của mạng DetNet với $4$ lớp mạng có phần nhanh hơn so với ISDNN cùng số lớp mạng. Tuy nhiên, xét về tổng thể, đầu ra hàm mất mát của ISDNN cho kết quả tốt hơn so với DetNet cùng số lớp mạng dù phải cần đến vòng đào tạo thứ $12.000$. Nếu tăng số lớp mạng của DetNet lên $10$, do số lượng tham số học tăng lên đáng kể, thời gian hội tụ và đầu ra mất mát cuối cùng cũng cho kết quả tốt hơn ISDNN chỉ $4$ lớp mạng. Tuy nhiên, đánh đổi ở đây là số lượng tham số học sẽ lên đến $316.244$. Xét về sự hội tụ dựa trên độ chính xác của các mô hình như trene hình~\ref{fig:ber_1}. Trước hết, BER của ISDNN chỉ $4$ lớp mạng sau $20.000$ vòng đào tạo là vượt trội so với DetNet dù $4$ hay $10$ lớp mạng, hội tụ ở mức $\operatorname{BER}\approx 1,6 \times 10^{-4}$. So sánh với DetNet dù với $10$ lớp mạng và lượng tham số học khổng lồ cũng chỉ có đạt được sai số chưa đến $10^{-3}$. Tuy nhiên, từ mô phỏng cũng cho thấy rằng, độ chính xác của DetNet cho thời gian hội tụ là nhanh hơn nhiều so với ISDNN khi chỉ cần đến khoảng $5.000$ vòng đào tạo.
+
+\begin{figure}[ht]
+     \centering
+     \begin{subfigure}[b]{0.48\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figures/BER_1.eps}
+         \caption{BER}
+         \label{fig:ber_1}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.48\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figures/Loss_1.eps}
+         \caption{Mất mát}
+         \label{fig:loss_1}
+     \end{subfigure}
+     \hfill
+        \caption{Sự hội tụ của quá trình đào tạo mô hình ISDNN và DetNet.}
+        \label{fig:training_1}
+\end{figure}
+
+Sau quá trình đào tạo, mô hình thu được sẽ được kiểm tra trên các bộ dữ liệu thử nghiệm được tạo độc lập với tập dữ liệu huấn luyện. Kết quả thu được khi so sánh độ chính xác của các phương pháp nhận dạng kênh truyền gồm ZF, MMSE, DetNet, và ISDNN khi SNR thay đổi được biểu diễn trên hình~\ref{fig:isdnn}. Trước hết, có thể kết luận, độ chính xác của mô hình đề xuất là vượt trội so với các phương pháp còn lại. Khi so sánh với hai phương pháp tuyến tính là ZF và MMSE, đường BER của ISDNN và DetNet đều cho thấy sự khác biệt, khi độ dốc của BER từ các mạng DNN giảm dần theo SNR còn ZF và MMSE thì ngược lại. Phải cần đến mức $\operatorname{SNR}=20$~dB, phương pháp MMSE mới đạt đến độ chính xác của ISDNN tức $\operatorname{BER}\approx 10^{-4}$, do giải thuật gốc ISD cũng xuất phát từ MMSE nên có thể coi đây là giá trị tối ưu của ISD. Khi so sánh với mạng nơ-ron sâu DetNet gồm $4$ lớp mạng, ISDNN cũng cho độ lợi về BER đạt $10^3$ tại các mức SNR thấp, và $10^1$ tại SNR cao. Khi tăng số lớp của DetNet lên $10$, cũng tương tự như quá trình huấn luyện, độ chính xác cũng được cải thiện, tuy nhiên dù SNR ở mức cao như $20$~dB, BER của DetNet cũng chỉ tiệm cận được đến độ chính xác của ISDNN với $4$ lớp mạng. Có thể rút ra nhận xét mô hình mạng ISDNN ngoài việc cho độ chính xác vượt trội so với ZF, MMSE, và DetNet còn có ưu điểm là BER không có sự biến đổi quá lớn ở các mức SNR khác nhau. Đây là đặc điểm quan trọng của mô hình đầu ra, khi tạp âm / công suất phát luôn là một vấn đề mà các thế hệ mạng viễn thông thế hệ mới như 5G quan tâm. Nếu độ chính xác của việc nhận không bị ảnh hưởng nhiều bởi SNR thì mật độ bao phủ, cũng như hiệu quả về năng lượng là rõ ràng có thể nhận thấy được.
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\linewidth]{figures/performance_1.eps}
+    \caption{Độ chính xác của mô hình ISDNN so sánh với DetNet và các bộ nhận dạng tuyến tính.}
+    \label{fig:isdnn}
+\end{figure}
+
+Tiếp theo, tác giả xem xét đến tính chống chịu lỗi của mạng nơ-ron sâu ISDNN. Như đã trình bày ở trên, để có thể được áp dụng thực tế, các bộ dữ liệu cần được thu thập từ các hệ thống viễn thông thực. Tuy nhiên, sai số khi đo lường các đầu vào cho việc đào tạo là không thể tránh khỏi. Trong phần này, ma trận kênh truyền $\mathbf{H}$ được giả sử là có sự sai khác $1$\% và $5$\% so với $\mathbf{H}$ hoàn hảo. 
+\begin{figure}[ht]
+     \centering
+     \begin{subfigure}[b]{0.48\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figures/BER_2.eps}
+         \caption{BER}
+         \label{fig:ber_2}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.48\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figures/Loss_2.eps}
+         \caption{Mất mát}
+         \label{fig:loss_2}
+     \end{subfigure}
+     \hfill
+        \caption{Sự hội tụ của quá trình đào tạo các mô hình ISDNN với các sai số kênh truyền đầu vào khác nhau.}
+        \label{fig:training_2}
+\end{figure}
+
+Trên hình~\ref{fig:training_2} là kết quả của việc đào tạo mạng ISDNN với $3$ bộ dữ liệu với các mức sai số kênh truyền khác nhau. Đầu tiên, hình~\ref{fig:loss_2} cho thấy rõ ràng sai số của dữ liệu đầu vào ảnh hưởng trực tiếp độ sự hội tụ của một mạng DNN. Trường hợp ISDNN với kênh truyền chính xác cho tốc độ hội tụ về hàm mất mát là nhanh hơn đáng kể khi so với trường hợp kênh truyền có sai số. Với sai số $1$\% cần đến $18.000$ vòng đào tạo còn sai số $5$\% sau $20.000$ vòng đào tạo vẫn chưa có được sự hội tụ của hàm mất mát. Tiếp theo, về độ chính xác trong quá trình đào tạo cũng cho kết quả tương tự trên hình~\ref{fig:ber_2}. Khi dữ liệu kênh truyền có sai số, đường BER trong quá trình học có sự không ổn định và cần đến từ $15.000$ vòng đào tạo trở lên để hội tụ. Tuy nhiên, ở cả hàm mất mát và BER, vẫn có thể chấp nhận rằng sai số $1$\% của ma trận kênh truyền dù ảnh hưởng đến thời gian huấn luyện cần để hội tụ nhưng vẫn sẽ hội tụ ở giá trị tương đương với kênh truyền hoàn hảo.
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\linewidth]{figures/performance_2.eps}
+    \caption{Độ chính xác của mô hình ISDNN với các sai số kênh truyền đầu vào khác nhau.}
+    \label{fig:isdnn_1}
+\end{figure}
+
+Tương tự, mô hình được đào tạo ở cả ba trường hợp sẽ được đánh giá trên các bộ dữ liệu thử nghiệm, kết quả thu được như trên hình~\ref{fig:isdnn_1}. Dễ nhận thấy, sự tương quan của sai số ma trận kênh truyền đầu vào với BER đầu ra của mô hình đã huấn luyện. Ở các giá trị $\operatorname{SNR}\ge 5$~dB, sự sai khác giữa kênh truyền chính xác và có sai số khá ổn định ở mức $\approx 1 \times 10^{-4}$. Nhưng nếu so sánh mức sai số này với các kết quả thu được trên hình~\ref{fig:isdnn}, kể cả ở mức sai số $5$\% của ma trận kênh truyền, ISDNN vẫn cho sai số tương đương với DetNet $10$ lớp mạng và vượt trội DetNet nếu chỉ $4$ lớp mạng. Khi so sánh với hai bộ ước lượng tuyến tính, MMSE (ISD gốc) sẽ tốt hơn ISDNN với sai số dữ liệu $5$\% nếu SNR ở các giá trị $\ge 15$~dB, ngược lại nếu SNR thấp hơn hoặc sử dụng ZF thì ISDNN vẫn sẽ có lợi thế. Từ các kết quả trên, có thể thấy sự ảnh hưởng của dữ liệu đầu vào tới ISDNN nói riêng và các mạng DNN nói chung, tuy nhiên ở các mức sai số nhỏ, mô hình đầu ra vẫn sẽ cho độ chính xác ở mức chấp nhận được, và vẫn sẽ hơn các giải thuật tuyến tính hay mô hình DetNet. Đây chính là tiềm năng để triển khai ISDNN với các bộ dữ liệu thực, và triển khai trên các hệ thống viễn thông thực tế trong tương lai.
+
 \section{Kết luận chương}
+
+Trong chương này, tác giả đã trình bày khái quát về việc sử dụng DNN và mở rộng sâu cho việc nhận dạng kênh truyền. Tiếp đến, mô hình mạng nơ-ron sâu đã được đề xuất trước đây được trình bày ngắn gọn để làm cơ sở so sánh với phương pháp được tác giả đề xuất. Từ một phương pháp nhận dạng không mù với độ phức tạp thấp ISD đã được công bố trước đó, tác giả đã đề xuất mô hình mạng ISDNN mới sử dụng phương pháp mở rộng sâu. Kết quả mô phỏng đã chỉ ra hiệu năng về độ chính xác và độ phức tạp của mô hình ISDNN được đề xuất. Trước hết, về độ chính xác, ISDNN cho kết quả vượt trội so với các thuật toán nhận dạng tuyến tính không mù như ZF, MMSE, và mạng nơ-ron sâu DetNet dù với số lượng lớp mạng ít hơn. Về độ phức tạp, so với các giải thuật tuyến tính, ISDNN cho độ lợi $\mathcal{O}(L)$ tương tự như DetNet. Hơn nữa, ISDNN chỉ cần $24$ tham số học cho $4$ lớp mạng khi so sánh với $105.416$ tham số của mạng DetNet cùng số lớp mạng. Từ hai khía cạnh trên, kết luận mạng ISDNN đã giải quyết cả hai vấn đề là độ phức tạp, và chính xác đã được đề ra ở phần Mở đầu. Ngoài ra, để xem xét khả năng ứng dụng vào thực tế, tác giả đã xem xét hiệu suất của ISDNN nếu có sai số trong các bộ dữ liệu đầu vào, có thể xảy ra bởi sai số đo lượng. Các kết quả mô phỏng chỉ ra sự ảnh hưởng của tập huấn luyện đến mô hình được đào tạo. Tuy nhiên, sai số cũng ở mức chấp nhận được và vẫn là tốt hơn nếu so sánh với các phương pháp đã kể trên. 
