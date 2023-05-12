@@ -259,6 +259,15 @@
 
 \tikzstyle{field8} = [rounded rectangle, minimum width=10mm, minimum height=10mm, align=center, fill=green!10!white, draw=black, line width=1pt]
 
+\pgfdeclarepatternformonly{soft horizontal lines}{\pgfpointorigin}{\pgfqpoint{100pt}{1pt}}{\pgfqpoint{100pt}{3pt}}%
+{
+  \pgfsetstrokeopacity{0.3}
+  \pgfsetlinewidth{0.1pt}
+  \pgfpathmoveto{\pgfqpoint{0pt}{0.5pt}}
+  \pgfpathlineto{\pgfqpoint{100pt}{0.5pt}}
+  \pgfusepath{stroke}
+}
+
 \tikzset{>=latex} % for LaTeX arrow head
 \colorlet{myred}{red!40!white}
 \colorlet{myblue}{blue!40!white}

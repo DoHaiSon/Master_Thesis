@@ -24,7 +24,7 @@
 7 & $\alpha$ & Tham số học của mạng ISDNN \\ \hline
 8 & $\delta$ & Tốc độ học / độ dài bước \\ \hline
 9 & $\Im$ & Phần ảo \\ \hline
-10 & $\lambda$ & Trọng số của thành phần B-MRE \\ \hline
+10 & $\lambda$ & Bước sóng \\ \hline
 11 & $\mathbb{E}$(.) & Công suất trung bình \\ \hline
 12 & $\mathbf{e}$ & Véc-tơ phần dư / lỗi \\ \hline
 13 & $\mathcal{L}$ & Hàm mất mát \\ \hline
@@ -34,8 +34,8 @@
 17 & $\Psi_t$ & Hàm phi tuyến tính phân đoạn \\ \hline
 18 & $\Re$ & Phần thực \\ \hline
 19 & $\sigma$ & Độ lệch chuẩn \\ \hline
-20 & $\mathbf{\theta}$ & Bộ tham số của việc học \\ \hline
-21 & $\lVert . \rVert _F$ & Frobenius norm \\ \hline
+20 & $\mathbf{\theta}$ & Góc ngẩng / Bộ tham số của việc học \\ \hline
+21 & $\mathcal{F}$ & Ma trận Fourier rời rạc \\ \hline
 22 & $\mathbf{0}_T$ & Véc-tơ cột có kích thước $T \times 1$ \\ \hline
 23 & $\operatorname{arg}$ & Vị trí \\ \hline
 24 & $b$ & Bias của bộ biến đổi tuyến tính \\ \hline
@@ -48,13 +48,13 @@
 31 & $\mathbf{G}_H$ & Ma trận Gram của $\mathbf{H}$ \\ \hline
 32 & $\mathbf{H}$ & Ma trận kênh truyền \\ \hline
 33 & $\mathbf{I}_K$ & Ma trận đơn vị kích thước K \\ \hline
-34 & $K$ & Số lượng bộ cân bằng của B-MRE \\ \hline
+34 & $K$ & Số các ký hiệu chứa dữ liệu hoặc pilot trong một ký hiệu OFDM\\ \hline
 35 & $L$ & Số ăng-ten thu \\ \hline
-36 & $M$ & Bậc kênh truyền \\ \hline
+36 & $M$ & Số lượng đường truyền giữa một cặp ăng-ten thu phát \\ \hline
 37 & $\operatorname{min}$ & Giá trị nhỏ nhất \\ \hline
-38 & $N$ & Số lượng ký hiệu tại mỗi thời điểm bên thu lưu lại \\ \hline
-39 & $N_p$ & Độ dài chuỗi ký hiệu pilot \\ \hline
-40 & $N_s$ & Độ dài chuỗi ký hiệu $\mathbf{s}$ \\ \hline
+38 & $n$ & Thời điểm  \\ \hline
+39 & $K_p$ & Số lượng ký hiệu pilot \\ \hline
+40 & $K_d$ & Số lượng ký hiệu dữ liệu \\ \hline
 41 & $\rho$ & Toán tử tuyến tính \\ \hline
 42 & $\mathbf{s}$ & Các ký hiệu được gửi đi từ bộ phát \\ \hline
 43 & $T$ & Số ăng-ten phát / người dùng bên phát \\ \hline
@@ -62,6 +62,9 @@
 45 & $\mathbf{w}$ & Tạp âm AWGN \\ \hline
 46 & $w$ & Trọng số của bộ biến đổi tuyến tính \\ \hline
 47 & $\mathbf{x}$ & Các ký hiệu bên thu nhận được \\ \hline
+48 & $\Theta$ &  Véc-tơ các tham số không biết trước cần được ước lượng \\ \hline
+49 & $\beta$ & Hệ số khuếch đại phức \\ \hline
+50 & $\phi$ & Gốc phương vị \\ \hline
 \end{longtable}
 }}
 \newpage
@@ -81,20 +84,27 @@
 1 & AI & Artificial intelligence & Trí tuệ nhân tạo \\ \hline
 2 & AWGN & Additive white Gaussian noise & Tạp âm trắng cộng sinh \\ \hline
 3 & B & Blind & Kỹ thuật nhận dạng mù \\ \hline
+64 & BCCH & Broadcast control channel & Kênh điều khiển phát sóng \\ \hline
 4 & BER & Bit error rate & Tỷ lệ lỗi bít \\ \hline
-5 & C1 & Constraint 1 & Ràng buộc bậc hai \\ \hline
-6 & C2 & Constraint 2 & Ràng buộc tuyến tính \\ \hline
-7 & C3 & Constraint 3 & Ràng buộc công suất \\ \hline
+65 & CCCH & Common control channel & Kênh điều khiển chung \\ \hline
 8 & CMA & Constant modulus algorithm & Thuật toán mô-đun không đổi \\ \hline
+6 & CP & Cyclic prefix & Tiền tố vòng \\ \hline
+5 & CRB & Cramér Rao bound & Đường bao Cramér Rao Bound \\ \hline
 9 & CSI & Channel state information & Thông tin về trạng thái kênh truyền \\ \hline
+62 & CSI-RS & Channel state information - reference signal & Tín hiệu tham chiếu thông tin trạng thái kênh truyền \\ \hline
 10 & Data-driven & Data-driven & Hướng dữ liệu \\ \hline
+66 & DCCH & Dedicated control channel & Kênh điều khiển chuyên dụng \\ \hline
 11 & DDCE & Decision-directed channel estimation & Phương pháp hướng quyết định \\ \hline
 12 & DetNet & Detection Network & Mạng nơ-ron học sâu phát hiện \\ \hline
 13 & DL & Deep learning & Học sâu \\ \hline
+68 & DL-SCH & Downlink shared channel & Kênh chia sẻ đường xuống \\ \hline
+59 & DMRS & Demodulation reference signal & Tín hiệu tham chiếu giải điều chế \\ \hline
 14 & DNN & Deep-neural network & Mạng nơ-ron sâu \\ \hline
 15 & DoA & Direction of arrival & Hướng sóng đến \\ \hline
 16 & DoD & Direction of departure & Hướng phát sóng \\ \hline
-17 & FIR & Finite impulse response & Đáp ứng xung hữu hạn \\ \hline
+67 & DTCH & Dedicated traffic channel & Kênh lưu lượng chuyên dụng \\ \hline
+7 & FFT & Fast Fourier transform & Biến đổi Fourier nhanh \\ \hline
+57 & FIM & Fisher information matrix & Ma trận thông tin Fisher \\ \hline
 18 & GPR & Gaussian process regression & Thuật toán hồi quy Gaussian \\ \hline
 19 & HOS & Higer-order statistics & Đặc tính thống kê bậc cao \\ \hline
 20 & i.i.d & Independent and identically distributed & Biến độc lập và phân phối đồng nhất \\ \hline
@@ -115,22 +125,33 @@
 35 & MRE & Mutually referenced equalizers & Bộ cân bằng kênh tham chiếu \\ \hline
 36 & NB & Non-blind & Kỹ thuật nhận dạng không mù \\ \hline
 37 & NN & Neural network & Mạng nơ-ron \\ \hline
+44 & OFDM & Orthogonal frequency-division multiplexing & Ghép kênh phân chia theo tần số trực giao \\ \hline
+17 & OP & Only pilot & Chỉ sử dụng các ký hiệu hoa tiêu \\ \hline
 38 & PC & Pilot contamination & Ô nhiễm pilot \\ \hline
 39 & PCA & Principal components analysis & Phân tích thành phần chính \\ \hline
+63 & PCCH & Paging control channel & Kênh điều khiển paging \\ \hline
+58 & Pdf & Probability density function & Hàm mật độ xác suất \\ \hline
 40 & Pilot & Pilot & Ký hiệu hoa tiêu \\ \hline
 41 & Pilot-assisted & Pilot-assisted & Phương pháp dựa trên tín hiệu hoa tiêu \\ \hline
 42 & PSK & Phase-shift keying & Điều chế pha \\ \hline
+71 & PSS & Primary synchronization signal & Tín hiệu đồng bộ sơ cấp \\ \hline
+60 & PTRS & Phase tracking reference signal & Tín hiệu tham chiếu theo dõi pha \\ \hline
 43 & QAM & Quadrature amplitude modulation & Điều chế biên độ cầu phương \\ \hline
-44 & rc & Reduced cost & Giảm thiểu chi phí \\ \hline
+70 & RACH & Random access channel & Kênh truy cập ngẫu nhiên \\ \hline
 45 & RL & Reinforcement learning & Học tăng cường \\ \hline
 46 & RLS & Recursive least squares & Kỹ thuật bình phương đệ quy nhỏ nhất \\ \hline
 47 & SB & Semi-blind & Kỹ thuật nhận dạng bán mù \\ \hline
-48 & SER & Symbol error rate & Tỷ lệ sai số ký hiệu \\ \hline
 49 & SIMO & Single-input multi-output & Hệ thống đơn đầu vào đa đầu ra \\ \hline
 50 & SISO & Single-input single-output & Hệ thống đơn đầu đơn vào đầu ra \\ \hline
 51 & SNR & Signal noise ratio & Tỷ lệ tín hiệu tạp âm \\ \hline
 52 & SOS & Second-order statistics & Đặc tính thống kê bậc hai \\ \hline
+61 & SRS & Sounding reference signal & Tín hiệu tham chiếu âm thanh \\ \hline
+72 & SSS & Secondary synchronization signal  & Tín hiệu đồng bộ thứ cấp \\ \hline
 53 & Training-based & Training-based & Phương pháp dựa trên việc đào tạo \\ \hline
+56 & UCA & Uniform circle array & Mảng tròn cách đều \\ \hline
+55 & UCyA & Uniform cylindrical array & Mảng trụ đồng nhất \\ \hline
+48 & ULA & Uniform linear array & Mảng thẳng cách đều \\ \hline
+69 & UL-SCH & Uplink shared channel & Kênh chia sẻ đường lên \\ \hline
 54 & ZF & Zero forcing & Kỹ thuật ép không \\ \hline
 
 \end{longtable}
