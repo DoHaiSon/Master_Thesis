@@ -7,20 +7,19 @@
 
 \subsection*{Lý do chọn đề tài}
 
-Theo~\cite{Mtawa2019}, trong năm 2021, chỉ riêng các thiết bị di động đã đòi hỏi tổng lưu lượng truy cập internet đạt 48,27 Petabytes/tháng và tăng trưởng 46\% hàng năm. Tốc độ truy cập của các thế hệ mạng di động phổ biến ở Việt Nam như 4G là trung bình trên 28,2 Megabits/giây và tăng lên từ 29 đến 47\% hàng năm. Với sự gia tăng nhanh chóng của số lượng các thiết bị di động và đòi hỏi về chất lượng nội dung của người dùng, yêu cầu về truyền tải nhanh và hiệu quả trong các hệ thống truyền thông không dây luôn là chủ đề nghiên cứu được quan tâm.
+Theo~\cite{Mtawa2019}, trong năm 2021, chỉ riêng các thiết bị di động đã đòi hỏi tổng lưu lượng truy cập Internet đạt 48,27 Petabytes/tháng và tăng trưởng 46\% hàng năm. Tốc độ truy cập của các thế hệ mạng di động phổ biến ở Việt Nam như 4G là trung bình trên 28,2 Megabits/giây và tăng lên từ 29\% đến 47\% hàng năm. Với sự gia tăng nhanh chóng của số lượng các thiết bị di động và đòi hỏi về chất lượng nội dung của người dùng, yêu cầu về truyền tải nhanh và hiệu quả trong các hệ thống truyền thông không dây luôn là chủ đề nghiên cứu được quan tâm.
 
-Trong thế hệ mạng di động tiên tiến như 5G và cao hơn, để tăng hiệu quả truyền tải, các hệ truyền thông đơn ăng-ten (antenna) hoặc đa đầu vào đa đầu ra (MIMO - Multi-input multi-output) kích thước nhỏ (số lượng ăng-ten của trạm cơ sở nhỏ hơn $10$) đã được thay thế bằng các hệ thống \textbf{MIMO kích thước lớn} (mMIMO - Massive MIMO) với số lượng ăng-ten trạm cơ sở từ $100$ đến hàng nghìn phần tử và phục vụ cùng lúc hàng chục đến hàng trăm người dùng~\cite{Larsson2014}. Kênh truyền của các hệ thống mMIMO có hai tính chất quan trọng bao gồm: (i) Làm cứng kênh (hardening)~\cite{Willhammar2020}, khi số lượng phần tử ăng-ten trong mMIMO tăng lên rất lớn, các kênh truyền vô tuyến có thể trở thành dạng large-scale fading và thay đổi chậm hơn; (ii) Truyền thuận lợi (favorable propagation)~\cite{Ngo2014}, trong hệ thống mMIMO, tín hiệu truyền tải trên kênh đường lên từ nhiều người dùng khác nhau là trực giao với nhau (không gây nhiễu cho nhau).
-% \begin{enumerate}
-    % \item Cứng kênh (Hardening)~\cite{Willhammar2020}: 
-    % \item Truyền thuận lợi (Favorable propagation)~\cite{Ngo2014}:
-% \end{enumerate}
+Trong thế hệ mạng di động tiên tiến như 5G và cao hơn, để tăng hiệu quả truyền tải, các hệ truyền thông đơn ăng-ten hoặc đa đầu vào đa đầu ra (MIMO - Multi-Input Multi-Output) kích thước nhỏ (số lượng ăng-ten của trạm cơ sở nhỏ hơn $10$) đã được thay thế bằng các hệ thống \textbf{MIMO kích thước lớn} (mMIMO - Massive MIMO) với số lượng ăng-ten trạm cơ sở từ hàng trăm đến hàng nghìn phần tử và phục vụ cùng lúc hàng chục đến hàng trăm người dùng~\cite{Larsson2014}. Kênh truyền của các hệ thống mMIMO có hai tính chất quan trọng bao gồm: (i) làm cứng kênh (hardening)~\cite{Willhammar2020}, khi số lượng phần tử ăng-ten trong mMIMO tăng lên rất lớn, các kênh truyền vô tuyến có thể trở thành dạng pha-đinh kích thước lớn (large-scale fading) và thay đổi chậm hơn; (ii) truyền thuận lợi (favorable propagation)~\cite{Ngo2014}, trong hệ thống mMIMO, tín hiệu truyền tải trên kênh đường lên từ nhiều người dùng khác nhau là trực giao với nhau (không gây nhiễu cho nhau).
 
-Để đạt được hiệu quả truyền tải, bất kỳ thế hệ mạng di động nào như 5G hay các thế hệ mạng WiFi như $802.11$ac, $802.11$ax đều cần thực hiện ước lượng kênh truyền vô tuyến nhằm khôi phục lại tín hiệu gốc được gửi đi. Trong luận văn này, ``\textbf{Nhận dạng hệ thống truyền thông}'' được hiểu là ``ước lượng kênh truyền''. Cụ thể, mạng 5G theo chuẩn 3GPP TS $38.211$ phiên bản $16$~\cite{r16}, có đến bốn loại tín hiệu tham chiếu được sử dụng cho việc đồng bộ và ước lượng kênh truyền, bao gồm: tín hiệu tham chiếu giải điều chế (DMRS -Demodulation reference signal), tín hiệu tham chiếu theo dõi pha (PTRS - Phase tracking reference signal), tín hiệu tham chiếu phát thanh (SRS - Sounding reference signal), và tín hiệu tham chiếu thông tin trạng thái kênh truyền (CSI-RS - Channel state information - reference signal). Trên hình~\ref{fig:DMRS} mô tả liên kết giữa các tín hiệu tham chiếu ở kênh vật lí với các lớp phía trên của mạng lõi 5G. Có thể nhận thấy, cả kênh đường lên và đường xuống của lớp dữ liệu và điều khiển đều có thể có sự xuất hiện của các tín hiệu tham chiếu này. Ví dụ, tín hiệu tham chiếu DMRS có thể chiếm đến $50$\% số sóng mang con (sub-carrier) trong một slot và từ $1$ đến $2$ slots trong một khung con (sub-frame) của 5G. Tuỳ thuộc vào điều kiện kênh truyền, trạm cơ sở sẽ tăng/giảm số lượng các tín hiệu tham chiếu này, có thể có các trường hợp lí tưởng khi DMRS chỉ cần ở kênh đường lên, nhờ tính đối xứng và cứng của kênh truyền mMIMO. Tuy nhiên, vẫn có thể nhận xét rằng, trong 5G, khi số lượng tín hiệu tham chiếu lớn, thì chi phí trong việc truyền tải và độ phức tạp trong việc ước lượng kênh truyền đều tăng lên. Điều tương tự với các thế hệ mạng WiFi, trong chuẩn WiFi phổ biến hiện nay như $802.11$ac~\cite{80211ac}, các tín hiệu tham chiếu gọi là hoa tiêu (pilot) được sử dụng. Để tăng tốc độ truyền tải, $802.11$ac hoạt động ở nhiều chế độ băng thông khác nhau, từ nhỏ nhất là $20$MHz yêu cầu $4$ pilots trên tổng $64$ sub-carriers, đến lớn nhất là $160$MHz yêu cầu $16$ pilots trên tổng $512$ sub-carriers. Trong luận văn này, thuật ngữ pilot sẽ được sử dụng để chỉ các tín hiệu tham chiếu như trong 5G hay pilot trong WiFi.
+Để đạt được hiệu quả truyền tải, bất kỳ thế hệ mạng di động nào như 5G hay các thế hệ mạng WiFi như $802.11$ac, $802.11$ax đều cần thực hiện ước lượng kênh truyền vô tuyến nhằm khôi phục lại tín hiệu gốc được gửi đi. Trong luận văn này, ``\textbf{nhận dạng hệ thống truyền thông}'' được hiểu là ``ước lượng kênh truyền''. Cụ thể, mạng 5G theo chuẩn 3GPP TS $38.211$ phiên bản $16$~\cite{r16}, có đến bốn loại tín hiệu tham chiếu được sử dụng cho việc đồng bộ và ước lượng kênh truyền, bao gồm: tín hiệu tham chiếu giải điều chế (DMRS  - Demodulation Reference Signal), tín hiệu tham chiếu bám pha (PTRS - Phase Tracking Reference Signal), tín hiệu tham chiếu âm thanh (SRS - Sounding Reference Signal), và tín hiệu tham chiếu thông tin trạng thái kênh truyền (CSI-RS - Channel State Information - Reference Signal). Trên hình~\ref{fig:DMRS} mô tả liên kết giữa các tín hiệu tham chiếu ở kênh vật lý với các lớp phía trên của mạng lõi 5G. Có thể nhận thấy, cả kênh đường lên và đường xuống của mặt phẳng dữ liệu và điều khiển đều có thể có sự xuất hiện của các tín hiệu tham chiếu này. Ví dụ, tín hiệu tham chiếu DMRS có thể chiếm đến $50$\% số sóng mang con (sub-carrier) trong một slot và từ $1$ đến $2$ slots trong một khung con (sub-frame) của 5G. Tuỳ thuộc vào điều kiện kênh truyền, trạm cơ sở sẽ tăng/giảm số lượng các tín hiệu tham chiếu này, có thể có các trường hợp lí tưởng khi DMRS chỉ cần ở kênh đường lên, nhờ tính đối xứng và cứng của kênh truyền mMIMO. Tuy nhiên, vẫn có thể nhận xét rằng, trong 5G, khi số lượng tín hiệu tham chiếu lớn, thì chi phí trong việc truyền tải và độ phức tạp trong việc ước lượng kênh truyền đều tăng lên. Điều tương tự với các thế hệ mạng WiFi, trong chuẩn WiFi phổ biến hiện nay như $802.11$ac~\cite{80211ac}, các tín hiệu tham chiếu gọi là hoa tiêu (pilot) được sử dụng. Để tăng tốc độ truyền tải, $802.11$ac hoạt động ở nhiều chế độ băng thông khác nhau, từ nhỏ nhất là $20$MHz yêu cầu $4$ pilots trên tổng $64$ sub-carriers, đến lớn nhất là $160$MHz yêu cầu $16$ pilots trên tổng $512$ sub-carriers. Do sử dụng các ký hiệu tham chiếu đã biết trước ở cả bên thu và phát, nên nhóm kỹ thuật ước lượng kênh này được gọi là không mù (NB - Non-Blind). Trong luận văn này, thuật ngữ pilot sẽ được sử dụng để chỉ các tín hiệu tham chiếu như trong 5G hay pilot trong WiFi.
 
 % Tuy nhiên, việc truyền tải không dây luôn gặp phải một hạn chế cố hữu đó là ảnh hưởng bởi kênh truyền vô tuyến là biến dạng tín hiệu. Trong luận văn này,
 % ``\textbf{Nhận dạng hệ thống truyền thông}'' được hiểu là ``ước lượng kênh truyền''.
 
 % Ngay từ các thế hệ mạng di động đầu tiên như 2G~\cite{Tse2005}, các chuỗi tín hiệu hoa tiêu (pilot sequence) được biết trước ở cả bên phát và thu đã được sử dụng để ước lượng sự ảnh hưởng của kênh truyền và khôi phục dạng tín hiệu ở bên thu (NB - Non-blind)~\cite{ljung1999system}. Đến thế hệ mạng di động 4G, 5G, và cao hơn, việc truyền tải đơn ăng-ten (antenna) đã được thay thế bằng các hệ thống đa đầu vào đa đầu ra (MIMO - Multi-input multi-output) hay lớn hơn nữa là MIMO kích thước lớn (mMIMO - Massive MIMO). Điều này khiến việc ước lượng kênh truyền trong các hệ thống MIMO, mMIMO trở nên phức tạp, yêu cầu các chuỗi pilot dài hơn~\cite{Michelusi2009}, dẫn đến hiệu quả về mặt phổ thời gian tần số của việc truyền tải bị giảm đi. 
+{
+\renewcommand{\thefigure}{0.\arabic{figure}}
+
 \begin{figure}[ht]
     \centering
     \begin{tikzpicture}
@@ -106,32 +105,34 @@ Trong thế hệ mạng di động tiên tiến như 5G và cao hơn, để tăn
     \node [below=10mm of DLcontrol, color=green!60!black,font=\Large] {Kênh đường xuống};
     \node [below=10mm of ULdata, color=red!80!black,font=\Large] {Kênh đường lên};
     \end{tikzpicture}
-    \caption{Các tín hiệu tham chiếu (bo bằng đường nét đứt màu xanh) tại kênh vật lí khác nhau trong mạng 5G.}
+    \caption{Các tín hiệu tham chiếu (viền bằng đường nét đứt màu xanh) tại kênh vật lý khác nhau trong mạng 5G.}
     \label{fig:DMRS}
 \end{figure}
-
-Nhiều phương pháp nghiên cứu đã được đề xuất để giảm thiểu số lượng pilot (chi phí) và độ phức tạp tính toán cần thiết cho việc ước lượng kênh truyền. Mà tiêu biểu trong số đó là ba hướng tiếp cận: 
+}
+Nhiều phương pháp nghiên cứu đã được đề xuất để \textbf{giảm thiểu số lượng pilot} (chi phí) và \textbf{độ phức tạp tính toán} cần thiết cho việc ước lượng kênh truyền. Mà tiêu biểu trong số đó là ba hướng tiếp cận: 
 \begin{enumerate}
     \item Các thuật toán nhận dạng ``mù'' (B - Blind) ở đây được hiểu là khi xử lý (nhận dạng), bộ xử lý ``không nhìn thấy'' (không có thông tin) của đầu vào. Các thuật toán xử lý tín hiệu mù phát triển mạnh trong thập kỷ 90~\cite{abed1997}, tuy nhiên các phương pháp xử lý mù thường yêu cầu các thông số thống kê của tín hiệu mà thông thường không biết trước trong các hệ thống truyền thông thực, hơn nữa, độ chính xác mà các thuật toán này đưa ra cũng thấp hơn đáng kể khi so sánh với các phương pháp sử dụng pilot truyền thống. Do vậy, các thuật toán mù cũng ít được quan tâm trong những thế hệ mạng viễn thông di động trước 5G.
 
-    \item Các thuật toán nhận dạng ``bán mù'' (SB - Semi-blind) là phương pháp cải tiến của B và được quan tâm trong các năm gần đây~\cite{Ladaycia2017, Ladaycia2019, shaik2021}. Đây là kỹ thuật kết hợp các thông tin từ hướng tiếp cận mù truyền thống và các dạng thông tin khác, ví dụ~\cite{Rekik2021}: số lượng nhỏ pilot, hướng sóng đến (DoA - Direction of arrival), toạ độ người dùng,~\ldots Điều này giúp giảm đi số lượng pilot cần thiết cho việc nhận dạng hệ thống nhằm tăng hiệu quả phổ nhưng vẫn giữ được độ chính xác cần thiết, giảm độ phức tạp, và cho khả năng ứng dụng rộng rãi hơn.
+    \item Các thuật toán nhận dạng ``bán mù'' (SB - Semi-Blind) là phương pháp cải tiến của B và được quan tâm trong các năm gần đây~\cite{Ladaycia2017, Ladaycia2019, shaik2021}. Đây là kỹ thuật kết hợp các thông tin từ hướng tiếp cận mù truyền thống 
+    % (số lượng nhỏ pilot) 
+    và các dạng thông tin khác, ví dụ~\cite{Rekik2021}: hướng sóng đến (DoA - Direction of Arrival), toạ độ người dùng,~\ldots. Điều này giúp tăng độ chính xác, giảm độ phức tạp, và cho khả năng ứng dụng rộng rãi hơn. Trong một số trường hợp, hiệu quả của từ các dạng thông tin khác này có thể giúp giảm đi số lượng pilot cần thiết cho việc nhận dạng hệ thống nhằm tăng hiệu suất phổ nhưng vẫn giữ được độ chính xác cần thiết.
 
-    \item Các thuật toán nhận dạng sử dụng học máy, học sâu (ML - Machine learning; DL - Deep learning) cũng là lĩnh vực nghiên cứu dành được nhiều sự quan tâm~\cite{Zhang2019} trong các năm gần đây. Ưu điểm của các kỹ thuật sử dụng ML, DL là tính đa dạng, khi hướng tiếp cận ML, DL sử dụng cho mục đích xử lý các loại tín hiệu như hình ảnh, âm thanh đã đạt được các bước tiến rõ rệt. Đầu vào của các mạng DL được sử dụng để nhận dạng hệ thống rất linh hoạt, có thể tương ứng với cả ba hướng tiếp cận: pilot, mù, và bán mù kể trên. Sau quá trình huấn luyện, các mô hình (model) học máy có thể hoạt động độc lập như một bộ cân bằng mù/bán mù, khi chỉ cần đưa các tín hiệu thu được đi qua model, và các tín hiệu được khôi phục sẽ được trả về mà không cần đến các chuỗi pilot, hay thông tin về trạng thái kênh truyền (CSI - Channel state information).
+    \item Các thuật toán nhận dạng sử dụng học máy, học sâu (ML - Machine Learning; DL - Deep Learning) cũng là lĩnh vực nghiên cứu dành được nhiều sự quan tâm~\cite{Zhang2019} trong các năm gần đây. Ưu điểm của các kỹ thuật sử dụng ML/DL là tính đa dạng, khi hướng tiếp cận ML/DL sử dụng cho mục đích xử lý các loại tín hiệu như hình ảnh, âm thanh đã đạt được các bước tiến rõ rệt. Đầu vào của các mạng DL được sử dụng để nhận dạng hệ thống rất linh hoạt, có thể tương ứng với cả ba hướng tiếp cận: pilot, mù, và bán mù kể trên. Sau quá trình huấn luyện, các mô hình (model) học máy có thể hoạt động độc lập như một bộ cân bằng mù/bán mù, khi chỉ cần đưa các tín hiệu thu được đi qua mô hình, và các tín hiệu cần khôi phục sẽ được trả về mà không cần đến các chuỗi pilot, hay thông tin về trạng thái kênh truyền (CSI - Channel State Information).
 \end{enumerate}
 
-Trong luận văn này, các phương pháp thuộc hai hướng tiếp cận SB khi sử dụng các thông tin bên lề về cấu trúc ăng-ten và sử dụng DL để tách sóng được gọi là ``\textbf{tri thức mới}''~\cite{InSI} do sử dụng hoặc thông tin khác với thông tin kênh.
+Trong luận văn này, các phương pháp thuộc hai hướng tiếp cận SB khi sử dụng các thông tin bên lề về cấu hình mảng ăng-ten và sử dụng DL để tách sóng được gọi là ``\textbf{tri thức mới}''~\cite{InSI} do sử dụng thông tin khác với thông tin từ các ký hiệu pilot.
 % Thay vào đó, các phương pháp này có thể sử dụng các tín hiệu mẫu được thu thập để đưa ra ước lượng chính xác của thông tin kênh truyền, giảm thiểu sự phụ thuộc vào kiến thức chính xác về kênh truyền. 
 Vì vậy, SB và DL là các phương pháp tiên tiến và hứa hẹn trong việc ước lượng kênh truyền trong các hệ thống truyền thông hiện đại.
 
-Ngoài việc thay đổi các thuật toán ước lượng kênh truyền, khi số lượng ăng-ten của mMIMO rất lớn thì cấu hình (kiến trúc) của các mảng ăng-ten này cũng cần được xem xét. Trong các thế hệ mạng di động cũ, các mảng ăng-ten thường ở dạng mảng thẳng cách đều (ULA - Uniform linear array). Tuy nhiên, nếu số lượng phần tử ăng-ten lên đến hàng trăm, trước hết dễ nhận thấy rằng kích thước của các mảng ULA này sẽ trở nên quá lớn. Ngoài ra, việc thay đổi kiến trúc mảng hoàn toàn có thể ảnh hưởng đến hiệu suất của các phép ước lượng, như trong~\cite{POORMOHAMMAD2017} đã chỉ ra, các kiến trúc mảng 3D cho độ chính xác vượt trội khi ước lượng DoA khi so sánh với ULA truyền thống. Mà DoA lại có thể là một thông số hữu ích bổ sung cho các phương pháp ước lượng SB. Do vậy, các kiến trúc hình học 3D nên được xem xét trong mMIMO để giảm thiểu kích thước và tăng cường độ chính xác của các hệ thống thu phát. Bên cạnh thay đổi cấu trúc vật lí của mảng ăng-ten, các mô hình kênh truyền cũng có thể được xem xét nhằm khai thác thêm các thông tin bên lề nhằm giảm thiểu sai số cho việc ước lượng.
+Ngoài việc thay đổi các thuật toán ước lượng kênh truyền, khi số lượng ăng-ten của mMIMO rất lớn thì cấu hình (kiến trúc) của các mảng ăng-ten này cũng cần được xem xét. Trong các thế hệ mạng di động cũ, các mảng ăng-ten thường ở dạng mảng thẳng cách đều (ULA - Uniform Linear Array). Tuy nhiên, nếu số lượng phần tử ăng-ten lên đến hàng trăm, trước hết dễ nhận thấy rằng kích thước của các mảng ULA này sẽ trở nên quá lớn. Ngoài ra, việc thay đổi cấu hình mảng hoàn toàn có thể ảnh hưởng đến hiệu suất của các bộ ước lượng, như trong~\cite{POORMOHAMMAD2017} đã chỉ ra, các cấu hình mảng 3D cho độ chính xác vượt trội khi ước lượng DoA khi so sánh với ULA truyền thống. Mà DoA lại có thể là một thông số hữu ích bổ sung cho các phương pháp ước lượng SB, ML/DL. Do vậy, các kiến trúc hình học 3D nên được xem xét trong mMIMO để giảm thiểu kích thước và tăng độ chính xác của các hệ thống truyền thông. Bên cạnh thay đổi cấu hình vật lý của mảng ăng-ten, các mô hình kênh truyền cũng có thể được xem xét nhằm khai thác thêm các thông tin bên lề, đảm bảo giảm thiểu sai số cho việc ước lượng.
 
-% Từ thực tế và những phân tích nêu trên, luận văn tập trung nghiên cứu hai mục tiêu sau phương pháp nhận dạng hệ thống bán mù, học máy, học sâu và đề xuất các giải thuật mới để cải thiện các phương pháp nhận dạng này, bao gồm:
-Từ thực tế và những phân tích nêu trên, luận văn tập trung nghiên cứu hai mục tiêu bao gồm
+% Từ thực tế và những phân tích nêu trên, luận văn tập trung nghiên cứu hai mục tiêu sau phương pháp nhận dạng hệ thống bán mù, học máy, học sâu và đề xuất các thuật toán mới để cải thiện các phương pháp nhận dạng này, bao gồm:
+Từ thực tế và những phân tích nêu trên, luận văn tập trung nghiên cứu hai mục tiêu bao gồm:
 \begin{enumerate}
     % \item Phát triển thuật toán bán mù dựa trên một phương pháp nhận dạng mù truyền thống cho các hệ thống MIMO và mMIMO.
-    \item Xem xét sự ảnh hưởng của các kiến trúc mảng ăng-ten, mô hình kênh truyền đến hiệu suất của các thuật toán ước lượng NB và SB trong các hệ thống mMIMO.
+    \item Xem xét sự ảnh hưởng của các cấu hình mảng ăng-ten, mô hình kênh truyền đến hiệu suất của các thuật toán ước lượng NB và SB trong hệ thống mMIMO.
     
-    \item Phát triển một phương pháp nhận dạng sử dụng DL cho các hệ thống mMIMO.
+    \item Phát triển phương pháp nhận dạng sử dụng DL cho hệ thống mMIMO.
 \end{enumerate}
 \vspace{0.5cm}
 
@@ -139,16 +140,16 @@ Từ thực tế và những phân tích nêu trên, luận văn tập trung ngh
 
 Trong luận văn, để đạt được mục tiêu nghiên cứu học viên đã tìm hiểu các tài liệu, bài báo, tạp chí quốc tế,~\ldots có uy tín, thực hiện việc tính toán mô hình dữ liệu, phân tích số học để đưa ra các hướng giải quyết hợp lý, và sau đó kiểm nghiệm lại kết quả bằng hình thức mô phỏng trên Matlab, Python.
 
-Cụ thể để phát triển các thuật toán mới như mục tiêu đề ra các bước nghiên cứu sau đã được thực hiện trong luận văn:
+Cụ thể để phát triển các thuật toán mới như mục tiêu đề ra, các bước nghiên cứu sau đã được thực hiện trong luận văn:
 
 \begin{enumerate}
     \item Tìm hiểu về các mô hình kênh truyền và thuật toán nhận dạng hệ thống trong truyền thông không dây với các hướng tiếp cận khác nhau. 
 	\item Xác định bài toán cụ thể và mục tiêu của nghiên cứu.
 	% \item Lựa chọn thuật toán bán truyền thống phù hợp để phát triển lên SB và một phương pháp sử dụng học sâu để nhận dạng kênh truyền có thể cải tiến.
-    \item Xây dựng mô hình toán học của kênh truyền vô tuyến và lựa chọn phương pháp đánh giá hiệu suất của các kiến trúc mảng ăng-ten/giải thuật ước lượng kênh truyền NB, SB.
+    \item Xây dựng mô hình toán học của kênh truyền vô tuyến và lựa chọn phương pháp đánh giá hiệu suất của các cấu hình mảng ăng-ten/thuật toán ước lượng kênh truyền NB, SB.
     \item Lựa chọn một phương pháp ước lượng kênh truyền có thể phát triển thành mạng học sâu.
 	\item Xây dựng mô hình toán học, huấn luyện mô hình, và tối ưu hóa các thuật toán đề xuất.
-	\item Đánh giá và phân tích kết quả ở nhiều kịch bản khác nhau, so sánh với các nghiên cứu đi trước.
+	\item Đánh giá và phân tích kết quả ở nhiều kịch bản khác nhau, so sánh với các nghiên cứu trước đây.
 \end{enumerate} 
 \vspace{0.3cm}
 
@@ -159,11 +160,11 @@ Cụ thể để phát triển các thuật toán mới như mục tiêu đề r
 	\item Tìm hiểu về các mô hình kênh truyền mMIMO, các thuật toán ước lượng kênh truyền trong những năm gần đây.
 	% \item Xây dựng mô hình toán học hệ thống MIMO/mMIMO để mô tả quá trình truyền tải tín hiệu qua kênh truyền.
 	% \item Phát triển thuật toán SB dựa trên phương pháp bộ cân bằng kênh tham chiếu (MRE - Mutually referenced equalizers).
-    \item Xây dựng mô hình toán học của kênh truyền có cấu trúc (structured) cho việc truyền thông, từ đó khảo sát ảnh hưởng của các kiến trúc mảng ăng-ten, thuật toán ước lượng đến hiệu năng chung của việc ước lượng kênh truyền thông qua đường bao Cramér Rao (CRB).
+    \item Xây dựng mô hình toán học của kênh truyền có cấu trúc (structured), từ đó khảo sát ảnh hưởng của các cấu hình mảng ăng-ten, thuật toán ước lượng đến hiệu năng chung của việc ước lượng kênh truyền thông qua đường bao Cramér Rao (CRB).
     
-	\item Phát triển một mạng nơ-ron sâu dựa trên giải thuật phát hiện tuần tự lặp lại (ISD - Iterative sequential detection) để ước lượng kênh truyền viễn thông.
+	\item Phát triển một mạng nơ-ron sâu dựa trên thuật toán phát hiện tuần tự lặp lại (ISD - Iterative Sequential Detection) để ước lượng kênh truyền.
 	
- \item Đánh giá, kiểm tra các thuật toán được đề xuất trên các công cụ mô phỏng Matlab, Python.
+ \item Đánh giá, kiểm tra các thuật toán được đề xuất thông qua các công cụ mô phỏng Matlab, Python.
 \end{itemize} 
 \vspace{0.3cm}
 
@@ -174,16 +175,21 @@ Luận văn có hai đóng góp chính sau đây:
 \begin{itemize}
 	% \item Tổng quan về các thuật toán nhận dạng hệ thống truyền thông MIMO kích thước lớn.
 	% \item Đề xuất thuật toán SB-MRE cho ước lượng kênh truyền.
-    \item Khảo sát sự ảnh hưởng của kiến trúc mảng ăng-ten 3D và mô hình kênh truyền có cấu trúc đến tính chính xác của việc ước lượng kênh truyền dựa trên CRB trong các hệ thống mMIMO.
+    \item Khảo sát sự ảnh hưởng của cấu hình mảng ăng-ten 3D và mô hình kênh truyền có cấu trúc đến tính chính xác của việc ước lượng kênh truyền dựa trên CRB trong các hệ thống mMIMO.
     
-	\item Đề xuất một mạng học sâu ISDNN cho việc ước lượng kênh truyền của hệ thống mMIMO cho cả hai mô hình kênh có cấu trúc và phi cấu trúc.
+	\item Đề xuất một mạng học sâu ISDNN cho việc ước lượng kênh truyền của hệ thống mMIMO với cả hai mô hình kênh có cấu trúc và không sử dụng cấu trúc.
 \end{itemize} 
 %\newpage
 
 Kết quả nghiên cứu của chương~\ref{sec:CRB} đã được công bố:
 \begin{enumerate}
-    \item[] \textbf{Do Hai Son} and Tran Thi Thuy Quynh (2023), ``Impact Analysis of Antenna Array Geometry on Performance of Semi-blind Structured Channel Estimation for massive MIMO-OFDM systems,'' in \textit{2023 IEEE Statistical Signal Processing Workshop (SSP)}, Hanoi, Vietnam, July. [accepted]
+    \item[] \textbf{Do Hai Son} and Tran Thi Thuy Quynh (2023), ``Impact Analysis of Antenna Array Geometry on Performance of Semi-blind Structured Channel Estimation for massive MIMO-OFDM systems,'' in \textit{IEEE Statistical Signal Processing Workshop (SSP)}, Hanoi, Vietnam, July. [accepted]
 \end{enumerate}
+
+% Kết quả nghiên cứu liên quan khác:
+% \begin{enumerate}
+%     \item[] \textbf{Do Hai Son} and et al. (2023), ``On the Semi-Blind Mutually Referenced Equalizer for MIMO Systems,''  \textit{Asia-Pacific Signal and Information Processing Association – Annual Summit and Conference (APSIPA-ASC)}, Taipei, Taiwan, November. [submitted]
+% \end{enumerate}
 
 \subsection*{Bố cục của luận văn}
 \vspace{0.5cm}
@@ -194,7 +200,7 @@ Nội dung tiếp theo của luận văn được trình bày như sau:
 \begin{itemize}
 	\item Chương 1: Trình bày các mô hình kênh truyền trong hệ thống viễn thông mMIMO và tổng quan về các phương pháp nhận dạng hệ thống trong truyền thông không dây.
 	% \item Chương 2: Trình bày sơ lược về thuật toán B-MRE gốc, sau đó đề xuất phương pháp SB-MRE cho MIMO/mMIMO. Kiểm nghiệm và đánh giá kết quả thông qua mô phỏng Matlab.
-    \item Chương 2: Trình bày mô hình kênh truyền có cấu trúc cho các hệ thống mMIMO với các cấu hình mảng ăng-ten khác nhau. Sử dụng đường bao Cramér Rao  để xem xét ảnh hưởng của kiến trúc mảng ăng-ten và giải thuật SB đến hiệu suất của việc ước lượng kênh truyền.
-	\item Chương 3: Trình bày sơ lược về mạng DetNet (Detection network) phục vụ cho ước lượng kênh truyền viễn thông. Đề xuất một mô hình mạng ISDNN, cho cả mô hình kênh truyền có cấu trúc và phi cấu trúc, nhằm giảm độ phức tạp cho mô hình đầu ra. Tạo bộ dữ liệu, đào tạo, và đánh giá kết quả thông qua mô phỏng Python.
-	\item Kết luận: Đưa ra kết luận về hai thuật toán được đề xuất và đề xuất các giải pháp để cải thiện hệ thống.
+    \item Chương 2: Trình bày mô hình kênh truyền có cấu trúc cho hệ thống mMIMO với các cấu hình mảng ăng-ten khác nhau. Sử dụng đường bao Cramér Rao  để xem xét ảnh hưởng của cấu hình mảng ăng-ten và thuật toán SB đến hiệu suất của việc ước lượng kênh truyền.
+	\item Chương 3: Trình bày sơ lược về mạng DetNet (Detection Network) phục vụ cho ước lượng kênh truyền viễn thông. Đề xuất một mô hình mạng ISDNN, cho cả mô hình kênh truyền có cấu trúc và không sử dụng cấu trúc, nhằm giảm độ phức tạp cho mô hình đầu ra. Tạo bộ dữ liệu, đào tạo, và đánh giá kết quả thông qua mô phỏng Python.
+	\item Kết luận: Đưa ra kết luận về hai đề xuất trong luận văn và các hạn chế cùng hướng nghiên cứu tiếp theo.
 \end{itemize} 

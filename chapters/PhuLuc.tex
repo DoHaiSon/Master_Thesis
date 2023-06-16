@@ -8,7 +8,7 @@
 
 \section{Thuật toán tối ưu Adam}
 \label{sec:adam}
-Thuật toán tối ưu Adam là phương pháp tối ưu hơn so với giải thuật tối ưu giảm dần độ dốc ngẫu nhiên (SGD - Stochastic gradient descent). Adam áp dụng các tốc độ học tập thích nghi ($\delta$ - Adaptive learning rate) khác nhau cho mỗi tham số học. Điều này mang lại lợi thế lớn khi các mô hình mạng nơ-ron với kiến trúc phức tạp. Một số phần trong mạng nơ-ron nhạy cảm với sự thay đổi của trọng số theo các cách riêng biệt. Do vậy, các phần này sẽ cần tốc độ học nhỏ hơn với các vùng khác. Trong luận văn này, tác giả chỉ đưa ra một số biểu diễn toán học quan trọng của Adam, chi tiết về giải thuật tối ưu này có tại~\cite{Diederik2014}.
+Thuật toán tối ưu Adam là phương pháp tối ưu hơn so với giải thuật tối ưu giảm dần độ dốc ngẫu nhiên (SGD - Stochastic Gradient Descent). Adam áp dụng các tốc độ học tập thích nghi ($\delta$ - Adaptive learning rate) khác nhau cho mỗi tham số học. Điều này mang lại lợi thế lớn khi các mô hình mạng nơ-ron với kiến trúc phức tạp. Một số phần trong mạng nơ-ron nhạy cảm với sự thay đổi của trọng số theo các cách riêng biệt. Do vậy, các phần này sẽ cần tốc độ học nhỏ hơn với các vùng khác. Trong luận văn này, tác giả chỉ đưa ra một số biểu diễn toán học quan trọng của Adam, chi tiết về giải thuật tối ưu này có tại~\cite{Diederik2014}.
 
 \begin{subequations}
     \begin{align}
@@ -22,11 +22,11 @@ Thuật toán tối ưu Adam là phương pháp tối ưu hơn so với giải t
 trong đó:
 \begin{itemize}[-]
     \item  $\delta$: tốc độ học.
-    \item  $\beta_1, \beta_2$: tỉ lệ giảm dần theo cấp số nhân cho ước lượng moment thứ nhất và hai.
-    \item  $m_t$: giá trị trung bình của ước lượng moment thứ nhất.
-    \item  $v_t$: phương sai của ước lượng moment thứ hai.
-    \item  $g_t$: gradient.
-    \item  $\hat{m}_t$: các công cụ ước lượng hiệu chỉnh bias cho moment thứ nhất.
-    \item $\hat{v}_t$: các công cụ ước lượng hiệu chỉnh bias cho moment thứ hai.
+    \item  $\beta_1, \beta_2$: tỉ lệ giảm dần theo cấp số nhân cho ước lượng mô-men (moment) thứ nhất và hai.
+    \item  $m_t$: giá trị trung bình của ước lượng mô-men thứ nhất.
+    \item  $v_t$: phương sai của ước lượng mô-men thứ hai.
+    \item  $g_t$: độ dốc.
+    \item  $\hat{m}_t$: các công cụ ước lượng hiệu chỉnh độ lệch cho mô-men thứ nhất.
+    \item $\hat{v}_t$: các công cụ ước lượng hiệu chỉnh độ lệch cho mô-men thứ hai.
     \item $w_t$: trọng số của mô hình.
 \end{itemize}

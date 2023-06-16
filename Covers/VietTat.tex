@@ -14,15 +14,15 @@
 \hline
 in thường & Vô hướng \\ 
 \hline
-in thường, đậm & Vector \\ 
+in thường, đậm & Véc-tơ \\ 
 \hline
 in hoa, đậm & Ma trận \\ 
 \hline
 (.)$^\top$ & Chuyển vị \\ 
 \hline
-(.)$^-1$ & Nghịch đảo \\ 
+(.)$^{-1}$ & Nghịch đảo \\ 
 \hline
-(.)$^H$ & Chuyển vị liên hợp phức \\ 
+(.)$^H$ & Phép biến đổi Hermitian \\ 
 \hline
 $\alpha$ & Tham số học của mạng ISDNN \\ 
 \hline
@@ -32,7 +32,7 @@ $\Im$ & Phần ảo \\
 \hline
 $\lambda$ & Bước sóng \\ 
 \hline
-$\mathbb{E}$(.) & Công suất trung bình \\ 
+$\mathbb{E}$(.) & Kỳ vọng \\ 
 \hline
 $\mathbf{e}$ & Véc-tơ phần dư / lỗi \\ 
 \hline
@@ -50,19 +50,19 @@ $\Re$ & Phần thực \\
 \hline
 $\sigma$ & Độ lệch chuẩn \\ 
 \hline
-$\mathbf{\theta}$ & Góc ngẩng / Bộ tham số của việc học \\ 
+$\mathbf{\theta}$ & Góc ngẩng \\ 
 \hline
 $\mathcal{F}$ & Ma trận Fourier rời rạc \\ 
 \hline
 $\mathbf{0}_T$ & Véc-tơ cột gồm các phần tử $0$ có kích thước $T \times 1$ \\ 
 \hline
-$\operatorname{arg}$ & Vị trí \\ 
+$\operatorname{arg}$ & Vị trí của phần tử trong véc-tơ / ma trận \\ 
 \hline
-$b$ & Bias của bộ biến đổi tuyến tính \\ 
+$b$ & Độ lệch của bộ biến đổi tuyến tính \\ 
 \hline
-$\mathcal{CN}$ & Tạp âm AWGN phức \\ 
+$\mathcal{CN}$ & Phân phối chuẩn phức \\ 
 \hline
-$\operatorname{con}$ & Phép nối \\ 
+$\operatorname{con}$ & Phép nối véc-tơ\\ 
 \hline
 $\partial$ & Đạo hàm riêng \\ 
 \hline
@@ -76,9 +76,9 @@ $\mathbf{G}_H$ & Ma trận Gram của $\mathbf{H}$ \\
 \hline
 $\mathbf{H}$ & Ma trận kênh truyền \\ 
 \hline
-$\mathbf{I}_K$ & Ma trận đơn vị kích thước K \\ 
+$\mathbf{I}_K$ & Ma trận đơn vị kích thước $K \times K$ \\ 
 \hline
-$K$ & Số các ký hiệu chứa dữ liệu hoặc pilot trong một ký hiệu OFDM \\ 
+$K$ & Độ dài một ký hiệu OFDM / Số các lớp trong một mạng DNN \\ 
 \hline
 $L$ & Số ăng-ten thu \\ 
 \hline
@@ -106,9 +106,9 @@ $w$ & Trọng số của bộ biến đổi tuyến tính \\
 \hline
 $\mathbf{x}$ & Các ký hiệu bên thu nhận được \\ 
 \hline
-$\Theta$ & Véc-tơ các tham số không biết trước cần được ước lượng \\ 
+$\Theta$ & Véc-tơ các tham số không biết trước cần được ước lượng / bộ tham số của việc học \\ 
 \hline
-$\beta$ & Hệ số khuếch đại phức \\ 
+$\beta$ & Hệ số khuếch đại \\ 
 \hline
 $\phi$ & Góc phương vị \\
 \hline
@@ -125,161 +125,165 @@ $\phi$ & Góc phương vị \\
 \hline
 \textbf{Chữ viết tắt}~ & \textbf{Giải thích tiếng Anh} & \textbf{Giải thích tiếng Việt} \\ 
 \hline
-AI & Artificial intelligence & Trí tuệ nhân tạo \\ 
+AI & Artificial Intelligence & Trí tuệ nhân tạo \\ 
 \hline
-AWGN & Additive white Gaussian noise & Tạp âm trắng cộng sinh \\ 
+AWGN & Additive White Gaussian Noise & Tạp âm trắng cộng tính \\ 
 \hline
 B & Blind & Kỹ thuật nhận dạng mù \\ 
 \hline
-BCCH & Broadcast control channel & Kênh điều khiển phát sóng \\ 
+BCCH & Broadcast Control Channel & Kênh điều khiển quảng bá \\ 
 \hline
-BER & Bit error rate & Tỷ lệ lỗi bít \\ 
+BER & Bit Error Rate & Tỷ lệ lỗi bít \\ 
 \hline
-CBSM & Correlation-based stochastic mode & Mô hình ngẫu nhiên dựa trên tương quan\\
+CBSM & Correlation-based Stochastic Mode & Mô hình ngẫu nhiên dựa trên tương quan\\
 \hline
-CCCH & Common control channel & Kênh điều khiển chung \\ 
+CCCH & Common Control Channel & Kênh điều khiển chung \\ 
 \hline
-CMA & Constant modulus algorithm & Thuật toán mô-đun không đổi \\ 
+CMA & Constant Modulus Algorithm & Thuật toán mô-đun không đổi \\ 
 \hline
-CP & Cyclic prefix & Tiền tố vòng \\ 
+CP & Cyclic Prefix & Tiền tố vòng \\ 
 \hline
-CRB & Cramér Rao bound & Đường bao Cramér Rao Bound \\ 
+CRB & Cramér Rao Bound & Đường bao Cramér Rao \\ 
 \hline
-CSI & Channel state information & Thông tin về trạng thái kênh truyền \\ 
+CSI & Channel State Information & Thông tin về trạng thái kênh truyền \\ 
 \hline
-CSI-RS & Channel state information - reference signal & Tín hiệu tham chiếu thông tin trạng thái kênh truyền \\ 
+CSI-RS & Channel State Information - Reference Signal & Tín hiệu tham chiếu thông tin trạng thái kênh truyền \\ 
 \hline
 Data-driven & Data-driven & Hướng dữ liệu \\ 
 \hline
-DCCH & Dedicated control channel & Kênh điều khiển chuyên dụng \\ 
+DCCH & Dedicated Control Channel & Kênh điều khiển chuyên dụng \\ 
 \hline
-DDCE & Decision-directed channel estimation & Phương pháp hướng quyết định \\ 
+DDCE & Decision-directed Channel Estimation & Ước lượng kênh trực tiếp quyết định \\ 
 \hline
 DetNet & Detection Network & Mạng nơ-ron học sâu phát hiện \\ 
 \hline
-DL & Deep learning & Học sâu \\ 
+DL & Deep Learning & Học sâu \\ 
 \hline
-DL-SCH & Downlink shared channel & Kênh chia sẻ đường xuống \\ 
+DL-SCH & Downlink Shared Channel & Kênh chia sẻ đường xuống \\ 
 \hline
-DMRS & Demodulation reference signal & Tín hiệu tham chiếu giải điều chế \\ 
+DMRS & Demodulation Reference Signal & Tín hiệu tham chiếu giải điều chế \\ 
 \hline
-DNN & Deep-neural network & Mạng nơ-ron sâu \\ 
+DNN & Deep-neural Network & Mạng nơ-ron sâu \\ 
 \hline
-DoA & Direction of arrival & Hướng sóng đến \\ 
+DoA & Direction of Arrival & Hướng sóng đến \\ 
 \hline
-DoD & Direction of departure & Hướng phát sóng \\ 
+DoD & Direction of Departure & Hướng phát sóng \\ 
 \hline
-DTCH & Dedicated traffic channel & Kênh lưu lượng chuyên dụng \\ 
+DTCH & Dedicated Traffic Channel & Kênh lưu lượng chuyên dụng \\ 
 \hline
-FFT & Fast Fourier transform & Biến đổi Fourier nhanh \\ 
+FFT & Fast Fourier Transform & Biến đổi Fourier nhanh \\ 
 \hline
-FIM & Fisher information matrix & Ma trận thông tin Fisher \\ 
+FIM & Fisher Information Matrix & Ma trận thông tin Fisher \\ 
 \hline
-GBSM & Geometry-based stochastic model & Mô hình ngẫu nhiên dựa trên hình học\\
+GBSM & Geometry-based Stochastic Model & Mô hình ngẫu nhiên dựa trên hình học\\
 \hline
-GPR & Gaussian process regression & Thuật toán hồi quy Gaussian \\ 
+GPR & Gaussian Process Regression & Thuật toán hồi quy Gaussian \\ 
 \hline
-HOS & Higer-order statistics & Đặc tính thống kê bậc cao \\ 
+HOS & Higer-order Statistics & Đặc tính thống kê bậc cao \\ 
 \hline
-i.i.d & Independent and identically distributed & Biến độc lập và phân phối đồng nhất \\ 
+i.i.d & Independent and Identically Distributed & Biến độc lập và phân phối đồng nhất \\ 
 \hline
-ICA & Independent component analysis & Phân tích thành phần độc lập \\ 
+ICA & Independent Component Analysis & Phân tích thành phần độc lập \\ 
 \hline
-ISD & Iterative sequential detection & Mạng học sâu phát hiện tuần tự lặp lại \\ 
+ISD & Iterative Sequential Detection & Mạng học sâu phát hiện tuần tự lặp lại \\ 
 \hline
-ISDNN & Iterative sequential Deep-neural network & Mạng nơ-ron sâu tuần tự lặp lại \\ 
+ISDNN & Iterative Sequential Deep-neural Network & Mạng nơ-ron sâu tuần tự lặp lại \\ 
 \hline
-LMMSE & Linear Minimum mean square error & Kỹ thuật ước lượng lỗi bình phương trung bình nhỏ nhất tuyến tính \\ 
+KBSM & Kronecker-based Stochastic Mode & Mô hình ngẫu nhiên Kronecker\\
 \hline
-LMS & Least mean squares & Kỹ thuật trung bình bình phương nhỏ nhất \\ 
+LMMSE & Linear Minimum Mean Square Error & Kỹ thuật ước lượng lỗi bình phương trung bình tối thiểu tuyến tính \\ 
 \hline
-LS & Least square & Kỹ thuật bình phương nhỏ nhất \\ 
+LMS & Least Mean Squares & Kỹ thuật trung bình bình phương tối thiểu \\ 
 \hline
-LSTM & Long/short-term memory & Mạng trí nhớ dài hạn/ngắn hạn \\ 
+LS & Least Square & Kỹ thuật bình phương tối thiểu \\ 
 \hline
-MIMO & Multi-input multi-output & Hệ thống đa đầu vào đa đầu ra \\ 
+LSTM & Long/Short-term Memory & Mạng trí nhớ dài hạn/ngắn hạn \\ 
 \hline
-ML & Machine learning & Học máy \\ 
+MIMO & Multi-Input Multi-Output & Hệ thống đa đầu vào đa đầu ra \\ 
 \hline
-MLE & Maximum likelihood estimator & Bộ ước lượng hợp lẽ cực đại \\ 
+ML & Machine Learning & Học máy \\ 
 \hline
-mMIMO & Massive Multi-input multi-output & Hệ thống đa đầu vào đa đầu ra kích thước lớn \\ 
+MLE & Maximum Likelihood Estimator & Bộ ước lượng hợp lẽ cực đại \\ 
 \hline
-MMSE & Minimum mean square error & Kỹ thuật lỗi trung bình phương sai tối thiểu \\ 
+mMIMO & Massive Multi-Input Multi-Output & Hệ thống đa đầu vào đa đầu ra kích thước lớn \\ 
 \hline
-mmWave & Millimeter wave & Bước sóng mi-li-mét \\ 
+MMSE & Minimum Mean Square Error & Kỹ thuật ước lượng lỗi bình phương trung bình tối thiểu \\ 
+\hline
+mmWave & Millimeter Wave & Bước sóng mi-li-mét \\ 
 \hline
 Model-driven & Model-driven & Hướng mô hình \\ 
 \hline
-MRE & Mutually referenced equalizers & Bộ cân bằng kênh tham chiếu \\ 
+MRE & Mutually Referenced Equalizers & Bộ cân bằng kênh tham chiếu \\ 
 \hline
-NB & Non-blind & Kỹ thuật nhận dạng không mù \\ 
+NB & Non-Blind & Kỹ thuật nhận dạng không mù \\ 
 \hline
-NN & Neural network & Mạng nơ-ron \\ 
+NGSM & Non-Geometrical Stochastic Model & Mô hình kênh ngẫu nhiên không dựa trên hình học \\
 \hline
-OFDM & Orthogonal frequency-division multiplexing & Ghép kênh phân chia theo tần số trực giao \\ 
+NN & Neural Network & Mạng nơ-ron \\ 
 \hline
-OP & Only pilot & Chỉ sử dụng các ký hiệu hoa tiêu \\ 
+OFDM & Orthogonal Frequency-division Multiplexing & Ghép kênh phân chia theo tần số trực giao \\ 
 \hline
-PC & Pilot contamination & Ô nhiễm pilot \\ 
+OP & Only Pilot & Chỉ sử dụng các ký hiệu hoa tiêu \\ 
 \hline
-PCA & Principal components analysis & Phân tích thành phần chính \\ 
+PC & Pilot Contamination & Ô nhiễm pilot \\ 
 \hline
-PCCH & Paging control channel & Kênh điều khiển paging \\ 
+PCA & Principal Components Analysis & Phân tích thành phần chính \\ 
 \hline
-Pdf & Probability density function & Hàm mật độ xác suất \\ 
+PCCH & Paging Control Channel & Kênh điều khiển paging \\ 
+\hline
+PDF & Probability Density Function & Hàm mật độ xác suất \\ 
 \hline
 Pilot & Pilot & Ký hiệu hoa tiêu \\ 
 \hline
-Pilot-assisted & Pilot-assisted & Phương pháp dựa trên tín hiệu hoa tiêu \\ 
+Pilot-assisted & Pilot-assisted & Phương pháp dựa trên ký hiệu hoa tiêu \\ 
 \hline
-PSK & Phase-shift keying & Điều chế pha \\ 
+PSK & Phase-shift Keying & Điều chế pha số \\ 
 \hline
-PSS & Primary synchronization signal & Tín hiệu đồng bộ sơ cấp \\ 
+PSS & Primary Synchronization Signal & Tín hiệu đồng bộ sơ cấp \\ 
 \hline
-PTRS & Phase tracking reference signal & Tín hiệu tham chiếu theo dõi pha \\ 
+PTRS & Phase Tracking Reference Signal & Tín hiệu tham chiếu bám pha \\ 
 \hline
-QAM & Quadrature amplitude modulation & Điều chế biên độ cầu phương \\ 
+QAM & Quadrature Amplitude Modulation & Điều chế biên độ cầu phương \\ 
 \hline
-RACH & Random access channel & Kênh truy cập ngẫu nhiên \\ 
+RACH & Random Access Channel & Kênh truy cập ngẫu nhiên \\ 
 \hline
-RL & Reinforcement learning & Học tăng cường \\ 
+RL & Reinforcement Learning & Học tăng cường \\ 
 \hline
-RLS & Recursive least squares & Kỹ thuật bình phương đệ quy nhỏ nhất \\ 
+SB & Semi-Blind & Kỹ thuật nhận dạng bán mù \\ 
 \hline
-SB & Semi-blind & Kỹ thuật nhận dạng bán mù \\ 
+SIMO & Single-Input Multi-Output & Hệ thống đơn đầu vào đa đầu ra \\ 
 \hline
-SIMO & Single-input multi-output & Hệ thống đơn đầu vào đa đầu ra \\ 
+SISO & Single-Input Single-Output & Hệ thống đơn đầu đơn vào đầu ra \\ 
 \hline
-SISO & Single-input single-output & Hệ thống đơn đầu đơn vào đầu ra \\ 
+SNR & Signal Noise Ratio & Tỷ lệ công suất tín hiệu trên công suất tạp âm \\ 
 \hline
-SNR & Signal noise ratio & Tỷ lệ tín hiệu tạp âm \\ 
+SOS & Second-order Statistics & Đặc tính thống kê bậc hai \\ 
 \hline
-SOS & Second-order statistics & Đặc tính thống kê bậc hai \\ 
+SRS & Sounding Reference Signal & Tín hiệu tham chiếu âm thanh \\ 
 \hline
-SRS & Sounding reference signal & Tín hiệu tham chiếu âm thanh \\ 
+SSS & Secondary Synchronization Signal & Tín hiệu đồng bộ thứ cấp \\ 
+% \hline
+% SC & Sub-cluster & Cụm con trong các cụm phân chia theo thời gian đến \\
 \hline
-SSS & Secondary synchronization signal & Tín hiệu đồng bộ thứ cấp \\ 
+TC & Time Cluster & Cụm phân chia theo thời gian đến \\
+% \hline
+% Training-based & Training-based & Phương pháp dựa trên việc huấn luyện \\ 
+% \hline
+% RT  & Ray-Tracing & Kỹ thuật bám tia \\
 \hline
-SC & Sub-cluster & Cụm con trong các TC \\
+UCA & Uniform Circle Array & Mảng tròn cách đều \\ 
 \hline
-TC & Time cluster & Cụm phân chia theo thời gian đến \\
+UCyA & Uniform Cylindrical Array & Mảng trụ cách đều \\ 
 \hline
-Training-based & Training-based & Phương pháp dựa trên việc đào tạo \\ 
+UE & User Equipment & Thiết bị đầu cuối của người dùng \\
 \hline
-RT  & Ray-tracing & Phân tích theo tia \\
+ULA & Uniform Linear Array & Mảng thẳng cách đều \\ 
 \hline
-UCA & Uniform circle array & Mảng tròn cách đều \\ 
+UL-SCH & Uplink Shared Channel & Kênh chia sẻ đường lên \\ 
 \hline
-UCyA & Uniform cylindrical array & Mảng trụ đồng nhất \\ 
-\hline
-ULA & Uniform linear array & Mảng thẳng cách đều \\ 
-\hline
-UL-SCH & Uplink shared channel & Kênh chia sẻ đường lên \\ 
-\hline
-ZF & Zero forcing & Kỹ thuật ép không \\
+ZF & Zero Forcing & Kỹ thuật ép không \\
 \hline
 \end{longtable}
 }
-}
+}   
 			

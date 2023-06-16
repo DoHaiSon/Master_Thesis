@@ -120,6 +120,7 @@
 \renewcommand{\baselinestretch}{1.4}
 \flushbottom
 \renewcommand*{\bibfont}{\fontsize{13}{16}\selectfont}
+\renewcommand{\cite}[2][]{}
 
 \usepackage[hidelinks, unicode]{hyperref}
 
@@ -127,82 +128,37 @@
 \input{./footage/Tikz_fig.tex}
 
 \pagestyle{empty}
-\input{Covers/BiaNgoai.tex}
-\newpage
-\pagestyle{plain}
-\pagenumbering{gobble}
-\input{Covers/BiaTrong.tex}
+\input{Covers/BiaTomTat.tex}
 \newpage
 \def\baselinestretch{1.3}
 \pagestyle{plain}
 \pagenumbering{gobble}
-\input{Covers/CamDoan.tex}
-\newpage
-\input{Covers/CamOn.tex} 
-\newpage
-\input{Covers/TomTat.tex}
-\newpage
 \pagenumbering{roman}
 
 
 \setlength{\parindent}{1cm}
 \setlength{\parskip}{0.6ex}
 
-\fontsize{13}{16}\selectfont
-\renewcommand{\contentsname}{\centerline{\fontsize{14}{16}\selectfont\MakeUppercase{Mục lục}}}
-\clearpage
-\phantomsection
-\addcontentsline{toc}{chapter}{Mục lục}
-\tableofcontents
-\clearpage
-\input{Covers/VietTat.tex}
-
-\newpage
-\clearpage
-\phantomsection
-\addcontentsline{toc}{chapter}{Danh mục hình vẽ}
-\renewcommand{\listfigurename}{\centerline{\fontsize{14}{16}\selectfont{\MakeUppercase{Danh mục hình vẽ}}}}
-\listoffigures
-\fontsize{13}{16}\selectfont
-
-\newpage
-\clearpage
-\phantomsection
-\addcontentsline{toc}{chapter}{Danh mục bảng biểu}
-\renewcommand{\listtablename}{\centerline{\fontsize{14}{16}\selectfont{\MakeUppercase{Danh mục bảng biểu}}}}
-\listoftables
-\fontsize{13}{16}\selectfont
-\newpage
-
 \pagenumbering{arabic}
 \pagestyle{plain}
 
-\input{chapters/Chap0_Intro}
+\input{Tomtat_chapters/Chap0}
 \newpage
-\input{chapters/Chap1_Background.tex}
+\input{Tomtat_chapters/Chap1}
 \newpage
-\input{chapters/Chap2_CRB.tex}
+\input{Tomtat_chapters/Chap2}
 \newpage
-% \input{chapters/Chap2_MRE.tex}
-% \newpage
-\input{chapters/Chap3_ML.tex}
-% \newpage
-% \input{chapters/Chap4_KQ.tex}
+\input{Tomtat_chapters/Chap3}
 \newpage
-\input{chapters/Chap5_Ketluan.tex}
-\newpage
-\input{chapters/Congbo.tex}
+\input{Tomtat_chapters/Chap4}
 
 \def\baselinestretch{1}
 \vspace{-2cm}
-\clearpage
-\phantomsection
-\addcontentsline{toc}{chapter}{TÀI LIỆU THAM KHẢO}
-\renewcommand{\bibname}{Tài liệu tham khảo}
-\bibliographystyle{./footage/agsm_uet.bst}
-\bibliography{library.bib}
+% \clearpage
+% \phantomsection
+% \addcontentsline{toc}{chapter}{TÀI LIỆU THAM KHẢO}
+% \renewcommand{\bibname}{Tài liệu tham khảo}
+% \bibliographystyle{./footage/agsm_uet.bst}
+% \bibliography{library.bib}
 
-\newpage
-\appendix
-\input{chapters/PhuLuc.tex}
 \end{document}
